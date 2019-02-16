@@ -1,0 +1,26 @@
+stages:
+  - lint
+  - test
+  - build
+
+# For now pipelines on run on the frontend code, these will need to be
+# reassigned on a per-job basis when the backend is added to pipelines.
+image: node:10
+before_script:
+  - cd mellophone/frontend
+  - yarn
+
+"FE Linting":
+  stage: lint
+  script:
+    - yarn lint
+
+"FE Testing":
+  stage: test
+  script:
+    - yarn test
+
+"FE Build":
+  stage: build
+  script:
+    - yarn build
