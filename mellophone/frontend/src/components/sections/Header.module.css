@@ -1,0 +1,19 @@
+.header {
+  position: -webkit-sticky;
+  position: sticky;
+  background-color: #cd2d79;
+  color: #ffffff;
+  padding: 0px 16px;
+}
+
+.header > nav {
+  margin: 0 auto;
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  text-decoration: none;
+}

@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@reach/router": "^1.2.1",
     "@types/jest": "23.3.13",
     "@types/node": "10.12.21",
+    "@types/reach__router": "^1.2.3",
     "@types/react": "16.8.1",
     "@types/react-dom": "16.0.11",
     "react": "^16.7.0",
@@ -15,7 +17,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "lint": "prettier \"**/**.{js,json,css}\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -26,5 +29,8 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "homepage": "localhost:8000/static"
+  "homepage": "localhost:8000/static",
+  "devDependencies": {
+    "prettier": "^1.16.4"
+  }
 }

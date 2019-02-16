@@ -1,0 +1,7 @@
+.main > div {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+}

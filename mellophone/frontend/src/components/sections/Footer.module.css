@@ -1,0 +1,12 @@
+.footer {
+  background-color: #222222;
+  color: #ffffff;
+}
+
+.footer > div {
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  max-width: 1000px;
+}
