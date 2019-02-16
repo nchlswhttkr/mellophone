@@ -15,11 +15,12 @@ Including another URLconf
 """
 import os
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from django.views.static import serve
 from django.conf import settings
 
 urlpatterns = [
+    path('api/', include('backend.urls')),
     path('admin/', admin.site.urls),
 
     # This seems to be the simplest approach for serving index.html from root

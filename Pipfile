@@ -9,6 +9,7 @@ pylint = "*"
 
 [packages]
 django = "==2.1.5"
+psycopg2 = "==2.7.5"
 
 [requires]
 python_version = "3.7"
