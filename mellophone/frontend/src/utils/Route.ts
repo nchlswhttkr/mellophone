@@ -1,9 +1,10 @@
 import { navigate } from "@reach/router";
 
 /**
- * This is used to build routes as needed through the application.
+ * This is used to build routes as needed through the application. When built
+ * with no arguments, it will default to the home page.
  *
- * It could probably be a simple function but this was too much fun to write.
+ * This could probably be a simple function but this was too much fun to write.
  */
 export default class Route {
   paths: Array<string>;

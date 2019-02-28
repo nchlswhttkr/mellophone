@@ -9,7 +9,11 @@ interface Props {
 
 function Button(props: Props) {
   return (
-    <button onClick={props.onClick} className={styles.button}>
+    <button
+      onClick={props.onClick}
+      className={styles.button}
+      type="button" // explicit type avoids issues with <form>
+    >
       {props.children}
     </button>
   );

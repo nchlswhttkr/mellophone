@@ -8,8 +8,9 @@ autopep8 = "*"
 pylint = "*"
 
 [packages]
-django = "==2.1.5"
+django = "==2.1.7"
 psycopg2 = "==2.7.5"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.7"

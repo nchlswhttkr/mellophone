@@ -2,7 +2,7 @@ import React from "react";
 
 import { Link } from "@reach/router";
 
-import styles from "./Header.module.css";
+import classes from "./Header.module.css";
 import Route from "../../utils/Route";
 
 interface Props {
@@ -11,9 +11,9 @@ interface Props {
 
 function Header(props: Props) {
   return (
-    <header className={styles.header}>
+    <header className={classes.header}>
       <nav>
-        <Link to={new Route().build()} className={styles.title}>
+        <Link to={new Route().build()} className={classes.title}>
           <h2>Mellophone</h2>
         </Link>
         <strong>
