@@ -6,7 +6,7 @@ import Input from "../elements/Input";
 import Button from "../elements/Button";
 import Divider from "../elements/Divider";
 
-import styles from "./SignInForm.module.css";
+import classes from "./SignInForm.module.css";
 import Route from "../../utils/Route";
 
 interface State {
@@ -67,11 +67,11 @@ class SignInForm extends React.Component<{}, State> {
       <Section>
         <form
           ref={this.formRef}
-          className={styles.form}
+          className={classes.form}
           onKeyDown={event => {
             event.key === "Enter" && this.onSubmit();
           }}>
-          <h3 className={styles.center}>
+          <h3 className={classes.center}>
             {isNewAccount ? "Sign Up" : "Sign In"}
           </h3>
 
@@ -80,7 +80,7 @@ class SignInForm extends React.Component<{}, State> {
           <Input ref={this.usernameRef} label="Email" />
           <Input ref={this.passwordRef} label="Password" type="password" />
 
-          <p className={styles.center}>
+          <p className={classes.center}>
             Are you sure your{" "}
             <a
               href="https://haveibeenpwned.com/"
@@ -97,7 +97,7 @@ class SignInForm extends React.Component<{}, State> {
 
           <Divider />
 
-          <Button onClick={this.toggleNewAccount}>
+          <Button onClick={this.toggleNewAccount} type="button">
             {isNewAccount
               ? "Sign in to an existing account"
               : "Create an account"}

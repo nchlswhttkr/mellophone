@@ -1,6 +1,6 @@
 import React from "react";
 
-import styles from "./Main.module.css";
+import classes from "./Main.module.css";
 
 interface Props {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ interface Props {
 
 function Main(props: Props) {
   return (
-    <main className={styles.main}>
+    <main className={classes.main}>
       <div>{props.children}</div>
     </main>
   );

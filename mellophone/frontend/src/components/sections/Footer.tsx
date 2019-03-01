@@ -1,10 +1,10 @@
 import React from "react";
 
-import styles from "./Footer.module.css";
+import classes from "./Footer.module.css";
 
 function Footer() {
   return (
-    <footer className={styles.footer}>
+    <footer className={classes.footer}>
       <div>
         <p>&copy; Mellophone</p>
         <p>

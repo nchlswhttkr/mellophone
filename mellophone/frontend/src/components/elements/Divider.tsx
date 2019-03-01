@@ -1,9 +1,14 @@
 import React from "react";
+import classnames from "classnames";
 
-import styles from "./Divider.module.css";
+import classes from "./Divider.module.css";
 
-function Divider() {
-  return <hr className={styles.divider} />;
+interface Props {
+  className?: string;
+}
+
+function Divider(props: Props) {
+  return <hr className={classnames(classes.divider, props.className)} />;
 }
 
 export default Divider;
