@@ -44,4 +44,6 @@ def sign_up(request):
 
 
 def who_am_i(request):
-    return JsonResponse({"value": request.user.get_username()}, status=200)
+    if request.user.is_authenticated:
+        return JsonResponse({"value": request.user.get_username()}, status=200)
+    return JsonResponse({}, status=403)

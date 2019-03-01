@@ -23,8 +23,16 @@ urlpatterns = [
     path('api/', include('backend.urls')),
     path('admin/', admin.site.urls),
 
-    # This seems to be the simplest approach for serving index.html from root
-    re_path(r'^$', serve, kwargs={
+    # Serving the favicon like this is unecessary, but prevents a warning when
+    # loading an HTTP route like /api/
+    path('favicon.ico', serve, kwargs={
+        'document_root': os.path.join(settings.BASE_DIR, 'frontend/build'),
+        'path': 'favicon.ico'
+    }),
+
+    # Simple method to serve the default frontend from anywhere if no previous
+    # route matches
+    re_path(r'', serve, kwargs={
         'document_root': os.path.join(settings.BASE_DIR, 'frontend/build'),
         'path': 'index.html'
     }),
