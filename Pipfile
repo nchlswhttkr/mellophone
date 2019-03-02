@@ -16,4 +16,8 @@ django-cors-headers = "*"
 python_version = "3.7"
 
 [scripts]
+db-init = "initdb -E UTF_8 -D data -U postgres"
+db-start = "pg_ctl -D data start"
+db-stop = "pg_ctl -D data stop"
+db-migrate = "python mellophone/manage.py migrate"
 server = "python mellophone/manage.py runserver"
