@@ -34,8 +34,13 @@ export default class IdentityService {
     });
   }
 
-  static async getUsername(): Promise<string> {
-    const response = await BaseRequest.get<{ value: string }>("/whoami");
-    return response.value;
+  static async getIdentity(): Promise<void> {
+    identityStore.setPending();
+    try {
+      const response = await BaseRequest.get<{ user: User }>("/whoami");
+      identityStore.setResolved(response.user);
+    } catch (error) {
+      identityStore.setRejected(error);
+    }
   }
 }
