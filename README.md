@@ -35,6 +35,10 @@ Here are some common commands you might find yourself running.
 
 To set up the backend you will need [pipenv](https://pipenv.readthedocs.io/en/latest/) and [Postgres (10)](https://www.postgresql.org/download/).
 
+```
+pipenv install
+```
+
 Installing Postgres will usually create a 'postgres' user (recommended practice) and a server, but for the sake of understanding and visibility I currently run everything from within the project directory.
 
 To create the database and start running its server, you can use the following commands. This will use the `/data` directory, creating a default installation (default name, user, password) that we will use in development.
@@ -49,18 +53,11 @@ If you receive and error about the port already being in use, this is likely bec
 Now that the database is up and running, we can set up Django and run migrations against the database. After this has completed we can run the backend server.
 
 ```
-pipenv install
 pipenv run db-migrate
 pipenv run server
 ```
 
 If you want to interact with the backend through the frontend, make sure you [created a production build of the frontend](#frontend).
-
-Another useful step is to create an admin/superuser for our application, which we can later access through Django's admin panel ([localhost:8000/admin](localhost:8000/admin)) if we want to manage users.
-
-```
-pipenv run create-admin
-```
 
 After you have finished making changes, you can stop the database server.
 
