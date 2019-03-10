@@ -10,6 +10,7 @@ export default class BaseRequest {
         Accept: "application/json",
       },
     });
+
     return await response.json();
   }
 
