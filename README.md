@@ -4,15 +4,19 @@ An app for writing meeting minutes.
 
 :trumpet: :trumpet: :trumpet:
 
-I'm trying some full stack stuff, watch this space.
+## Contributing
 
-## Installation
+Contributions are welcome! Please be respectful in your interactions with other contributors.
+
+For a guide on getting Mellophone running locally, please see the [Getting Started](#getting-started) section.
+
+## Getting Started
 
 ### Frontend
 
-To run the frontend you will need [Yarn](https://yarnpkg.org/) (and to have [Node](https://nodejs.org/) installed). Being familiar with how a React app built off [create-react-app](https://facebook.github.io/create-react-app/docs/) works is of benefit too.
+To run the frontend you will need [Yarn](https://yarnpkg.org/) (as well as [Node](https://nodejs.org/)). Being familiar with how a React app built using [create-react-app](https://facebook.github.io/create-react-app/docs/) works is beneficial too.
 
-To setup the frontend, you will need to install its dependencies and start the development server.
+To set up the frontend, you will need to install its dependencies and start the development server.
 
 ```
 cd mellophone/frontend
@@ -48,16 +52,16 @@ pipenv run db-init
 pipenv run db-start
 ```
 
-If you receive and error about the port already being in use, this is likely because the default Postgres server is running - try stopping it with `pg_ctl -D /Library/PostgreSQL/10/data stop`.
+If you receive an error about the port already being in use, this is likely because the default Postgres server is running - try stopping it with `pg_ctl -D /Library/PostgreSQL/10/data stop`.
 
 Now that the database is up and running, we can set up Django and run migrations against the database. After this has completed we can run the backend server.
+
+If you want to interact with the backend through the frontend, make sure you have [created a production build of the frontend](#frontend).
 
 ```
 pipenv run db-migrate
 pipenv run server
 ```
-
-If you want to interact with the backend through the frontend, make sure you [created a production build of the frontend](#frontend).
 
 After you have finished making changes, you can stop the database server.
 
@@ -70,7 +74,7 @@ You can find a summary of commands below
 | Command               | Action                                                                                |
 | --------------------- | ------------------------------------------------------------------------------------- |
 | pipenv install        | Install dependencies (and ensure all dependencies are up to date with `Pipfile.lock`) |
-| pipevn run db-init    | Create the Postgres database (i)                                                      |
+| pipevn run db-init    | Create the Postgres database                                                          |
 | pipenv run db-start   | Start the Postgres server                                                             |
 | pipenv run db-stop    | Stop the Postgres server                                                              |
 | pipenv run db-migrate | Apply new migrates to the database (must be running at this time)                     |

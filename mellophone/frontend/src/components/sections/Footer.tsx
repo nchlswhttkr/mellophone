@@ -9,7 +9,10 @@ function Footer() {
         <p>&copy; Mellophone</p>
         <p>
           Contribute on{" "}
-          <a href="https://github.com/nchlswhttkr/mellophone">GitHub</a>!
+          <a href="https://github.com/nchlswhttkr/mellophone#contributing">
+            GitHub
+          </a>
+          !
         </p>
       </div>
     </footer>
