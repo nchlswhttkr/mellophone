@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import json
 
@@ -57,6 +57,12 @@ def sign_up(request):
     return JsonResponse({}, status=403)
 
 
+@csrf_exempt
+def sign_out(request):
+    logout(request)
+    return JsonResponse({}, status=200)
+
+
 def who_am_i(request):
     if request.user.is_authenticated:
         return JsonResponse({
@@ -67,4 +73,4 @@ def who_am_i(request):
                 "lastName": request.user.last_name,
             }
         }, status=200)
-    return JsonResponse({}, status=403)
+    return JsonResponse({}, status=200)

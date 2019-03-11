@@ -1,0 +1,44 @@
+.root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 300px;
+  margin: 64px auto;
+  animation: rise-up 0.2s ease 0s;
+}
+
+.avatarContainer {
+  display: inline-block;
+  background: radial-gradient(center, #cd2d79 0, #ffffff 70%);
+  border-radius: 50%;
+}
+
+.avatar {
+  font-size: 24px;
+  text-align: center;
+  line-height: 64px;
+  height: 64px;
+  width: 64px;
+  margin: 8px;
+  color: #cd2d79;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.textContainer {
+  font-size: 1.4em;
+  text-align: center;
+}
+
+@keyframes rise-up {
+  0% {
+    opacity: 0;
+    top: 200px;
+  }
+
+  100% {
+    opacity: 1;
+    top: 0;
+  }
+}

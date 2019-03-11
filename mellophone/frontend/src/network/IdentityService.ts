@@ -44,8 +44,18 @@ export default class IdentityService {
   static async getIdentity(): Promise<void> {
     identityStore.setPending();
     try {
-      const response = await BaseRequest.get<{ user: User }>("/whoami");
+      const response = await BaseRequest.get<{ user?: User }>("/whoami");
       identityStore.setResolved(response.user);
+    } catch (error) {
+      identityStore.setRejected(error);
+    }
+  }
+
+  static async clearIdentity(): Promise<void> {
+    identityStore.setPending();
+    try {
+      await BaseRequest.get("/sign-out");
+      identityStore.setResolved();
     } catch (error) {
       identityStore.setRejected(error);
     }
