@@ -33,18 +33,18 @@ export default class IdentityStore {
   }
 
   @action public setPending() {
-    this.state === "pending";
-    this.user === undefined;
-    this.error === undefined;
+    this.state = "pending";
+    this.user = undefined;
+    this.error = undefined;
   }
 
   @action public setResolved(user: User) {
-    this.state === "resolved";
+    this.state = "resolved";
     this.user = user;
   }
 
   @action public setRejected(error: Error) {
-    this.state === "rejected";
+    this.state = "rejected";
     this.error = error;
   }
 }
