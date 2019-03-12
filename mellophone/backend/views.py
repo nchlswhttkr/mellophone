@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import json
 
@@ -19,7 +19,14 @@ def sign_in(request):
 
     if user is not None:
         login(request, user)
-        return JsonResponse({}, status=200)
+        return JsonResponse({
+            "user": {
+                "id": request.user.id,
+                "email": request.user.email,
+                "firstName": request.user.first_name,
+                "lastName": request.user.last_name,
+            }
+        }, status=200)
 
     return JsonResponse({}, status=403)
 
@@ -29,8 +36,8 @@ def sign_up(request):
     body = json.loads(request.body.decode('utf-8'))
     email = body['email']
     password = body['password']
-    first_name = body['first_name']
-    last_name = body['last_name']
+    first_name = body['firstName']
+    last_name = body['lastName']
 
     User.objects.create_user(
         email, email, password, first_name=first_name, last_name=last_name)
@@ -38,12 +45,32 @@ def sign_up(request):
 
     if user is not None:
         login(request, user)
-        return JsonResponse({}, status=201)
+        return JsonResponse({
+            "user": {
+                "id": request.user.id,
+                "email": request.user.email,
+                "firstName": request.user.first_name,
+                "lastName": request.user.last_name,
+            }
+        }, status=201)
 
     return JsonResponse({}, status=403)
+
+
+@csrf_exempt
+def sign_out(request):
+    logout(request)
+    return JsonResponse({}, status=200)
 
 
 def who_am_i(request):
     if request.user.is_authenticated:
-        return JsonResponse({"value": request.user.get_username()}, status=200)
-    return JsonResponse({}, status=403)
+        return JsonResponse({
+            "user": {
+                "id": request.user.id,
+                "email": request.user.email,
+                "firstName": request.user.first_name,
+                "lastName": request.user.last_name,
+            }
+        }, status=200)
+    return JsonResponse({}, status=200)

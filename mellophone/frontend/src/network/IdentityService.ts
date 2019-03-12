@@ -1,4 +1,6 @@
 import BaseRequest from "./BaseRequest";
+import { User } from "../types";
+import { identityStore } from "../stores";
 
 export default class IdentityService {
   static async authenticateUser(
@@ -11,7 +13,11 @@ export default class IdentityService {
       );
     }
 
-    await BaseRequest.post("/sign-in", { email, password });
+    const response = await BaseRequest.post<{ user: User }>("/sign-in", {
+      email,
+      password,
+    });
+    identityStore.setResolved(response.user);
   }
 
   static async createUser(
@@ -26,16 +32,32 @@ export default class IdentityService {
       );
     }
 
-    await BaseRequest.post("/sign-up", {
+    const response = await BaseRequest.post<{ user: User }>("/sign-up", {
       email,
       password,
-      first_name: firstName,
-      last_name: lastName,
+      firstName,
+      lastName,
     });
+    identityStore.setResolved(response.user);
   }
 
-  static async getUsername(): Promise<string> {
-    const response = await BaseRequest.get<{ value: string }>("/whoami");
-    return response.value;
+  static async getIdentity(): Promise<void> {
+    identityStore.setPending();
+    try {
+      const response = await BaseRequest.get<{ user?: User }>("/whoami");
+      identityStore.setResolved(response.user);
+    } catch (error) {
+      identityStore.setRejected(error);
+    }
+  }
+
+  static async clearIdentity(): Promise<void> {
+    identityStore.setPending();
+    try {
+      await BaseRequest.get("/sign-out");
+      identityStore.setResolved();
+    } catch (error) {
+      identityStore.setRejected(error);
+    }
   }
 }

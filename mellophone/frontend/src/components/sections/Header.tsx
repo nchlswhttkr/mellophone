@@ -1,12 +1,13 @@
 import React from "react";
-
+import { observer } from "mobx-react";
 import { Link } from "@reach/router";
 
 import classes from "./Header.module.css";
 import Route from "../../utils/Route";
+import IdentityStore from "../../stores/IdentityStore";
 
 interface Props {
-  isAuthenticated: React.ReactNode;
+  identityStore: IdentityStore;
 }
 
 function Header(props: Props) {
@@ -17,7 +18,7 @@ function Header(props: Props) {
           <h2>Mellophone</h2>
         </Link>
         <strong>
-          {props.isAuthenticated ? (
+          {props.identityStore.user ? (
             <Link to={new Route().path(Route.ACCOUNT).build()}>Account</Link>
           ) : (
             <Link to={new Route().path(Route.SIGN_IN).build()}>Sign In</Link>
@@ -28,4 +29,4 @@ function Header(props: Props) {
   );
 }
 
-export default Header;
+export default observer(Header);

@@ -55,7 +55,7 @@ class SignInForm extends React.Component<{}, State> {
           this.passwordRef.current.value
         );
       }
-      new Route().buildAndNavigate();
+      new Route().path(Route.ACCOUNT).buildAndNavigate();
     } catch (error) {
       console.error(error);
     }
