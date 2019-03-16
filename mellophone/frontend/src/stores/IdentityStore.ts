@@ -1,5 +1,5 @@
 import { observable, computed, action } from "mobx";
-import { User } from "../types";
+import { IUser, IIdentityStore } from "../types";
 
 /**
  * All information related to the currently authenticated user is held here.
@@ -13,9 +13,9 @@ import { User } from "../types";
  * For anonymous users, their identity will be anonymous. Null-checking on
  * this.user is insufficient to know whether an identity check resolved.
  */
-export default class IdentityStore {
+export default class IdentityStore implements IIdentityStore {
   @observable private _state?: "pending" | "resolved" | "rejected" = "resolved";
-  @observable user?: User;
+  @observable user?: IUser;
   @observable error?: Error;
 
   @computed get isPending() {
@@ -35,7 +35,7 @@ export default class IdentityStore {
     (this.user = undefined), (this.error = undefined);
   }
 
-  @action setResolved(user?: User) {
+  @action setResolved(user?: IUser) {
     this._state = "resolved";
     this.user = user;
   }

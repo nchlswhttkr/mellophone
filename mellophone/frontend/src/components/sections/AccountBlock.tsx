@@ -3,12 +3,12 @@ import { observer } from "mobx-react";
 
 import Section from "../elements/Section";
 import Button from "../elements/Button";
-import IdentityStore from "../../stores/IdentityStore";
+import { IIdentityStore } from "../../types";
 import classes from "./AccountBlock.module.css";
 import IdentityService from "../../network/IdentityService";
 
 interface Props {
-  identityStore: IdentityStore;
+  identityStore: IIdentityStore;
   signOut: () => Promise<void>;
 }
 

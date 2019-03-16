@@ -4,10 +4,10 @@ import { Link } from "@reach/router";
 
 import classes from "./Header.module.css";
 import Route from "../../utils/Route";
-import IdentityStore from "../../stores/IdentityStore";
+import { IIdentityStore } from "../../types";
 
 interface Props {
-  identityStore: IdentityStore;
+  identityStore: IIdentityStore;
 }
 
 function Header(props: Props) {

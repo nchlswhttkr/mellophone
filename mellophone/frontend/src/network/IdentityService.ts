@@ -1,5 +1,5 @@
 import BaseRequest from "./BaseRequest";
-import { User } from "../types";
+import { IUser } from "../types";
 import { identityStore } from "../stores";
 
 export default class IdentityService {
@@ -13,7 +13,7 @@ export default class IdentityService {
       );
     }
 
-    const response = await BaseRequest.post<{ user: User }>("/sign-in", {
+    const response = await BaseRequest.post<{ user: IUser }>("/sign-in", {
       email,
       password,
     });
@@ -32,7 +32,7 @@ export default class IdentityService {
       );
     }
 
-    const response = await BaseRequest.post<{ user: User }>("/sign-up", {
+    const response = await BaseRequest.post<{ user: IUser }>("/sign-up", {
       email,
       password,
       firstName,
@@ -44,7 +44,7 @@ export default class IdentityService {
   static async getIdentity(): Promise<void> {
     identityStore.setPending();
     try {
-      const response = await BaseRequest.get<{ user?: User }>("/whoami");
+      const response = await BaseRequest.get<{ user?: IUser }>("/whoami");
       identityStore.setResolved(response.user);
     } catch (error) {
       identityStore.setRejected(error);
