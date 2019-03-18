@@ -6,10 +6,10 @@ import Button from "../elements/Button";
 import { IIdentityStore } from "../../types";
 import classes from "./AccountBlock.module.css";
 import IdentityService from "../../network/IdentityService";
+import Route from "../../utils/Route";
 
 interface Props {
   identityStore: IIdentityStore;
-  signOut: () => Promise<void>;
 }
 
 function AccountBlock(props: Props) {
@@ -17,6 +17,11 @@ function AccountBlock(props: Props) {
 
   // Don't render for anonymous users or while still uncertain
   if (isResolved || !user) return null;
+
+  function signOut() {
+    IdentityService.clearIdentity();
+    new Route().buildAndNavigate();
+  }
 
   return (
     <Section className={classes.root}>
@@ -33,9 +38,9 @@ function AccountBlock(props: Props) {
         </p>
         <p>{user.email}</p>
         <p>
-          <em>User {user.id} of Mellophone!</em>
+          <em>User #{user.id} of Mellophone!</em>
         </p>
-        <Button onClick={props.signOut}>Sign Out</Button>
+        <Button onClick={signOut}>Sign Out</Button>
       </div>
     </Section>
   );

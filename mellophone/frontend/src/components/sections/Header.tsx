@@ -10,7 +10,8 @@ interface Props {
   identityStore: IIdentityStore;
 }
 
-function Header(props: Props) {
+const Header = observer((props: Props) => {
+  const { user } = props.identityStore;
   return (
     <header className={classes.header}>
       <nav>
@@ -18,7 +19,7 @@ function Header(props: Props) {
           <h2>Mellophone</h2>
         </Link>
         <strong>
-          {props.identityStore.user ? (
+          {user ? (
             <Link to={new Route().path(Route.ACCOUNT).build()}>Account</Link>
           ) : (
             <Link to={new Route().path(Route.SIGN_IN).build()}>Sign In</Link>
@@ -27,6 +28,6 @@ function Header(props: Props) {
       </nav>
     </header>
   );
-}
+});
 
-export default observer(Header);
+export default Header;
