@@ -12,11 +12,11 @@ interface Props {
   identityStore: IIdentityStore;
 }
 
-function AccountBlock(props: Props) {
-  const { isResolved, user } = props.identityStore;
+const AccountBlock = observer((props: Props) => {
+  const { rejected, user } = props.identityStore;
 
   // Don't render for anonymous users or while still uncertain
-  if (isResolved || !user) return null;
+  if (rejected || !user) return null;
 
   function signOut() {
     IdentityService.clearIdentity();
@@ -44,6 +44,6 @@ function AccountBlock(props: Props) {
       </div>
     </Section>
   );
-}
+});
 
-export default observer(AccountBlock);
+export default AccountBlock;

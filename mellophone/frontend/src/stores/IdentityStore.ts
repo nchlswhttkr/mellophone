@@ -14,25 +14,24 @@ import { IUser, IIdentityStore } from "../types";
  * this.user is insufficient to know whether an identity check resolved.
  */
 export default class IdentityStore implements IIdentityStore {
-  @observable private _state?: "pending" | "resolved" | "rejected" = "resolved";
-  @observable user?: IUser;
-  @observable error?: Error;
+  @observable private _state: "pending" | "resolved" | "rejected" = "resolved";
+  @observable user: IUser | undefined = undefined;
 
-  @computed get isPending() {
+  @computed get pending() {
     return this._state === "pending";
   }
 
-  @computed get isResolved() {
+  @computed get resolved() {
     return this._state === "resolved";
   }
 
-  @computed get isRejected() {
+  @computed get rejected() {
     return this._state === "rejected";
   }
 
   @action setPending() {
     this._state = "pending";
-    (this.user = undefined), (this.error = undefined);
+    this.user = undefined;
   }
 
   @action setResolved(user?: IUser) {
@@ -42,6 +41,5 @@ export default class IdentityStore implements IIdentityStore {
 
   @action setRejected(error?: Error) {
     this._state = "rejected";
-    this.error = error;
   }
 }

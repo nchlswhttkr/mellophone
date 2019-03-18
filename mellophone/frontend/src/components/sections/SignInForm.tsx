@@ -1,76 +1,71 @@
 import React from "react";
+import { observer } from "mobx-react";
 
+import Route from "../../utils/Route";
 import IdentityService from "../../network/IdentityService";
 import Section from "../elements/Section";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
 import Divider from "../elements/Divider";
-
 import classes from "./SignInForm.module.css";
-import Route from "../../utils/Route";
+import { IIdentityStore } from "../../types";
 
 interface State {
   isNewAccount: boolean;
+  errorMessage: string;
 }
 
+@observer
 class SignInForm extends React.Component<{}, State> {
   state = {
-    isNewAccount: false,
+    isNewAccount: true,
+    errorMessage: "",
   };
 
-  formRef = React.createRef<HTMLFormElement>();
   firstNameRef = React.createRef<HTMLInputElement>();
   lastNameRef = React.createRef<HTMLInputElement>();
   usernameRef = React.createRef<HTMLInputElement>();
   passwordRef = React.createRef<HTMLInputElement>();
 
   toggleNewAccount = () => {
-    // We could rely on React's reconciliation, but a form reset is simple here
-    this.formRef.current && this.formRef.current.reset();
+    // Using form.reset() is possible, but relying on reconcilation is fine
     this.setState({ isNewAccount: !this.state.isNewAccount });
   };
 
   onSubmit = async () => {
+    const { isNewAccount } = this.state;
+    const firstName = this.firstNameRef.current;
+    const lastName = this.lastNameRef.current;
+    const username = this.usernameRef.current;
+    const password = this.passwordRef.current;
+
     try {
-      if (
-        this.state.isNewAccount &&
-        this.firstNameRef.current &&
-        this.lastNameRef.current &&
-        this.usernameRef.current &&
-        this.passwordRef.current
-      ) {
+      if (isNewAccount && firstName && lastName && username && password) {
         await IdentityService.createUser(
-          this.usernameRef.current.value,
-          this.passwordRef.current.value,
-          this.firstNameRef.current.value,
-          this.lastNameRef.current.value
+          username.value,
+          password.value,
+          firstName.value,
+          lastName.value
         );
-      } else if (
-        !this.state.isNewAccount &&
-        this.usernameRef.current &&
-        this.passwordRef.current
-      ) {
-        await IdentityService.authenticateUser(
-          this.usernameRef.current.value,
-          this.passwordRef.current.value
-        );
+      } else if (!isNewAccount && username && password) {
+        await IdentityService.authenticateUser(username.value, password.value);
       }
       new Route().path(Route.ACCOUNT).buildAndNavigate();
     } catch (error) {
-      console.error(error);
+      this.setState({
+        errorMessage: error.message,
+      });
     }
   };
 
   render() {
-    const { isNewAccount } = this.state;
+    const { isNewAccount, errorMessage } = this.state;
+
     return (
       <Section>
         <form
-          ref={this.formRef}
           className={classes.form}
-          onKeyDown={event => {
-            event.key === "Enter" && this.onSubmit();
-          }}>
+          onKeyDown={e => e.key === "Enter" && this.onSubmit()}>
           <h3 className={classes.center}>
             {isNewAccount ? "Sign Up" : "Sign In"}
           </h3>
@@ -90,6 +85,8 @@ class SignInForm extends React.Component<{}, State> {
             </a>
             ?
           </p>
+
+          {errorMessage && <p className={classes.error}>{errorMessage}</p>}
 
           <Button onClick={this.onSubmit}>
             {isNewAccount ? "Create Account" : "Sign In"}

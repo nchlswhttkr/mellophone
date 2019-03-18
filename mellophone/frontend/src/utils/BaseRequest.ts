@@ -1,4 +1,4 @@
-const ROOT = "http://127.0.0.1:8000/api";
+const ROOT = "http://localhost:8000/api";
 
 export default class BaseRequest {
   static async get<T>(route: string, options: RequestInit = {}): Promise<T> {

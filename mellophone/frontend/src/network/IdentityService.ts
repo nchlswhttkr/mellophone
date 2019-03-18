@@ -1,4 +1,4 @@
-import BaseRequest from "./BaseRequest";
+import BaseRequest from "../utils/BaseRequest";
 import { IUser } from "../types";
 import { identityStore } from "../stores";
 
@@ -7,17 +7,20 @@ export default class IdentityService {
     email: string,
     password: string
   ): Promise<void> {
-    if (!email || !password) {
-      throw new Error(
-        "You must supply an email and password when creating signing in."
-      );
+    identityStore.setPending();
+    try {
+      if (!email || !password) {
+        throw new Error("An email and password is needed to sign in.");
+      }
+      const response = await BaseRequest.post<{ user: IUser }>("/sign-in", {
+        email,
+        password,
+      });
+      identityStore.setResolved(response.user);
+    } catch (error) {
+      identityStore.setRejected(error);
+      throw error;
     }
-
-    const response = await BaseRequest.post<{ user: IUser }>("/sign-in", {
-      email,
-      password,
-    });
-    identityStore.setResolved(response.user);
   }
 
   static async createUser(
@@ -26,19 +29,22 @@ export default class IdentityService {
     firstName: string,
     lastName: string
   ): Promise<void> {
-    if (!email || !password || !firstName || !lastName) {
-      throw new Error(
-        "You must supply a first name, last name, email and password when creating an account."
-      );
+    identityStore.setPending();
+    try {
+      if (!email || !password || !firstName || !lastName) {
+        throw new Error("New accounts must have a name, email and password.");
+      }
+      const response = await BaseRequest.post<{ user: IUser }>("/sign-up", {
+        email,
+        password,
+        firstName,
+        lastName,
+      });
+      identityStore.setResolved(response.user);
+    } catch (error) {
+      identityStore.setRejected(error);
+      throw error;
     }
-
-    const response = await BaseRequest.post<{ user: IUser }>("/sign-up", {
-      email,
-      password,
-      firstName,
-      lastName,
-    });
-    identityStore.setResolved(response.user);
   }
 
   static async getIdentity(): Promise<void> {
@@ -48,6 +54,7 @@ export default class IdentityService {
       identityStore.setResolved(response.user);
     } catch (error) {
       identityStore.setRejected(error);
+      throw error;
     }
   }
 
@@ -58,6 +65,7 @@ export default class IdentityService {
       identityStore.setResolved();
     } catch (error) {
       identityStore.setRejected(error);
+      throw error;
     }
   }
 }

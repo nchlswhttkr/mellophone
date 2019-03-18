@@ -6,12 +6,12 @@ import classes from "./Input.module.css";
 interface Props {
   type?: "text" | "password";
   label: string;
-  onInput?: (event: React.SyntheticEvent<HTMLInputElement>) => void;
+  onInput?: (event: React.FormEvent<HTMLInputElement>) => void;
   value?: string;
   className?: string;
 }
 
-function Input(props: Props, ref: React.Ref<HTMLInputElement>) {
+function Input(props: Props, ref?: React.Ref<HTMLInputElement>) {
   return (
     <label className={classes.label}>
       {props.label}
