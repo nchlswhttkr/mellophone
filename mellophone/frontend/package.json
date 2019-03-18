@@ -36,6 +36,6 @@
   "homepage": "localhost:8000/static",
   "devDependencies": {
     "prettier": "^1.16.4",
-    "react-testing-library": "^5.8.0"
+    "react-testing-library": "^6.0.0"
   }
 }
