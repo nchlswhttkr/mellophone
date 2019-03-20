@@ -1,4 +1,5 @@
 .main > div {
+  min-height: 90vh;
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 8px;

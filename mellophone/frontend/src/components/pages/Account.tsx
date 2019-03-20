@@ -6,13 +6,17 @@ import Header from "../sections/Header";
 import Main from "../sections/Main";
 import Footer from "../sections/Footer";
 import AccountBlock from "../sections/AccountBlock";
+import Section from "../elements/Section";
+import classes from "./Account.module.css";
 
 function Account(_: RouteComponentProps) {
   return (
     <>
       <Header identityStore={identityStore} />
       <Main>
-        <AccountBlock identityStore={identityStore} />
+        <Section className={classes.section}>
+          <AccountBlock identityStore={identityStore} />
+        </Section>
       </Main>
       <Footer />
     </>

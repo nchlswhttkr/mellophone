@@ -18,13 +18,15 @@ const Header = observer((props: Props) => {
         <Link to={new Route().build()} className={classes.title}>
           <h2>Mellophone</h2>
         </Link>
-        <strong>
-          {user ? (
-            <Link to={new Route().path(Route.ACCOUNT).build()}>Account</Link>
-          ) : (
-            <Link to={new Route().path(Route.SIGN_IN).build()}>Sign In</Link>
-          )}
-        </strong>
+        {user ? (
+          <Link to={new Route().path(Route.ACCOUNT).build()}>
+            <strong>Account</strong>
+          </Link>
+        ) : (
+          <Link to={new Route().path(Route.SIGN_IN).build()}>
+            <strong>Sign in</strong>
+          </Link>
+        )}
       </nav>
     </header>
   );

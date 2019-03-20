@@ -3,12 +3,10 @@ import { observer } from "mobx-react";
 
 import Route from "../../utils/Route";
 import IdentityService from "../../network/IdentityService";
-import Section from "../elements/Section";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
 import Divider from "../elements/Divider";
 import classes from "./SignInForm.module.css";
-import { IIdentityStore } from "../../types";
 
 interface State {
   isNewAccount: boolean;
@@ -50,7 +48,7 @@ class SignInForm extends React.Component<{}, State> {
       } else if (!isNewAccount && username && password) {
         await IdentityService.authenticateUser(username.value, password.value);
       }
-      new Route().path(Route.ACCOUNT).buildAndNavigate();
+      new Route().buildAndNavigate();
     } catch (error) {
       this.setState({
         errorMessage: error.message,
@@ -62,16 +60,16 @@ class SignInForm extends React.Component<{}, State> {
     const { isNewAccount, errorMessage } = this.state;
 
     return (
-      <Section>
+      <>
         <form
           className={classes.form}
           onKeyDown={e => e.key === "Enter" && this.onSubmit()}>
           <h3 className={classes.center}>
-            {isNewAccount ? "Sign Up" : "Sign In"}
+            {isNewAccount ? "Sign up" : "Sign in"}
           </h3>
 
-          {isNewAccount && <Input ref={this.firstNameRef} label="First Name" />}
-          {isNewAccount && <Input ref={this.lastNameRef} label="Last Name" />}
+          {isNewAccount && <Input ref={this.firstNameRef} label="First name" />}
+          {isNewAccount && <Input ref={this.lastNameRef} label="Last name" />}
           <Input ref={this.usernameRef} label="Email" />
           <Input ref={this.passwordRef} label="Password" type="password" />
 
@@ -89,7 +87,7 @@ class SignInForm extends React.Component<{}, State> {
           {errorMessage && <p className={classes.error}>{errorMessage}</p>}
 
           <Button onClick={this.onSubmit}>
-            {isNewAccount ? "Create Account" : "Sign In"}
+            {isNewAccount ? "Create account" : "Sign in"}
           </Button>
 
           <Divider />
@@ -100,7 +98,7 @@ class SignInForm extends React.Component<{}, State> {
               : "Create an account"}
           </Button>
         </form>
-      </Section>
+      </>
     );
   }
 }

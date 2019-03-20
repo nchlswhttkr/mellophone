@@ -1,7 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import Section from "../elements/Section";
 import Button from "../elements/Button";
 import { IIdentityStore } from "../../types";
 import classes from "./AccountBlock.module.css";
@@ -24,7 +23,7 @@ const AccountBlock = observer((props: Props) => {
   }
 
   return (
-    <Section className={classes.root}>
+    <div className={classes.root}>
       <div className={classes.avatarContainer}>
         <div className={classes.avatar}>
           <strong>{user.firstName.charAt(0) + user.lastName.charAt(0)}</strong>
@@ -42,7 +41,7 @@ const AccountBlock = observer((props: Props) => {
         </p>
         <Button onClick={signOut}>Sign Out</Button>
       </div>
-    </Section>
+    </div>
   );
 });
 

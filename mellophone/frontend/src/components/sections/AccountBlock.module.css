@@ -1,17 +1,15 @@
 .root {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 300px;
-  margin: 64px auto;
+  position: relative;
   animation: rise-up 0.2s ease 0s;
 }
 
 .avatarContainer {
-  display: inline-block;
   background: radial-gradient(center, #cd2d79 0, #ffffff 70%);
   border-radius: 50%;
+  padding: 8px;
 }
 
 .avatar {
@@ -20,14 +18,13 @@
   line-height: 64px;
   height: 64px;
   width: 64px;
-  margin: 8px;
   color: #cd2d79;
   background-color: #fff;
   border-radius: 50%;
 }
 
 .textContainer {
-  font-size: 1.4em;
+  font-size: 1.2em;
   text-align: center;
 }
 
