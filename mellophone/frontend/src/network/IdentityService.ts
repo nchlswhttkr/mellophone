@@ -1,6 +1,7 @@
 import BaseRequest from "../utils/BaseRequest";
 import { IUser } from "../types";
 import { identityStore } from "../stores";
+import Route from "../utils/Route";
 
 export default class IdentityService {
   static async authenticateUser(
@@ -63,6 +64,7 @@ export default class IdentityService {
     try {
       await BaseRequest.get("/sign-out");
       identityStore.setResolved();
+      new Route().buildAndNavigate();
     } catch (error) {
       identityStore.setRejected(error);
       throw error;

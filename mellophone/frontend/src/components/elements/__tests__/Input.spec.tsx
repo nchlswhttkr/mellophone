@@ -3,7 +3,7 @@ import { render, fireEvent, cleanup } from "react-testing-library";
 
 import Input from "../Input";
 
-describe("Components/Elements/Input", () => {
+describe("Components - Elements - Input", () => {
   beforeEach(cleanup);
 
   it("Can be read from using refs", () => {

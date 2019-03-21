@@ -3,7 +3,7 @@ import { render, fireEvent } from "react-testing-library";
 
 import Button from "../Button";
 
-describe("Components/Elements/Button", () => {
+describe("Components - Elements - Button", () => {
   it("Triggers onClick once when clicked", () => {
     const onClick = jest.fn();
     const { getByText } = render(<Button onClick={onClick}>Click me!</Button>);

@@ -1,35 +1,48 @@
 import React from "react";
-import { observer } from "mobx-react";
 
 import Route from "../../utils/Route";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
-import classes from "./SignInForm.module.css";
+import classes from "./SignUpForm.module.css";
 
 interface Props {
-  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => Promise<void>;
 }
 
 interface State {
   errorMessage: string;
 }
 
-class SignInForm extends React.Component<Props, State> {
+class SignUpForm extends React.Component<Props, State> {
   state = {
     errorMessage: "",
   };
 
-  usernameRef = React.createRef<HTMLInputElement>();
+  firstNameRef = React.createRef<HTMLInputElement>();
+  lastNameRef = React.createRef<HTMLInputElement>();
+  emailRef = React.createRef<HTMLInputElement>();
   passwordRef = React.createRef<HTMLInputElement>();
 
   onSubmit = async () => {
-    const username = this.usernameRef.current;
+    const firstName = this.firstNameRef.current;
+    const lastName = this.lastNameRef.current;
+    const email = this.emailRef.current;
     const password = this.passwordRef.current;
 
-    if (!username || !password) return undefined;
+    if (!email || !password || !firstName || !lastName) return undefined;
 
     try {
-      await this.props.signIn(username.value, password.value);
+      await this.props.signUp(
+        email.value,
+        password.value,
+        firstName.value,
+        lastName.value
+      );
       new Route().buildAndNavigate();
     } catch (error) {
       this.setState({
@@ -45,7 +58,9 @@ class SignInForm extends React.Component<Props, State> {
       <form
         className={classes.form}
         onKeyDown={e => e.key === "Enter" && this.onSubmit()}>
-        <Input ref={this.usernameRef} label="Email" />
+        <Input ref={this.firstNameRef} label="First name" />
+        <Input ref={this.lastNameRef} label="Last name" />
+        <Input ref={this.emailRef} label="Email" />
         <Input ref={this.passwordRef} label="Password" type="password" />
 
         <p className={classes.center}>
@@ -61,10 +76,10 @@ class SignInForm extends React.Component<Props, State> {
 
         {errorMessage && <p className={classes.error}>{errorMessage}</p>}
 
-        <Button onClick={this.onSubmit}>Sign in</Button>
+        <Button onClick={this.onSubmit}>Sign up</Button>
       </form>
     );
   }
 }
 
-export default SignInForm;
+export default SignUpForm;

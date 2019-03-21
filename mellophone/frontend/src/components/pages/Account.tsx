@@ -8,6 +8,7 @@ import Footer from "../sections/Footer";
 import AccountBlock from "../sections/AccountBlock";
 import Section from "../elements/Section";
 import classes from "./Account.module.css";
+import IdentityService from "../../network/IdentityService";
 
 function Account(_: RouteComponentProps) {
   return (
@@ -15,7 +16,10 @@ function Account(_: RouteComponentProps) {
       <Header identityStore={identityStore} />
       <Main>
         <Section className={classes.section}>
-          <AccountBlock identityStore={identityStore} />
+          <AccountBlock
+            identityStore={identityStore}
+            signOut={IdentityService.clearIdentity}
+          />
         </Section>
       </Main>
       <Footer />

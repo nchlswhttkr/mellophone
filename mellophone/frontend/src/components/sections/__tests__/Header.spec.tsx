@@ -17,7 +17,7 @@ function renderWithHistory(children: React.ReactNode, history: History) {
   );
 }
 
-describe("Components/Sections/Header", () => {
+describe("Components - Sections - Header", () => {
   let history: History;
   let identityStore: IIdentityStore;
 
@@ -34,8 +34,7 @@ describe("Components/Sections/Header", () => {
       history
     );
 
-    const target = getByText("Sign in");
-    fireEvent.click(target);
+    fireEvent.click(getByText("Sign in"));
 
     expect(history.location.pathname).toBe("/sign-in");
   });
@@ -52,8 +51,7 @@ describe("Components/Sections/Header", () => {
       history
     );
 
-    const target = getByText("Account");
-    fireEvent.click(target);
+    fireEvent.click(getByText("Account"));
 
     expect(history.location.pathname).toBe("/account");
   });
