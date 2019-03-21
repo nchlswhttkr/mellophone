@@ -1,24 +1,30 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import AccountBlock from "../sections/AccountBlock";
 import { identityStore } from "../../stores";
+import Header from "../sections/Header";
+import Main from "../sections/Main";
+import Footer from "../sections/Footer";
+import AccountBlock from "../sections/AccountBlock";
+import Section from "../elements/Section";
+import classes from "./Account.module.css";
 import IdentityService from "../../network/IdentityService";
-import Route from "../../utils/Route";
 
-class Account extends React.Component<RouteComponentProps> {
-  onSignOut = async () => {
-    await IdentityService.clearIdentity();
-    new Route().buildAndNavigate();
-  };
-
-  render() {
-    return (
-      <>
-        <AccountBlock identityStore={identityStore} signOut={this.onSignOut} />
-      </>
-    );
-  }
+function Account(_: RouteComponentProps) {
+  return (
+    <>
+      <Header identityStore={identityStore} />
+      <Main>
+        <Section className={classes.section}>
+          <AccountBlock
+            identityStore={identityStore}
+            signOut={IdentityService.clearIdentity}
+          />
+        </Section>
+      </Main>
+      <Footer />
+    </>
+  );
 }
 
 export default Account;

@@ -1,11 +1,11 @@
 import { observable, computed, action } from "mobx";
-import { User } from "../types";
+import { IUser, IIdentityStore } from "../types";
 
 /**
  * All information related to the currently authenticated user is held here.
  *
- * It might be possible remove the _state attribute, but keeping it ensures we
- * are can try and be explicit about what is readable.
+ * Although there is a _state attribute that indicates the request status, it
+ * is (at some times) acceptable to read information like the user.
  *
  * It's similar to fromPromise() from mobx-utils, but this way we can add
  * a variable like isAuthenticated() to simplify logic elsewhere.
@@ -13,35 +13,33 @@ import { User } from "../types";
  * For anonymous users, their identity will be anonymous. Null-checking on
  * this.user is insufficient to know whether an identity check resolved.
  */
-export default class IdentityStore {
-  @observable private _state?: "pending" | "resolved" | "rejected" = "resolved";
-  @observable user?: User;
-  @observable error?: Error;
+export default class IdentityStore implements IIdentityStore {
+  @observable private _state: "pending" | "resolved" | "rejected" = "resolved";
+  @observable user: IUser | undefined = undefined;
 
-  @computed get isPending() {
+  @computed get pending() {
     return this._state === "pending";
   }
 
-  @computed get isResolved() {
+  @computed get resolved() {
     return this._state === "resolved";
   }
 
-  @computed get isRejected() {
+  @computed get rejected() {
     return this._state === "rejected";
   }
 
   @action setPending() {
     this._state = "pending";
-    (this.user = undefined), (this.error = undefined);
+    this.user = undefined;
   }
 
-  @action setResolved(user?: User) {
+  @action setResolved(user?: IUser) {
     this._state = "resolved";
     this.user = user;
   }
 
   @action setRejected(error?: Error) {
     this._state = "rejected";
-    this.error = error;
   }
 }

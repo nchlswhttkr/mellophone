@@ -1,0 +1,16 @@
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.account {
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.account > h3 {
+  text-align: center;
+}
