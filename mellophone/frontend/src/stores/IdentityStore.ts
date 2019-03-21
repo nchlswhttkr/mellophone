@@ -4,8 +4,8 @@ import { IUser, IIdentityStore } from "../types";
 /**
  * All information related to the currently authenticated user is held here.
  *
- * It might be possible remove the _state attribute, but keeping it ensures we
- * are can try and be explicit about what is readable.
+ * Although there is a _state attribute that indicates the request status, it
+ * is (at some times) acceptable to read information like the user.
  *
  * It's similar to fromPromise() from mobx-utils, but this way we can add
  * a variable like isAuthenticated() to simplify logic elsewhere.

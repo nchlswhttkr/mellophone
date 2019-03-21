@@ -1,9 +1,9 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import Button from "../elements/Button";
 import { IIdentityStore } from "../../types";
 import classes from "./AccountBlock.module.css";
+import Button from "../elements/Button";
 
 interface Props {
   identityStore: IIdentityStore;

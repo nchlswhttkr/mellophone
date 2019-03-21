@@ -2,9 +2,9 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "@reach/router";
 
+import { IIdentityStore } from "../../types";
 import classes from "./Header.module.css";
 import Route from "../../utils/Route";
-import { IIdentityStore } from "../../types";
 
 interface Props {
   identityStore: IIdentityStore;

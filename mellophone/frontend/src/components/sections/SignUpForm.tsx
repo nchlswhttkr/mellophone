@@ -1,9 +1,9 @@
 import React from "react";
 
+import classes from "./SignUpForm.module.css";
 import Route from "../../utils/Route";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
-import classes from "./SignUpForm.module.css";
 
 interface Props {
   signUp: (

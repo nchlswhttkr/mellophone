@@ -1,10 +1,9 @@
 import React from "react";
-import { observer } from "mobx-react";
 
+import classes from "./SignInForm.module.css";
 import Route from "../../utils/Route";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
-import classes from "./SignInForm.module.css";
 
 interface Props {
   signIn: (email: string, password: string) => Promise<void>;
