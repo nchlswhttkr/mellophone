@@ -62,7 +62,7 @@ export default class IdentityService {
   static async clearIdentity(): Promise<void> {
     identityStore.setPending();
     try {
-      await BaseRequest.get("/sign-out");
+      await BaseRequest.post("/sign-out", {});
       identityStore.setResolved();
       new Route().buildAndNavigate();
     } catch (error) {

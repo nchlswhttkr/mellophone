@@ -1,15 +1,17 @@
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 import json
 
 
+@ensure_csrf_cookie
 def index(request):
-    return HttpResponse("Hello Mellophone!")
+    return JsonResponse({}, status=200)
 
 
-@csrf_exempt
+@require_http_methods(["POST"])
 def sign_in(request):
     body = json.loads(request.body.decode('utf-8'))
     email = body['email']
@@ -31,7 +33,7 @@ def sign_in(request):
     return JsonResponse({}, status=403)
 
 
-@csrf_exempt
+@require_http_methods(["POST"])
 def sign_up(request):
     body = json.loads(request.body.decode('utf-8'))
     email = body['email']
@@ -57,13 +59,14 @@ def sign_up(request):
     return JsonResponse({}, status=403)
 
 
-@csrf_exempt
+@require_http_methods(["POST"])
 def sign_out(request):
     logout(request)
     return JsonResponse({}, status=200)
 
 
-def who_am_i(request):
+@require_http_methods(["GET"])
+def whoami(request):
     if request.user.is_authenticated:
         return JsonResponse({
             "user": {

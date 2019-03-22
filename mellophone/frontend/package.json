@@ -35,6 +35,7 @@
   ],
   "homepage": "localhost:8000/static",
   "devDependencies": {
+    "http-proxy-middleware": "^0.19.1",
     "prettier": "^1.16.4",
     "react-testing-library": "^6.0.0"
   }

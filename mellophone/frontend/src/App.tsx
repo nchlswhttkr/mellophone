@@ -2,10 +2,12 @@ import React from "react";
 
 import Pages from "./components/pages";
 import IdentityService from "./network/IdentityService";
+import BaseRequest from "./utils/BaseRequest";
 
 class App extends React.Component {
-  componentDidMount() {
-    IdentityService.getIdentity();
+  async componentDidMount() {
+    await BaseRequest.get("/");
+    await IdentityService.getIdentity();
   }
 
   render() {

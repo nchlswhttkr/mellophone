@@ -1,35 +1,32 @@
-const ROOT = "http://localhost:8000/api";
+import CookieReader from "./CookieReader";
+
+const ROOT = "/api"; // see src/setupProxy.js
 
 export default class BaseRequest {
-  static async get<T>(route: string, options: RequestInit = {}): Promise<T> {
+  static async get<ExpectedResponse>(route: string): Promise<ExpectedResponse> {
     const response = await fetch(ROOT + route, {
-      ...options,
       method: "GET",
-      credentials: "include",
       headers: {
         Accept: "application/json",
+        "X-CSRFToken": CookieReader.getCsrfToken() || "",
       },
     });
-
     return await response.json();
   }
 
-  static async post<T>(
+  static async post<ExpectedResponse>(
     route: string,
-    payload: object,
-    options: RequestInit = {}
-  ): Promise<T> {
+    payload: object
+  ): Promise<ExpectedResponse> {
     const response = await fetch(ROOT + route, {
-      ...options,
       body: JSON.stringify(payload),
       method: "POST",
-      credentials: "include",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        "X-CSRFToken": CookieReader.getCsrfToken() || "",
       },
     });
-
     return await response.json();
   }
 }

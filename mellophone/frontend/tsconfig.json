@@ -16,5 +16,8 @@
     "jsx": "preserve",
     "experimentalDecorators": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/setupProxy.js" // proxy backend calls, not compiled with build
+  ]
 }
