@@ -1,21 +1,34 @@
-from django.http import HttpResponse, JsonResponse
+"""
+This is the starting point for Django to call its route controllers, but it can
+be extended as the controllers being called become more complex.
+"""
+
+
+import json
+from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from backend.models import Team, Membership
 from django.db import transaction, IntegrityError
-import json
+from backend.models import Team, Membership
 
 
 @ensure_csrf_cookie
 def index(request):
+    """
+    Effectively a "Hello world!" for the backend, but can also be used to get
+    the 'csrftoken' cookie if the frontend needs it.
+    """
     return JsonResponse({}, status=200)
 
 
 @require_http_methods(["POST"])
 def sign_in(request):
+    """
+    Attempt to log a user in given their credentials
+    """
     body = json.loads(request.body.decode('utf-8'))
     email = body['email']
     password = body['password']
@@ -38,6 +51,10 @@ def sign_in(request):
 
 @require_http_methods(["POST"])
 def sign_up(request):
+    """
+    Attempts to register a new user given their credentials and user
+    information.
+    """
     body = json.loads(request.body.decode('utf-8'))
     email = body['email']
     password = body['password']
@@ -64,12 +81,20 @@ def sign_up(request):
 
 @require_http_methods(["POST"])
 def sign_out(request):
+    """
+    End the current authenticated session, will succeed even if a session does
+    not exist.
+    """
     logout(request)
     return JsonResponse({}, status=200)
 
 
 @require_http_methods(["GET"])
 def whoami(request):
+    """
+    A fast way to obtain the current;y authenticated user's identity from their
+    session.
+    """
     if request.user.is_authenticated:
         return JsonResponse({
             "user": {
@@ -86,6 +111,9 @@ def whoami(request):
 @transaction.atomic
 @require_http_methods(['POST'])
 def create_team(request):
+    """
+    Create a new team, and assigns the session users as a member.
+    """
     try:
         body = json.loads(request.body.decode('utf-8'))
         name = body['name']
@@ -105,18 +133,16 @@ def create_team(request):
         return JsonResponse({}, status=400)
     except IntegrityError:
         return JsonResponse({}, status=500)
-    except Exception:
-        return JsonResponse({}, status=500)
 
 
 @login_required
 @require_http_methods(['GET'])
 def get_teams(request):
-    try:
-        member_id = request.user.id
-        print(member_id)
-        teams = Team.objects.filter(membership__user__id=member_id)
-        return JsonResponse({"teams": [team for team in teams.values()]},
-                            status=200)
-    except Exception:
-        return JsonResponse({}, status=500)
+    """
+    Gets all teams that the session user is a member of.
+    """
+    member_id = request.user.id
+    print(member_id)
+    teams = Team.objects.filter(membership__user__id=member_id)
+    return JsonResponse({"teams": [team for team in teams.values()]},
+                        status=200)

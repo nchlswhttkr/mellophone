@@ -5,22 +5,35 @@ stages:
 
 # For now pipelines on run on the frontend code, these will need to be
 # reassigned on a per-job basis when the backend is added to pipelines.
-image: node:10
-before_script:
-  - cd mellophone/frontend
-  - yarn
 
 "FE Linting":
+  image: node:10
   stage: lint
   script:
+    - cd mellophone/frontend
+    - yarn
     - yarn lint
 
 "FE Testing":
+  image: node:10
   stage: test
   script:
+    - cd mellophone/frontend
+    - yarn
     - yarn test
 
 "FE Build":
+  image: node:10
   stage: build
   script:
+    - cd mellophone/frontend
+    - yarn
     - yarn build
+
+"BE Linting":
+  image: python:3
+  stage: lint
+  script:
+    - pip install pipenv
+    - pipenv install
+    - pipenv run lint

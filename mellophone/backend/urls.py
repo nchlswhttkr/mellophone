@@ -1,6 +1,10 @@
+"""
+Route controllers can be declared here, Django will call these as appropriate.
+"""
+
 from django.urls import path
 
-from . import views
+from backend import views
 
 urlpatterns = [
     path('', views.index, name='GET /'),
