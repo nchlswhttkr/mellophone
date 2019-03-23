@@ -3,6 +3,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from backend.models import Team, Membership
+from django.db import transaction, IntegrityError
 import json
 
 
@@ -77,3 +80,43 @@ def whoami(request):
             }
         }, status=200)
     return JsonResponse({}, status=200)
+
+
+@login_required
+@transaction.atomic
+@require_http_methods(['POST'])
+def create_team(request):
+    try:
+        body = json.loads(request.body.decode('utf-8'))
+        name = body['name']
+        website = body['website']
+        owner = request.user
+        with transaction.atomic():
+            team = Team(name=name, website=website)
+            team.save()
+            membership = Membership(team=team, user=owner)
+            membership.save()
+            return JsonResponse({"team": {
+                'id': team.id,
+                'name': team.name,
+                'website': team.website,
+            }}, status=201)
+    except KeyError:
+        return JsonResponse({}, status=400)
+    except IntegrityError:
+        return JsonResponse({}, status=500)
+    except Exception:
+        return JsonResponse({}, status=500)
+
+
+@login_required
+@require_http_methods(['GET'])
+def get_teams(request):
+    try:
+        member_id = request.user.id
+        print(member_id)
+        teams = Team.objects.filter(membership__user__id=member_id)
+        return JsonResponse({"teams": [team for team in teams.values()]},
+                            status=200)
+    except Exception:
+        return JsonResponse({}, status=500)

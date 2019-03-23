@@ -8,4 +8,6 @@ urlpatterns = [
     path('sign-up', views.sign_up, name='POST /sign-up'),
     path('sign-out', views.sign_out, name='POST /sign-out'),
     path('whoami', views.whoami, name='GET /whoami'),
+    path('teams', views.create_team, name="POST /teams"),
+    path('get-teams', views.get_teams, name="GET /teams")  # controller time
 ]
