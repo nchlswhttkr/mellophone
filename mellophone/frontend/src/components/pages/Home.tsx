@@ -20,6 +20,7 @@ function Home(_: RouteComponentProps) {
       <Main>
         <Section className={classes.teams}>
           <TeamList
+            identityStore={identityStore}
             teamStore={teamStore}
             createTeam={() => setShowForm(true)}
           />

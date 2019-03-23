@@ -2,13 +2,13 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import classes from "./TeamList.module.css";
-import { ITeamStore } from "../../types";
+import { ITeamStore, IIdentityStore } from "../../types";
 import { Link } from "@reach/router";
 import Route from "../../utils/Route";
 import Button from "../elements/Button";
-import TeamService from "../../network/TeamService";
 
 interface Props {
+  identityStore: IIdentityStore;
   teamStore: ITeamStore;
   createTeam: () => void;
 }
@@ -17,9 +17,13 @@ interface Props {
 class TeamList extends React.Component<Props> {
   render() {
     const {
+      identityStore: { user },
       teamStore: { teams },
       createTeam,
     } = this.props;
+
+    if (!user) return null;
+
     return (
       <div className={classes.container}>
         <h2>My teams</h2>

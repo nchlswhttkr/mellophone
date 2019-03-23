@@ -43,7 +43,7 @@ To set up the backend you will need [pipenv](https://pipenv.readthedocs.io/en/la
 pipenv install
 ```
 
-Installing Postgres will usually create a 'postgres' user (recommended practice) and a server, but for the sake of understanding and visibility I currently run everything from within the project directory.
+Installing Postgres will usually create a 'postgres' user (recommended practice) and a server, but for the sake of understanding and visibility I currently run everything from within the project directory. You should also make sure the Postgres binaries are installed in your PATH (`initdb`, `pg_ctl` are two you'll need).
 
 To create the database and start running its server, you can use the following commands. This will use the `/data` directory, creating a default installation (default name, user, password) that we will use in development.
 
@@ -52,7 +52,7 @@ pipenv run db-init
 pipenv run db-start
 ```
 
-If you receive an error about the port already being in use, this is likely because the default Postgres server is running - try stopping it with `pg_ctl -D /Library/PostgreSQL/10/data stop`.
+If you receive an error about the port already being in use, this is likely because the default Postgres server is running - try stopping it with `pg_ctl -D /Library/PostgreSQL/10/data stop` (or wherever Postgres is installed on your computer).
 
 Now that the database is up and running, we can set up Django and run migrations against the database. After this has completed we can run the backend server.
 
@@ -79,3 +79,4 @@ You can find a summary of commands below
 | pipenv run db-stop    | Stop the Postgres server                                                              |
 | pipenv run db-migrate | Apply new migrates to the database (must be running at this time)                     |
 | pipenv run server     | Run the backend (a Django server)                                                     |
+| pipenv run lint       | Lint using pylint (just defaults for now)                                             |

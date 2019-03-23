@@ -7,7 +7,7 @@
 }
 
 .avatarContainer {
-  background: radial-gradient(center, #cd2d79 0, #ffffff 70%);
+  background: radial-gradient(#cd2d79, #ffffff 70%);
   border-radius: 50%;
   padding: 8px;
 }

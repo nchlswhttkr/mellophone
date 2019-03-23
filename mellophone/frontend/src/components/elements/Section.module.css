@@ -1,5 +1,5 @@
 .section {
   box-sizing: border-box;
-  margin: 16px 0;
+  width: 100%;
   padding: 8px 0;
 }
