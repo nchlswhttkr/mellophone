@@ -20,13 +20,16 @@ export default class TeamService {
   }
 
   static async getTeams(): Promise<void> {
-    teamStore.clearTeams();
     try {
       const response = await BaseRequest.get<{ teams: ITeam[] }>("/get-teams");
-      teamStore.addTeams(response.teams);
+      teamStore.setTeams(response.teams);
     } catch (error) {
       if (process.env.NODE_ENV !== "production") console.error(error);
       throw error;
     }
+  }
+
+  static clearTeams(): void {
+    teamStore.setTeams([]);
   }
 }
