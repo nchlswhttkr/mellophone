@@ -35,5 +35,5 @@ stages:
   stage: lint
   script:
     - pip install pipenv
-    - pipenv install
+    - pipenv install --dev
     - pipenv run lint
