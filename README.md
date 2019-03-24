@@ -1,8 +1,10 @@
 # Mellophone
 
-An app for writing meeting minutes.
+[![](https://gitlab.com/nchlswhttkr/mellophone/badges/master/build.svg)](https://gitlab.com/nchlswhttkr/mellophone/pipelines)
 
 :trumpet: :trumpet: :trumpet:
+
+An app for teams, at the moment for writing and sharing meeting minutes.
 
 ## Contributing
 

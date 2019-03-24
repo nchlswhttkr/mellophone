@@ -11,6 +11,9 @@ export default class BaseRequest {
         "X-CSRFToken": CookieReader.getCsrfToken() || "",
       },
     });
+    if (response.status >= 400) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
     return await response.json();
   }
 
@@ -27,6 +30,9 @@ export default class BaseRequest {
         "X-CSRFToken": CookieReader.getCsrfToken() || "",
       },
     });
+    if (response.status >= 400) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
     return await response.json();
   }
 }

@@ -35,7 +35,7 @@ describe("Components - Sections - AccountBlock", () => {
       <AccountBlock identityStore={identityStore} signOut={signOut} />
     );
 
-    expect(container.children).toHaveLength(0);
+    expect(container.childElementCount).toBe(0);
   });
 
   it("Shows a user's profile if they are authenticated", () => {
