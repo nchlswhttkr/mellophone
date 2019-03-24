@@ -32,7 +32,7 @@ urlpatterns = [
 
     # Simple method to serve the default frontend from anywhere if no previous
     # route matches
-    re_path(r'', serve, kwargs={
+    re_path(r"", serve, kwargs={
         'document_root': os.path.join(settings.BASE_DIR, 'frontend/build'),
         'path': 'index.html'
     }),

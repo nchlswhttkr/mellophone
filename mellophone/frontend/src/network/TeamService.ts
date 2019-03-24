@@ -21,7 +21,7 @@ export default class TeamService {
 
   static async getTeams(): Promise<void> {
     try {
-      const response = await BaseRequest.get<{ teams: ITeam[] }>("/get-teams");
+      const response = await BaseRequest.get<{ teams: ITeam[] }>("/teams");
       teamStore.setTeams(response.teams);
     } catch (error) {
       if (process.env.NODE_ENV !== "production") console.error(error);
