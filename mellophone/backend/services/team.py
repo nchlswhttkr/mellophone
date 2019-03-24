@@ -30,4 +30,8 @@ class TeamService:
             team.save()
             membership = Membership(team=team, user=owner)
             membership.save()
-            return team
+            return {
+                "id": team.id,
+                "name": team.name,
+                "website": team.website
+            }
