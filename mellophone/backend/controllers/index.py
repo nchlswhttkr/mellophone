@@ -2,7 +2,7 @@
 A controller for routes that do not belong to a more specific controller.
 """
 
-
+import re
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 
@@ -17,8 +17,20 @@ class IndexController:
     For now though, it only holds a single view.
     """
     @staticmethod
-    @ensure_csrf_cookie
     def process_request(request):
+        """
+        Passes of the request to the relevant route handler
+        """
+        path, method = request.path, request.method
+
+        if re.match(r"/api", path) and method == "GET":
+            return IndexController.hello_world(request)
+
+        return JsonResponse({}, status=404)
+
+    @staticmethod
+    @ensure_csrf_cookie
+    def hello_world(request):
         """
         Effectively a "Hello world!" for the backend, but can also be used to get
         the 'csrftoken' cookie if the frontend needs it.
