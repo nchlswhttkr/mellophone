@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 autopep8 = "*"
 pylint = "*"
+pylint-django = "*"
 
 [packages]
 django = "==2.1.7"
@@ -21,3 +22,4 @@ db-start = "pg_ctl -D data start"
 db-stop = "pg_ctl -D data stop"
 db-migrate = "python mellophone/manage.py migrate"
 server = "python mellophone/manage.py runserver"
+lint = "pylint mellophone/backend"

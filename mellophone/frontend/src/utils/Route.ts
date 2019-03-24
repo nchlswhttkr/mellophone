@@ -43,4 +43,5 @@ export default class Route {
   static TEAMS = "teams";
   static MEMBERS = "members";
   static MEETINGS = "meetings";
+  static NEW = "new";
 }

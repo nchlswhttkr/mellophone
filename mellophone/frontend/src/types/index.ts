@@ -5,7 +5,12 @@ export interface IUser {
   email: string;
 }
 
-// We only need to depend on something which resembles an IdentityStore
+export interface ITeam {
+  id: string;
+  name: string;
+  website: string;
+}
+
 export interface IIdentityStore {
   readonly user: IUser | undefined;
   readonly pending: boolean;
@@ -14,4 +19,10 @@ export interface IIdentityStore {
   setPending: () => void;
   setResolved: (user?: IUser) => void;
   setRejected: (error?: Error) => void;
+}
+
+export interface ITeamStore {
+  readonly teams: ITeam[];
+  addTeam: (team: ITeam) => void;
+  setTeams: (teams: ITeam[]) => void;
 }

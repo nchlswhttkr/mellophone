@@ -1,11 +1,29 @@
-from django.urls import path
+"""
+Route controllers can be declared here, Django will call these as appropriate.
 
-from . import views
+https://docs.djangoproject.com/en/dev/topics/http/urls#how-django-processes-a-request
+"""
+
+from django.urls import re_path
+
+from backend.controllers.index import IndexController
+from backend.controllers.identity import IdentityController
+from backend.controllers.team import TeamController
 
 urlpatterns = [
-    path('', views.index, name='GET /'),
-    path('sign-in', views.sign_in, name='POST /sign-in'),
-    path('sign-up', views.sign_up, name='POST /sign-up'),
-    path('sign-out', views.sign_out, name='POST /sign-out'),
-    path('whoami', views.whoami, name='GET /whoami'),
+    re_path(
+        r"^$",
+        IndexController.process_request,
+        name='backend /index'
+    ),
+    re_path(
+        r"^identity",
+        IdentityController.process_request,
+        name='backend /identity'
+    ),
+    re_path(
+        r"^teams",
+        TeamController.process_request,
+        name='backend /teams'
+    ),
 ]
