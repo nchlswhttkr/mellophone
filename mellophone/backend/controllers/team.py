@@ -36,7 +36,7 @@ class TeamController:
         """
         user = IdentityService.get_session_user(request)
         if user is None:
-            return JsonResponse({}, status=403)
+            return JsonResponse({}, status=401)
 
         teams = TeamService.get_teams_of_user(user)
         return JsonResponse({"teams": teams}, status=200)
@@ -51,7 +51,9 @@ class TeamController:
         """
         owner = IdentityService.get_session_user(request)
         if owner is None:
-            return JsonResponse({}, status=403)
+            response = JsonResponse({}, status=401)
+            response['WWW-Authenticate'] = 'Basic'
+            return response
 
         body = json.loads(request.body.decode("utf-8"))
         name = body["name"]

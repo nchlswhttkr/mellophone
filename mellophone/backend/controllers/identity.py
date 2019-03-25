@@ -4,6 +4,7 @@ Handles identity-related routes
 
 import re
 import json
+import base64
 from django.http.response import JsonResponse
 from backend.services.user import UserService
 from backend.services.identity import IdentityService
@@ -41,16 +42,19 @@ class IdentityController:
         """
         Attempt to initiate an authenticated session
         """
-        body = json.loads(request.body.decode("utf-8"))
-        email = body["email"]
-        password = body["password"]
+        credentials = re.fullmatch(
+            r"Basic (.*)", request.META['HTTP_AUTHORIZATION'])[1]
+        email, password = base64.b64decode(
+            credentials.encode()).decode().split(':')
 
         IdentityService.sign_in(request, email=email, password=password)
 
-        # It is not certain that authenticating will succeed.
+        # It is not certain that authenticating will succeed
         user = IdentityService.get_session_user(request)
         if user is None:
-            return JsonResponse({}, status=401)
+            response = JsonResponse({}, status=401)
+            response['WWW-Authenticate'] = 'Basic'
+            return response
 
         return JsonResponse({
             "user": {
@@ -66,9 +70,11 @@ class IdentityController:
         """
         Create a new user and started an authenticated session with them
         """
+        credentials = re.fullmatch(
+            r"Basic (.*)", request.META['HTTP_AUTHORIZATION'])[1]
+        email, password = base64.b64decode(
+            credentials.encode()).decode().split(':')
         body = json.loads(request.body.decode("utf-8"))
-        email = body["email"]
-        password = body["password"]
         first_name = body["firstName"]
         last_name = body["lastName"]
 
@@ -95,7 +101,8 @@ class IdentityController:
     @staticmethod
     def whoami(request):
         """
-        Return information about the session user
+        Return information about the session user, or an empty object if there
+        is no user
         """
         user = IdentityService.get_session_user(request)
         if user is None:

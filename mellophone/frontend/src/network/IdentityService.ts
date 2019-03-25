@@ -16,9 +16,9 @@ export default class IdentityService {
       }
       const response = await BaseRequest.post<{ user: IUser }>(
         "/identity/sign-in",
+        {},
         {
-          email,
-          password,
+          Authorization: "Basic " + btoa(`${email}:${password}`),
         }
       );
       identityStore.setResolved(response.user);
@@ -42,10 +42,11 @@ export default class IdentityService {
       const response = await BaseRequest.post<{ user: IUser }>(
         "/identity/sign-up",
         {
-          email,
-          password,
           firstName,
           lastName,
+        },
+        {
+          Authorization: "Basic " + btoa(`${email}:${password}`),
         }
       );
       identityStore.setResolved(response.user);

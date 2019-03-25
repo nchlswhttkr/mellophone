@@ -13,7 +13,11 @@ import Section from "../elements/Section";
 
 function Home(_: RouteComponentProps) {
   const [showForm, setShowForm] = React.useState<boolean>(false);
-  TeamService.getTeams();
+
+  TeamService.getTeams().catch(
+    error => process.env.NODE_ENV !== "production" && console.error(error)
+  );
+
   return (
     <>
       <Header identityStore={identityStore} />

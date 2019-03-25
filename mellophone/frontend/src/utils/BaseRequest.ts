@@ -3,12 +3,16 @@ import CookieReader from "./CookieReader";
 const ROOT = "/api"; // see src/setupProxy.js
 
 export default class BaseRequest {
-  static async get<ExpectedResponse>(route: string): Promise<ExpectedResponse> {
+  static async get<ExpectedResponse>(
+    route: string,
+    headers: object = {}
+  ): Promise<ExpectedResponse> {
     const response = await fetch(ROOT + route, {
       method: "GET",
       headers: {
         Accept: "application/json",
         "X-CSRFToken": CookieReader.getCsrfToken() || "",
+        ...headers,
       },
     });
     if (response.status >= 400) {
@@ -19,7 +23,8 @@ export default class BaseRequest {
 
   static async post<ExpectedResponse>(
     route: string,
-    payload: object
+    payload: object,
+    headers: object = {}
   ): Promise<ExpectedResponse> {
     const response = await fetch(ROOT + route, {
       body: JSON.stringify(payload),
@@ -28,6 +33,7 @@ export default class BaseRequest {
         Accept: "application/json",
         "Content-Type": "application/json",
         "X-CSRFToken": CookieReader.getCsrfToken() || "",
+        ...headers,
       },
     });
     if (response.status >= 400) {
