@@ -28,4 +28,4 @@ class GenericViews:
         If a request fails because something required does not exist, this view
         can be used.
         """
-        return GenericViews.not_found_response(request)
+        return JsonResponse({}, status=404)

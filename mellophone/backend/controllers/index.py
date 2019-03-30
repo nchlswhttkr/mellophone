@@ -24,7 +24,7 @@ class IndexController:
         """
         path, method = request.path, request.method
 
-        if re.fullmatch(r"/api", path) and method == "GET":
+        if re.fullmatch(r"/api/", path) and method == "GET":
             return IndexController.hello_world(request)
 
         return GenericViews.not_found_response(request)
