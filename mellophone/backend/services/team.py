@@ -35,3 +35,15 @@ class TeamService:
                 "name": team.name,
                 "website": team.website
             }
+
+    @staticmethod
+    def get_team_with_id(team_id):
+        """
+        Retrieve information about a given team
+        """
+        team = Team.objects.get(pk=team_id)
+        return {
+            "id": team.id,
+            "name": team.name,
+            "website": team.website,
+        }

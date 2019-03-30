@@ -27,6 +27,9 @@ class TeamController:
         if re.match(r"/api/teams", path) and method == "POST":
             return TeamController.create_team(request)
 
+        if re.match(r"/api/teams/[0-9]*", path) and method == "GET":
+            return TeamController.get_team(request)
+
         return JsonResponse({}, status=404)
 
     @staticmethod
@@ -61,3 +64,17 @@ class TeamController:
 
         team = TeamService.create_team_with_owner(owner, name, website)
         return JsonResponse({"team": team}, status=201)
+
+    @staticmethod
+    def get_team(request):
+        """
+        Get a team by their id
+        """
+        user = IdentityService.get_session_user(request)
+        if user is None:
+            response = JsonResponse({}, status=401)
+            response['WWW-Authenticate'] = 'Basic'
+            return response
+
+        team_id = re.match(r"/api/teams/([0-9]*)", request.path)[1]
+        return JsonResponse({"team": TeamService.get_team_with_id(team_id)}, status=200)

@@ -23,6 +23,8 @@ export interface IIdentityStore {
 
 export interface ITeamStore {
   readonly teams: ITeam[];
+  readonly currentTeam: ITeam | undefined;
   addTeam: (team: ITeam) => void;
   setTeams: (teams: ITeam[]) => void;
+  setCurrentTeam: (id: string) => void;
 }

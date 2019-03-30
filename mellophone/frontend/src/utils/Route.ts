@@ -7,8 +7,8 @@ import { navigate } from "@reach/router";
  * This could probably be a simple function but this was too much fun to write.
  */
 export default class Route {
-  paths: Array<string>;
-  queries: Array<string>;
+  private paths: Array<string>;
+  private queries: Array<string>;
 
   constructor() {
     this.paths = [];

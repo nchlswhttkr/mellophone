@@ -29,6 +29,17 @@ export default class TeamService {
     }
   }
 
+  static async getTeamAndSetAsCurrent(id: string) {
+    try {
+      const response = await BaseRequest.get<{ team: ITeam }>(`/teams/${id}`);
+      teamStore.addTeam(response.team);
+      teamStore.setCurrentTeam(response.team.id);
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") console.error(error);
+      throw error;
+    }
+  }
+
   static clearTeams(): void {
     teamStore.setTeams([]);
   }
