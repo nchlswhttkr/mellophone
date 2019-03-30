@@ -23,7 +23,7 @@ class IndexController:
         """
         path, method = request.path, request.method
 
-        if re.match(r"/api", path) and method == "GET":
+        if re.fullmatch(r"/api", path) and method == "GET":
             return IndexController.hello_world(request)
 
         return JsonResponse({}, status=404)

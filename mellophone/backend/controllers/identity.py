@@ -23,16 +23,16 @@ class IdentityController:
         """
         path, method = request.path, request.method
 
-        if re.match(r"/api/identity/sign-in", path) and method == "POST":
+        if re.fullmatch(r"/api/identity/sign-in", path) and method == "POST":
             return IdentityController.sign_in(request)
 
-        if re.match(r"/api/identity/sign-up", path) and method == "POST":
+        if re.fullmatch(r"/api/identity/sign-up", path) and method == "POST":
             return IdentityController.sign_up(request)
 
-        if re.match(r"/api/identity/sign-out", path) and method == "POST":
+        if re.fullmatch(r"/api/identity/sign-out", path) and method == "POST":
             return IdentityController.sign_out(request)
 
-        if re.match(r"/api/identity/whoami", path) and method == "GET":
+        if re.fullmatch(r"/api/identity/whoami", path) and method == "GET":
             return IdentityController.whoami(request)
 
         return JsonResponse({}, status=404)

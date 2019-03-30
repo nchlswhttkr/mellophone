@@ -21,13 +21,13 @@ class TeamController:
         """
         path, method = request.path, request.method
 
-        if re.match(r"/api/teams", path) and method == "GET":
+        if re.fullmatch(r"/api/teams", path) and method == "GET":
             return TeamController.get_teams(request)
 
-        if re.match(r"/api/teams", path) and method == "POST":
+        if re.fullmatch(r"/api/teams$", path) and method == "POST":
             return TeamController.create_team(request)
 
-        if re.match(r"/api/teams/[0-9]*", path) and method == "GET":
+        if re.fullmatch(r"/api/teams/[0-9]*", path) and method == "GET":
             return TeamController.get_team(request)
 
         return JsonResponse({}, status=404)
