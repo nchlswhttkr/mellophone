@@ -8,6 +8,7 @@ import base64
 from django.http.response import JsonResponse
 from backend.services.user import UserService
 from backend.services.identity import IdentityService
+from backend.views.generic import GenericViews
 
 
 class IdentityController:
@@ -35,7 +36,7 @@ class IdentityController:
         if re.fullmatch(r"/api/identity/whoami", path) and method == "GET":
             return IdentityController.whoami(request)
 
-        return JsonResponse({}, status=404)
+        return GenericViews.not_found_response(request)
 
     @staticmethod
     def sign_in(request):
@@ -52,9 +53,7 @@ class IdentityController:
         # It is not certain that authenticating will succeed
         user = IdentityService.get_session_user(request)
         if user is None:
-            response = JsonResponse({}, status=401)
-            response['WWW-Authenticate'] = 'Basic'
-            return response
+            return GenericViews.authentication_required_response(request)
 
         return JsonResponse({
             "user": {

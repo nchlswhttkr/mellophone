@@ -5,6 +5,7 @@ A controller for routes that do not belong to a more specific controller.
 import re
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
+from backend.views.generic import GenericViews
 
 
 class IndexController:
@@ -26,7 +27,7 @@ class IndexController:
         if re.fullmatch(r"/api", path) and method == "GET":
             return IndexController.hello_world(request)
 
-        return JsonResponse({}, status=404)
+        return GenericViews.not_found_response(request)
 
     @staticmethod
     @ensure_csrf_cookie

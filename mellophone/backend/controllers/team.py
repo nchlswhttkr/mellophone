@@ -7,6 +7,7 @@ import json
 from django.http.response import JsonResponse
 from backend.services.identity import IdentityService
 from backend.services.team import TeamService
+from backend.views.generic import GenericViews
 
 
 class TeamController:
@@ -30,7 +31,7 @@ class TeamController:
         if re.fullmatch(r"/api/teams/[0-9]*", path) and method == "GET":
             return TeamController.get_team(request)
 
-        return JsonResponse({}, status=404)
+        return GenericViews.not_found_response(request)
 
     @staticmethod
     def get_teams(request):
@@ -39,7 +40,7 @@ class TeamController:
         """
         user = IdentityService.get_session_user(request)
         if user is None:
-            return JsonResponse({}, status=401)
+            return GenericViews.authentication_required_response(request)
 
         teams = TeamService.get_teams_of_user(user)
         return JsonResponse({"teams": teams}, status=200)
@@ -54,9 +55,7 @@ class TeamController:
         """
         owner = IdentityService.get_session_user(request)
         if owner is None:
-            response = JsonResponse({}, status=401)
-            response['WWW-Authenticate'] = 'Basic'
-            return response
+            return GenericViews.authentication_required_response(request)
 
         body = json.loads(request.body.decode("utf-8"))
         name = body["name"]
@@ -72,9 +71,7 @@ class TeamController:
         """
         user = IdentityService.get_session_user(request)
         if user is None:
-            response = JsonResponse({}, status=401)
-            response['WWW-Authenticate'] = 'Basic'
-            return response
+            return GenericViews.authentication_required_response(request)
 
         team_id = re.match(r"/api/teams/([0-9]*)", request.path)[1]
         return JsonResponse({"team": TeamService.get_team_with_id(team_id)}, status=200)
