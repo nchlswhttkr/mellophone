@@ -12,7 +12,7 @@ describe("Components -  Sections - CreateTeamForm", () => {
   beforeEach(() => {
     createTeam.mockReset();
     sessionStore.setUser({
-      id: "1",
+      id: 1,
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",

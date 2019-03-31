@@ -42,7 +42,7 @@ describe("Components - Sections - AccountBlock", () => {
     sessionStore.setUser({
       firstName: "John",
       lastName: "Doe",
-      id: "16",
+      id: 16,
       email: "john@email.com",
     });
     const { queryByText } = render(
@@ -63,7 +63,7 @@ describe("Components - Sections - AccountBlock", () => {
     sessionStore.setUser({
       firstName: "John",
       lastName: "Doe",
-      id: "16",
+      id: 16,
       email: "john@email.com",
     });
     const { getByText } = renderWithHistory(

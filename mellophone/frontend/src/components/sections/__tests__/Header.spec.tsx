@@ -44,7 +44,7 @@ describe("Components - Sections - Header", () => {
       firstName: "John",
       lastName: "Doe",
       email: "john@email.com",
-      id: "1",
+      id: 1,
     });
     const { getByText } = renderWithHistory(
       <Header sessionStore={sessionStore} />,

@@ -17,7 +17,7 @@ describe("Stores - SessionStore", () => {
   it("Reflects when a new user is added", () => {
     const sessionStore = new SessionStore();
     const user: IUser = {
-      id: "1",
+      id: 1,
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
@@ -32,7 +32,7 @@ describe("Stores - SessionStore", () => {
     const sessionStore = new SessionStore();
     const teams: ITeam[] = [
       {
-        id: "10",
+        id: 10,
         name: "Western Brass",
         website: "https://facebook.com/WesternBrass",
       },
@@ -41,26 +41,26 @@ describe("Stores - SessionStore", () => {
     sessionStore.upsertTeams(teams);
 
     expect(sessionStore.teams.size).toBe(1);
-    expect(sessionStore.teams.get("10")!.name).toBe("Western Brass");
+    expect(sessionStore.teams.get(10)!.name).toBe("Western Brass");
   });
 
   it("Clears the teams and user when clearSession is called", () => {
     const sessionStore = new SessionStore();
 
     sessionStore.setUser({
-      id: "1",
+      id: 1,
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
     });
     sessionStore.upsertTeams([
       {
-        id: "10",
+        id: 10,
         name: "Western Brass",
         website: "https://facebook.com/WesternBrass",
       },
       {
-        id: "3",
+        id: 3,
         name: "Glen Eira Band",
         website: "http://gleneiraband.com.au",
       },

@@ -1,19 +1,19 @@
 export interface IUser {
-  id: string;
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
 }
 
 export interface ITeam {
-  id: string;
+  id: number;
   name: string;
   website: string;
 }
 
 export interface ISessionStore {
   readonly user: IUser | undefined;
-  readonly teams: Map<string, ITeam>;
+  readonly teams: Map<number, ITeam>;
   setUser: (user?: IUser) => void;
   upsertTeams: (teams: ITeam[]) => void;
   clearSession: () => void;

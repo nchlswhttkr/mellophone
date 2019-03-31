@@ -19,7 +19,7 @@ export default class TeamService {
     sessionStore.upsertTeams(response.teams);
   }
 
-  static async fetchTeam(id: string) {
+  static async fetchTeam(id: number) {
     const response = await BaseRequest.get<{ team: ITeam }>(`/teams/${id}`);
     sessionStore.upsertTeams([response.team]);
   }

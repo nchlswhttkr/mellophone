@@ -13,9 +13,9 @@ interface Props {
 }
 
 function Team(props: RouteComponentProps<Props>) {
-  const { teamId } = props;
+  const teamId = new Number(props.teamId).valueOf();
 
-  if (!teamId) return null;
+  if (Number.isNaN(teamId)) return null;
 
   React.useEffect(() => {
     TeamService.fetchTeam(teamId).catch(

@@ -27,7 +27,7 @@ describe("Components - Sections - TeamList", () => {
 
   it("Allows authenticated users to create a team if they are lonely", () => {
     sessionStore.setUser({
-      id: "1",
+      id: 1,
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
@@ -43,19 +43,19 @@ describe("Components - Sections - TeamList", () => {
 
   it("Shows a list of teams for an authenticated user", () => {
     sessionStore.setUser({
-      id: "1",
+      id: 1,
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
     });
     sessionStore.upsertTeams([
       {
-        id: "1",
+        id: 1,
         name: "Western Brass",
         website: "https://facebook.com/WesternBrass",
       },
       {
-        id: "2",
+        id: 2,
         name: "Glen Eira Band",
         website: "http://gleneiraband.com.au",
       },
@@ -71,14 +71,14 @@ describe("Components - Sections - TeamList", () => {
   it("Directs a user to a team's profile when they select its name", () => {
     navigate("/");
     sessionStore.setUser({
-      id: "1",
+      id: 1,
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
     });
     sessionStore.upsertTeams([
       {
-        id: "33",
+        id: 33,
         name: "Western Brass",
         website: "https://facebook.com/WesternBrass",
       },
@@ -95,14 +95,14 @@ describe("Components - Sections - TeamList", () => {
   it("Allows a user to create a new meeting for their team", () => {
     navigate("/");
     sessionStore.setUser({
-      id: "1",
+      id: 3,
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
     });
     sessionStore.upsertTeams([
       {
-        id: "33",
+        id: 33,
         name: "Western Brass",
         website: "https://facebook.com/WesternBrass",
       },

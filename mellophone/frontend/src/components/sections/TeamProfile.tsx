@@ -5,7 +5,7 @@ import { ISessionStore } from "../../types";
 
 interface Props {
   sessionStore: ISessionStore;
-  teamId: string;
+  teamId: number;
 }
 
 @observer

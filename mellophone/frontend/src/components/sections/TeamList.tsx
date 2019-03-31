@@ -32,7 +32,7 @@ class TeamList extends React.Component<Props> {
               <Link
                 to={new Route()
                   .path(Route.TEAMS)
-                  .path(team.id)
+                  .path(team.id.toString())
                   .build()}>
                 {team.name}
               </Link>
@@ -42,7 +42,7 @@ class TeamList extends React.Component<Props> {
               onClick={() =>
                 new Route()
                   .path(Route.TEAMS)
-                  .path(team.id)
+                  .path(team.id.toString())
                   .path(Route.MEETINGS)
                   .path(Route.NEW)
                   .buildAndNavigate()

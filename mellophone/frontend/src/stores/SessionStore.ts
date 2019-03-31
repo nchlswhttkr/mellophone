@@ -1,6 +1,5 @@
 import { observable, computed, action } from "mobx";
 import { IUser, ISessionStore, ITeam } from "../types";
-import { string } from "prop-types";
 
 /**
  * All information related to the currently authenticated user is held here.
@@ -10,7 +9,7 @@ import { string } from "prop-types";
  */
 export default class SessionStore implements ISessionStore {
   @observable private _user: IUser | undefined = undefined;
-  @observable private _teams: Map<string, ITeam> = new Map<string, ITeam>();
+  @observable private _teams = new Map<number, ITeam>();
 
   @computed get user() {
     return this._user;
