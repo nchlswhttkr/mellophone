@@ -7,7 +7,7 @@ import Header from "../sections/Header";
 import Footer from "../sections/Footer";
 import { sessionStore } from "../../stores";
 
-function PageNotFound(_: RouteComponentProps) {
+export default function PageNotFound(_: RouteComponentProps) {
   return (
     <>
       <Header sessionStore={sessionStore} />
@@ -28,5 +28,3 @@ function PageNotFound(_: RouteComponentProps) {
     </>
   );
 }
-
-export default PageNotFound;

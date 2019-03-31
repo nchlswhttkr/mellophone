@@ -4,14 +4,10 @@ import classes from "./SignUpForm.module.css";
 import Route from "../../utils/Route";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
+import { IUserToBeCreated } from "../../types";
 
 interface Props {
-  signUp: (
-    email: string,
-    password: string,
-    firstName: string,
-    lastName: string
-  ) => Promise<void>;
+  signUp: (user: IUserToBeCreated, password: string) => Promise<void>;
 }
 
 interface State {
@@ -38,12 +34,13 @@ class SignUpForm extends React.Component<Props, State> {
 
     try {
       await this.props.signUp(
-        email.value,
-        password.value,
-        firstName.value,
-        lastName.value
+        {
+          email: email.value,
+          firstName: firstName.value,
+          lastName: lastName.value,
+        },
+        password.value
       );
-      new Route().buildAndNavigate();
     } catch (error) {
       this.setState({
         errorMessage: error.message,

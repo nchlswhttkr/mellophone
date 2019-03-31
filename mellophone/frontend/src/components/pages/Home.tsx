@@ -11,14 +11,21 @@ import CreateTeamForm from "../sections/CreateTeamForm";
 import TeamList from "../sections/TeamList";
 import Section from "../elements/Section";
 
-function Home(_: RouteComponentProps) {
+export default function Home(_: RouteComponentProps) {
   const [showForm, setShowForm] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    TeamService.fetchSessionUserTeams().catch(
-      error => process.env.NODE_ENV !== "production" && console.error(error)
-    );
+    TeamService.fetchSessionUserTeams()
+      .then(teams => sessionStore.upsertTeams(teams))
+      .catch(
+        error => process.env.NODE_ENV !== "production" && console.error(error)
+      );
   }, []);
+
+  const createTeam = async (name: string, website: string) => {
+    const team = await TeamService.createTeam(name, website);
+    sessionStore.upsertTeams([team]);
+  };
 
   return (
     <>
@@ -32,7 +39,7 @@ function Home(_: RouteComponentProps) {
           {showForm && (
             <CreateTeamForm
               sessionStore={sessionStore}
-              createTeam={TeamService.createTeam}
+              createTeam={createTeam}
             />
           )}
         </Section>
@@ -41,5 +48,3 @@ function Home(_: RouteComponentProps) {
     </>
   );
 }
-
-export default Home;

@@ -7,6 +7,7 @@ import Main from "../sections/Main";
 import Footer from "../sections/Footer";
 import TeamService from "../../network/TeamService";
 import TeamProfile from "../sections/TeamProfile";
+import Section from "../elements/Section";
 
 interface Props {
   teamId: string;
@@ -18,9 +19,11 @@ function Team(props: RouteComponentProps<Props>) {
   if (Number.isNaN(teamId)) return null;
 
   React.useEffect(() => {
-    TeamService.fetchTeam(teamId).catch(
-      error => process.env.NODE_ENV !== "production" && console.error(error)
-    );
+    TeamService.fetchTeam(teamId)
+      .then(team => sessionStore.upsertTeams([team]))
+      .catch(
+        error => process.env.NODE_ENV !== "production" && console.error(error)
+      );
   }, []);
 
   return (

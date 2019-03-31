@@ -28,10 +28,12 @@ describe("Components -  Sections - SignUpForm", () => {
 
     expect(signUp).toBeCalledTimes(1);
     expect(signUp).toBeCalledWith(
-      "username@email.com",
-      "hunter2",
-      "Nicholas",
-      "Whittaker"
+      {
+        email: "username@email.com",
+        firstName: "Nicholas",
+        lastName: "Whittaker",
+      },
+      "hunter2"
     );
   });
 
@@ -59,10 +61,12 @@ describe("Components -  Sections - SignUpForm", () => {
 
     expect(signUp).toBeCalledTimes(1);
     expect(signUp).toBeCalledWith(
-      "username@email.com",
-      "hunter2",
-      "Nicholas",
-      "Whittaker"
+      {
+        email: "username@email.com",
+        firstName: "Nicholas",
+        lastName: "Whittaker",
+      },
+      "hunter2"
     );
     expect(queryByText("Unable to sign up an unknown reason")).not.toBeNull();
   });

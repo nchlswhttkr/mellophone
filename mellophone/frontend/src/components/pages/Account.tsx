@@ -6,25 +6,21 @@ import Header from "../sections/Header";
 import Main from "../sections/Main";
 import Footer from "../sections/Footer";
 import AccountBlock from "../sections/AccountBlock";
-import Section from "../elements/Section";
-import classes from "./Account.module.css";
 import IdentityService from "../../network/IdentityService";
 
-function Account(_: RouteComponentProps) {
+export default function Account(_: RouteComponentProps) {
+  const signOut = async () => {
+    await IdentityService.clearIdentity();
+    sessionStore.clearSession();
+  };
+
   return (
     <>
       <Header sessionStore={sessionStore} />
       <Main>
-        <Section className={classes.section}>
-          <AccountBlock
-            sessionStore={sessionStore}
-            signOut={IdentityService.clearIdentity}
-          />
-        </Section>
+        <AccountBlock sessionStore={sessionStore} signOut={signOut} />
       </Main>
       <Footer />
     </>
   );
 }
-
-export default Account;

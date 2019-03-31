@@ -3,7 +3,7 @@ import { ITeam } from "../types";
 import { sessionStore } from "../stores";
 
 export default class TeamService {
-  static async createTeam(name: string, website: string): Promise<void> {
+  static async createTeam(name: string, website: string): Promise<ITeam> {
     if (!name || !website) {
       throw new Error("Teams must have a name and website.");
     }
@@ -11,16 +11,16 @@ export default class TeamService {
       name,
       website,
     });
-    sessionStore.upsertTeams([response.team]);
+    return response.team;
   }
 
-  static async fetchSessionUserTeams(): Promise<void> {
+  static async fetchSessionUserTeams(): Promise<ITeam[]> {
     const response = await BaseRequest.get<{ teams: ITeam[] }>("/teams");
-    sessionStore.upsertTeams(response.teams);
+    return response.teams;
   }
 
-  static async fetchTeam(id: number) {
+  static async fetchTeam(id: number): Promise<ITeam> {
     const response = await BaseRequest.get<{ team: ITeam }>(`/teams/${id}`);
-    sessionStore.upsertTeams([response.team]);
+    return response.team;
   }
 }

@@ -12,9 +12,25 @@ import classes from "./SignIn.module.css";
 import IdentityService from "../../network/IdentityService";
 import Button from "../elements/Button";
 import Divider from "../elements/Divider";
+import { IUserToBeCreated } from "../../types";
+import Route from "../../utils/Route";
 
-function SignIn(_: RouteComponentProps) {
+export default function SignIn(_: RouteComponentProps) {
   const [newAccount, setNewAccount] = React.useState<boolean>(false);
+
+  const signUp = async (user: IUserToBeCreated, password: string) => {
+    await IdentityService.createUser(user, password);
+    const identity = await IdentityService.getIdentity();
+    sessionStore.setUser(identity);
+    new Route().buildAndNavigate();
+  };
+
+  const signIn = async (email: string, password: string) => {
+    await IdentityService.authenticateUser(email, password);
+    const identity = await IdentityService.getIdentity();
+    sessionStore.setUser(identity);
+    new Route().buildAndNavigate();
+  };
 
   return (
     <>
@@ -26,9 +42,9 @@ function SignIn(_: RouteComponentProps) {
           </h3>
 
           {newAccount ? (
-            <SignUpForm signUp={IdentityService.createUser} />
+            <SignUpForm signUp={signUp} />
           ) : (
-            <SignInForm signIn={IdentityService.authenticateUser} />
+            <SignInForm signIn={signIn} />
           )}
 
           <Divider />
@@ -44,5 +60,3 @@ function SignIn(_: RouteComponentProps) {
     </>
   );
 }
-
-export default SignIn;

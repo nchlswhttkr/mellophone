@@ -2,6 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import { ISessionStore } from "../../types";
+import classes from "./TeamProfile.module.css";
 
 interface Props {
   sessionStore: ISessionStore;
@@ -16,10 +17,12 @@ class TeamProfile extends React.Component<Props> {
     if (!team) return null;
 
     return (
-      <>
-        <p>{team.name}</p>
+      <div className={classes.root}>
+        <p>
+          <strong>{team.name}</strong>
+        </p>
         <p>{team.website}</p>
-      </>
+      </div>
     );
   }
 }

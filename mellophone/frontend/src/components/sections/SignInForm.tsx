@@ -29,7 +29,6 @@ class SignInForm extends React.Component<Props, State> {
 
     try {
       await this.props.signIn(username.value, password.value);
-      new Route().buildAndNavigate();
     } catch (error) {
       this.setState({
         errorMessage: error.message,
