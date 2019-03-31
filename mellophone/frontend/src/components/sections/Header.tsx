@@ -2,16 +2,16 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "@reach/router";
 
-import { IIdentityStore } from "../../types";
+import { ISessionStore } from "../../types";
 import classes from "./Header.module.css";
 import Route from "../../utils/Route";
 
 interface Props {
-  identityStore: IIdentityStore;
+  sessionStore: ISessionStore;
 }
 
 const Header = observer((props: Props) => {
-  const { user } = props.identityStore;
+  const { user } = props.sessionStore;
   return (
     <header className={classes.header}>
       <nav>

@@ -11,20 +11,10 @@ export interface ITeam {
   website: string;
 }
 
-export interface IIdentityStore {
+export interface ISessionStore {
   readonly user: IUser | undefined;
-  readonly pending: boolean;
-  readonly resolved: boolean;
-  readonly rejected: boolean;
-  setPending: () => void;
-  setResolved: (user?: IUser) => void;
-  setRejected: (error?: Error) => void;
-}
-
-export interface ITeamStore {
-  readonly teams: ITeam[];
-  readonly currentTeam: ITeam | undefined;
-  addTeam: (team: ITeam) => void;
-  setTeams: (teams: ITeam[]) => void;
-  setCurrentTeam: (id: string) => void;
+  readonly teams: Map<string, ITeam>;
+  setUser: (user?: IUser) => void;
+  upsertTeams: (teams: ITeam[]) => void;
+  clearSession: () => void;
 }

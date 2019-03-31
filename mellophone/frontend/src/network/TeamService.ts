@@ -1,46 +1,26 @@
 import BaseRequest from "../utils/BaseRequest";
 import { ITeam } from "../types";
-import { teamStore } from "../stores";
+import { sessionStore } from "../stores";
 
 export default class TeamService {
   static async createTeam(name: string, website: string): Promise<void> {
-    try {
-      if (!name || !website) {
-        throw new Error("Teams must have a name and website.");
-      }
-      const response = await BaseRequest.post<{ team: ITeam }>("/teams", {
-        name,
-        website,
-      });
-      teamStore.addTeam(response.team);
-    } catch (error) {
-      if (process.env.NODE_ENV !== "production") console.error(error);
-      throw error;
+    if (!name || !website) {
+      throw new Error("Teams must have a name and website.");
     }
+    const response = await BaseRequest.post<{ team: ITeam }>("/teams", {
+      name,
+      website,
+    });
+    sessionStore.upsertTeams([response.team]);
   }
 
-  static async getTeams(): Promise<void> {
-    try {
-      const response = await BaseRequest.get<{ teams: ITeam[] }>("/teams");
-      teamStore.setTeams(response.teams);
-    } catch (error) {
-      if (process.env.NODE_ENV !== "production") console.error(error);
-      throw error;
-    }
+  static async fetchSessionUserTeams(): Promise<void> {
+    const response = await BaseRequest.get<{ teams: ITeam[] }>("/teams");
+    sessionStore.upsertTeams(response.teams);
   }
 
-  static async getTeamAndSetAsCurrent(id: string) {
-    try {
-      const response = await BaseRequest.get<{ team: ITeam }>(`/teams/${id}`);
-      teamStore.addTeam(response.team);
-      teamStore.setCurrentTeam(response.team.id);
-    } catch (error) {
-      if (process.env.NODE_ENV !== "production") console.error(error);
-      throw error;
-    }
-  }
-
-  static clearTeams(): void {
-    teamStore.setTeams([]);
+  static async fetchTeam(id: string) {
+    const response = await BaseRequest.get<{ team: ITeam }>(`/teams/${id}`);
+    sessionStore.upsertTeams([response.team]);
   }
 }

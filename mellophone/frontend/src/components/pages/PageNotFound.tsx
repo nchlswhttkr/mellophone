@@ -5,12 +5,12 @@ import Route from "../../utils/Route";
 import Main from "../sections/Main";
 import Header from "../sections/Header";
 import Footer from "../sections/Footer";
-import { identityStore } from "../../stores";
+import { sessionStore } from "../../stores";
 
 function PageNotFound(_: RouteComponentProps) {
   return (
     <>
-      <Header identityStore={identityStore} />
+      <Header sessionStore={sessionStore} />
       <Main>
         <h1>Page Not Found</h1>
         <p>

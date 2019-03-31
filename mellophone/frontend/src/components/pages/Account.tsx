@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { identityStore } from "../../stores";
+import { sessionStore } from "../../stores";
 import Header from "../sections/Header";
 import Main from "../sections/Main";
 import Footer from "../sections/Footer";
@@ -13,11 +13,11 @@ import IdentityService from "../../network/IdentityService";
 function Account(_: RouteComponentProps) {
   return (
     <>
-      <Header identityStore={identityStore} />
+      <Header sessionStore={sessionStore} />
       <Main>
         <Section className={classes.section}>
           <AccountBlock
-            identityStore={identityStore}
+            sessionStore={sessionStore}
             signOut={IdentityService.clearIdentity}
           />
         </Section>

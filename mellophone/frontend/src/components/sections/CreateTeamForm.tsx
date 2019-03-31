@@ -4,10 +4,10 @@ import classes from "./CreateTeamForm.module.css";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
 import { observer } from "mobx-react";
-import { IIdentityStore } from "../../types";
+import { ISessionStore } from "../../types";
 
 interface Props {
-  identityStore: IIdentityStore;
+  sessionStore: ISessionStore;
   createTeam: (name: string, website: string) => Promise<void>;
 }
 
@@ -37,10 +37,10 @@ class CreateTeamForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { identityStore } = this.props;
+    const { sessionStore } = this.props;
     const { errorMessage } = this.state;
 
-    if (!identityStore.user) return null;
+    if (!sessionStore.user) return null;
 
     return (
       <form className={classes.form}>

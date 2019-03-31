@@ -7,8 +7,8 @@ import {
   History,
 } from "@reach/router";
 
-import IdentityStore from "../../../stores/IdentityStore";
-import { IIdentityStore } from "../../../types";
+import SessionStore from "../../../stores/SessionStore";
+import { ISessionStore } from "../../../types";
 import AccountBlock from "../AccountBlock";
 
 function renderWithHistory(children: React.ReactNode, history: History) {
@@ -20,33 +20,33 @@ function renderWithHistory(children: React.ReactNode, history: History) {
 describe("Components - Sections - AccountBlock", () => {
   let history: History;
   let signOut = jest.fn();
-  let identityStore: IIdentityStore;
+  let sessionStore: ISessionStore;
 
   beforeEach(() => {
     cleanup();
     history = createHistory(createMemorySource("/account"));
     signOut.mockReset();
-    identityStore = new IdentityStore();
+    sessionStore = new SessionStore();
   });
 
   it("Shows nothing if no user is authenticated", () => {
-    identityStore.setResolved(undefined);
+    sessionStore.setUser(undefined);
     const { container } = render(
-      <AccountBlock identityStore={identityStore} signOut={signOut} />
+      <AccountBlock sessionStore={sessionStore} signOut={signOut} />
     );
 
     expect(container.childElementCount).toBe(0);
   });
 
   it("Shows a user's profile if they are authenticated", () => {
-    identityStore.setResolved({
+    sessionStore.setUser({
       firstName: "John",
       lastName: "Doe",
       id: "16",
       email: "john@email.com",
     });
     const { queryByText } = render(
-      <AccountBlock identityStore={identityStore} signOut={signOut} />
+      <AccountBlock sessionStore={sessionStore} signOut={signOut} />
     );
 
     const name = queryByText("John Doe");
@@ -60,14 +60,14 @@ describe("Components - Sections - AccountBlock", () => {
 
   it("Triggers signOut when a user clicks to sign out", async () => {
     history.navigate("/account");
-    identityStore.setResolved({
+    sessionStore.setUser({
       firstName: "John",
       lastName: "Doe",
       id: "16",
       email: "john@email.com",
     });
     const { getByText } = renderWithHistory(
-      <AccountBlock identityStore={identityStore} signOut={signOut} />,
+      <AccountBlock sessionStore={sessionStore} signOut={signOut} />,
       history
     );
 

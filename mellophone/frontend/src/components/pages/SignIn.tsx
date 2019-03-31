@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { identityStore } from "../../stores";
+import { sessionStore } from "../../stores";
 import Header from "../sections/Header";
 import Main from "../sections/Main";
 import Footer from "../sections/Footer";
@@ -18,7 +18,7 @@ function SignIn(_: RouteComponentProps) {
 
   return (
     <>
-      <Header identityStore={identityStore} />
+      <Header sessionStore={sessionStore} />
       <Main className={classes.main}>
         <Section className={classes.account}>
           <h3 className={classes.center}>

@@ -2,48 +2,38 @@ import React from "react";
 import { render, cleanup, fireEvent } from "react-testing-library";
 
 import TeamList from "../TeamList";
-import { IIdentityStore, ITeamStore } from "../../../types";
-import IdentityStore from "../../../stores/IdentityStore";
-import TeamStore from "../../../stores/TeamStore";
+import { ISessionStore } from "../../../types";
+import SessionStore from "../../../stores/SessionStore";
 import { navigate } from "@reach/router";
 
 describe("Components - Sections - TeamList", () => {
   let createTeam = jest.fn();
-  let identityStore: IIdentityStore;
-  let teamStore: ITeamStore;
+  let sessionStore: ISessionStore;
 
   beforeEach(() => {
     cleanup();
     createTeam.mockReset();
-    identityStore = new IdentityStore();
-    teamStore = new TeamStore();
+    sessionStore = new SessionStore();
   });
 
   it("Does not render if a user is not authenticated", () => {
+    sessionStore.setUser(undefined);
     const { container } = render(
-      <TeamList
-        createTeam={createTeam}
-        identityStore={identityStore}
-        teamStore={teamStore}
-      />
+      <TeamList createTeam={createTeam} sessionStore={sessionStore} />
     );
 
     expect(container.childElementCount).toBe(0);
   });
 
   it("Allows authenticated users to create a team if they are lonely", () => {
-    identityStore.setResolved({
+    sessionStore.setUser({
       id: "1",
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
     });
     const { getByText } = render(
-      <TeamList
-        createTeam={createTeam}
-        identityStore={identityStore}
-        teamStore={teamStore}
-      />
+      <TeamList createTeam={createTeam} sessionStore={sessionStore} />
     );
 
     fireEvent.click(getByText("Create team"));
@@ -52,13 +42,13 @@ describe("Components - Sections - TeamList", () => {
   });
 
   it("Shows a list of teams for an authenticated user", () => {
-    identityStore.setResolved({
+    sessionStore.setUser({
       id: "1",
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
     });
-    teamStore.setTeams([
+    sessionStore.upsertTeams([
       {
         id: "1",
         name: "Western Brass",
@@ -71,11 +61,7 @@ describe("Components - Sections - TeamList", () => {
       },
     ]);
     const { queryByText } = render(
-      <TeamList
-        createTeam={createTeam}
-        identityStore={identityStore}
-        teamStore={teamStore}
-      />
+      <TeamList createTeam={createTeam} sessionStore={sessionStore} />
     );
 
     expect(queryByText("Western Brass")).not.toBeNull();
@@ -84,13 +70,13 @@ describe("Components - Sections - TeamList", () => {
 
   it("Directs a user to a team's profile when they select its name", () => {
     navigate("/");
-    identityStore.setResolved({
+    sessionStore.setUser({
       id: "1",
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
     });
-    teamStore.setTeams([
+    sessionStore.upsertTeams([
       {
         id: "33",
         name: "Western Brass",
@@ -98,11 +84,7 @@ describe("Components - Sections - TeamList", () => {
       },
     ]);
     const { getByText } = render(
-      <TeamList
-        createTeam={createTeam}
-        identityStore={identityStore}
-        teamStore={teamStore}
-      />
+      <TeamList createTeam={createTeam} sessionStore={sessionStore} />
     );
 
     fireEvent.click(getByText("Western Brass"));
@@ -112,13 +94,13 @@ describe("Components - Sections - TeamList", () => {
 
   it("Allows a user to create a new meeting for their team", () => {
     navigate("/");
-    identityStore.setResolved({
+    sessionStore.setUser({
       id: "1",
       firstName: "Nicholas",
       lastName: "Whittaker",
       email: "nicholas@email.com",
     });
-    teamStore.setTeams([
+    sessionStore.upsertTeams([
       {
         id: "33",
         name: "Western Brass",
@@ -126,11 +108,7 @@ describe("Components - Sections - TeamList", () => {
       },
     ]);
     const { getByText } = render(
-      <TeamList
-        createTeam={createTeam}
-        identityStore={identityStore}
-        teamStore={teamStore}
-      />
+      <TeamList createTeam={createTeam} sessionStore={sessionStore} />
     );
 
     fireEvent.click(getByText("Create meeting"));

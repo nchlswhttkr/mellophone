@@ -1,5 +1,3 @@
-import IdentityStore from "./IdentityStore";
-import TeamStore from "./TeamStore";
+import SessionStore from "./SessionStore";
 
-export const identityStore = new IdentityStore();
-export const teamStore = new TeamStore();
+export const sessionStore = new SessionStore();

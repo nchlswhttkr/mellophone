@@ -2,16 +2,16 @@ import React from "react";
 import { render, cleanup, fireEvent } from "react-testing-library";
 
 import CreateTeamForm from "../CreateTeamForm";
-import IdentityStore from "../../../stores/IdentityStore";
-import { IIdentityStore } from "../../../types";
+import SessionStore from "../../../stores/SessionStore";
+import { ISessionStore } from "../../../types";
 
 describe("Components -  Sections - CreateTeamForm", () => {
   let createTeam = jest.fn();
-  let identityStore: IIdentityStore = new IdentityStore();
+  let sessionStore: ISessionStore = new SessionStore();
 
   beforeEach(() => {
     createTeam.mockReset();
-    identityStore.setResolved({
+    sessionStore.setUser({
       id: "1",
       firstName: "Nicholas",
       lastName: "Whittaker",
@@ -21,9 +21,9 @@ describe("Components -  Sections - CreateTeamForm", () => {
   });
 
   it("Does not render if a user is not authenticated", () => {
-    identityStore.setResolved();
+    sessionStore.setUser();
     const { container } = render(
-      <CreateTeamForm identityStore={identityStore} createTeam={createTeam} />
+      <CreateTeamForm sessionStore={sessionStore} createTeam={createTeam} />
     );
 
     expect(container.childElementCount).toBe(0);
@@ -31,7 +31,7 @@ describe("Components -  Sections - CreateTeamForm", () => {
 
   it("Creates a team when the form is submitted", () => {
     const { getByLabelText, getByText } = render(
-      <CreateTeamForm identityStore={identityStore} createTeam={createTeam} />
+      <CreateTeamForm sessionStore={sessionStore} createTeam={createTeam} />
     );
 
     fireEvent.input(getByLabelText("Team name"), {
@@ -54,7 +54,7 @@ describe("Components -  Sections - CreateTeamForm", () => {
       throw new Error("Unable to create a team at this time.");
     });
     const { getByLabelText, getByText, queryByText } = render(
-      <CreateTeamForm identityStore={identityStore} createTeam={createTeam} />
+      <CreateTeamForm sessionStore={sessionStore} createTeam={createTeam} />
     );
 
     fireEvent.click(getByText("Create team"));

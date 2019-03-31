@@ -1,12 +1,12 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import { IIdentityStore } from "../../types";
+import { ISessionStore } from "../../types";
 import classes from "./AccountBlock.module.css";
 import Button from "../elements/Button";
 
 interface Props {
-  identityStore: IIdentityStore;
+  sessionStore: ISessionStore;
   signOut: () => Promise<void>;
 }
 
@@ -14,12 +14,12 @@ interface Props {
 class AccountBlock extends React.Component<Props> {
   render() {
     const {
-      identityStore: { rejected, user },
+      sessionStore: { user },
       signOut,
     } = this.props;
 
     // Don't render for anonymous users or while still uncertain
-    if (rejected || !user) return null;
+    if (!user) return null;
 
     return (
       <div className={classes.root}>

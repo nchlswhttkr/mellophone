@@ -2,14 +2,13 @@ import React from "react";
 import { observer } from "mobx-react";
 
 import classes from "./TeamList.module.css";
-import { ITeamStore, IIdentityStore } from "../../types";
+import { ISessionStore, ITeam } from "../../types";
 import { Link } from "@reach/router";
 import Route from "../../utils/Route";
 import Button from "../elements/Button";
 
 interface Props {
-  identityStore: IIdentityStore;
-  teamStore: ITeamStore;
+  sessionStore: ISessionStore;
   createTeam: () => void;
 }
 
@@ -17,8 +16,7 @@ interface Props {
 class TeamList extends React.Component<Props> {
   render() {
     const {
-      identityStore: { user },
-      teamStore: { teams },
+      sessionStore: { user, teams },
       createTeam,
     } = this.props;
 
@@ -28,7 +26,7 @@ class TeamList extends React.Component<Props> {
       <div className={classes.container}>
         <h2>My teams</h2>
 
-        {teams.map(team => (
+        {Array.from(teams.values()).map(team => (
           <div key={team.id} className={classes.team}>
             <h3 className={classes.title}>
               <Link
@@ -54,7 +52,7 @@ class TeamList extends React.Component<Props> {
           </div>
         ))}
 
-        {teams.length === 0 && (
+        {teams.size === 0 && (
           <>
             <p>
               <em>You are not a member of any teams, why not create one?</em>

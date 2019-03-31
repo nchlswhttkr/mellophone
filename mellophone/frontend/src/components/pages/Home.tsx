@@ -2,7 +2,7 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
 import classes from "./Home.module.css";
-import { identityStore, teamStore } from "../../stores";
+import { sessionStore } from "../../stores";
 import Header from "../sections/Header";
 import Main from "../sections/Main";
 import Footer from "../sections/Footer";
@@ -14,23 +14,24 @@ import Section from "../elements/Section";
 function Home(_: RouteComponentProps) {
   const [showForm, setShowForm] = React.useState<boolean>(false);
 
-  TeamService.getTeams().catch(
-    error => process.env.NODE_ENV !== "production" && console.error(error)
-  );
+  React.useEffect(() => {
+    TeamService.fetchSessionUserTeams().catch(
+      error => process.env.NODE_ENV !== "production" && console.error(error)
+    );
+  }, []);
 
   return (
     <>
-      <Header identityStore={identityStore} />
+      <Header sessionStore={sessionStore} />
       <Main>
         <Section className={classes.teams}>
           <TeamList
-            identityStore={identityStore}
-            teamStore={teamStore}
+            sessionStore={sessionStore}
             createTeam={() => setShowForm(true)}
           />
           {showForm && (
             <CreateTeamForm
-              identityStore={identityStore}
+              sessionStore={sessionStore}
               createTeam={TeamService.createTeam}
             />
           )}

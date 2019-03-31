@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { identityStore, teamStore } from "../../stores";
+import { sessionStore } from "../../stores";
 import Header from "../sections/Header";
 import Main from "../sections/Main";
 import Footer from "../sections/Footer";
@@ -12,25 +12,25 @@ interface Props {
   teamId: string;
 }
 
-class Team extends React.Component<RouteComponentProps<Props>> {
-  componentDidMount() {
-    if (!this.props.teamId) return undefined;
-    TeamService.getTeamAndSetAsCurrent(this.props.teamId).catch(
+function Team(props: RouteComponentProps<Props>) {
+  const { teamId } = props;
+
+  if (!teamId) return null;
+
+  React.useEffect(() => {
+    TeamService.fetchTeam(teamId).catch(
       error => process.env.NODE_ENV !== "production" && console.error(error)
     );
-  }
+  }, []);
 
-  render() {
-    return (
-      <>
-        <Header identityStore={identityStore} />
-        <Main>
-          <TeamProfile teamStore={teamStore} />
-        </Main>
-        <Footer />
-      </>
-    );
-  }
+  return (
+    <>
+      <Header sessionStore={sessionStore} />
+      <Main>
+        <TeamProfile sessionStore={sessionStore} teamId={teamId} />
+      </Main>
+      <Footer />
+    </>
+  );
 }
-
 export default Team;
