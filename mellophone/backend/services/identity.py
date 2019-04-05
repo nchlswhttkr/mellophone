@@ -1,14 +1,10 @@
-"""
-Implements all identity-related logic, usually about the current user and their
-current session (whether they are authenticated)
-"""
-
 from django.contrib.auth import authenticate, login, logout
 
 
 class IdentityService:
     """
-    Processes authentication-related requests for the current session
+   Implements all identity-related logic, usually about the current user and
+   their current session (whether they are authenticated).
     """
 
     @staticmethod
@@ -17,15 +13,13 @@ class IdentityService:
         Attempt to log a user in given their credentials.
         """
         user = authenticate(request, username=email, password=password)
-
         if user is not None:
             login(request, user)
 
     @staticmethod
     def sign_out(request):
         """
-        End the current authenticated session, will succeed even if a session does
-        not exist
+        End the current session, succeeding even if a session does not exist.
         """
         logout(request)
 
@@ -33,7 +27,7 @@ class IdentityService:
     def get_session_user(request):
         """
         Will return a user's identity if they are authenticated in the current
-        session, otherwise returns None
+        session, otherwise None if no user is authenticated.
         """
         if request.user.is_authenticated:
             return request.user

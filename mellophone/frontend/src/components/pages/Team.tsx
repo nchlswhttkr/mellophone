@@ -7,7 +7,11 @@ import Main from "../sections/Main";
 import Footer from "../sections/Footer";
 import TeamService from "../../network/TeamService";
 import TeamProfile from "../sections/TeamProfile";
-import Section from "../elements/Section";
+import MeetingList from "../sections/MeetingList";
+import MeetingService from "../../network/MeetingService";
+import { IMeeting } from "../../types";
+import Button from "../elements/Button";
+import Route from "../../utils/Route";
 
 interface Props {
   teamId: string;
@@ -15,6 +19,9 @@ interface Props {
 
 function Team(props: RouteComponentProps<Props>) {
   const teamId = new Number(props.teamId).valueOf();
+  const [meetings, setMeetings] = React.useState<IMeeting[] | undefined>(
+    undefined
+  );
 
   if (Number.isNaN(teamId)) return null;
 
@@ -24,6 +31,9 @@ function Team(props: RouteComponentProps<Props>) {
       .catch(
         error => process.env.NODE_ENV !== "production" && console.error(error)
       );
+    MeetingService.fetchMeetingsOfTeam(teamId)
+      .then(meetings => setMeetings(meetings))
+      .catch();
   }, []);
 
   return (
@@ -31,6 +41,18 @@ function Team(props: RouteComponentProps<Props>) {
       <Header sessionStore={sessionStore} />
       <Main>
         <TeamProfile sessionStore={sessionStore} teamId={teamId} />
+        <MeetingList meetings={meetings} />
+        <Button
+          onClick={() =>
+            new Route()
+              .path(Route.TEAMS)
+              .path(teamId.toString())
+              .path(Route.MEETINGS)
+              .path(Route.NEW)
+              .buildAndNavigate()
+          }>
+          Create meeting
+        </Button>
       </Main>
       <Footer />
     </>

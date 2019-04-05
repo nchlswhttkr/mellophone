@@ -9,6 +9,7 @@ from django.urls import re_path
 from backend.controllers.index import IndexController
 from backend.controllers.identity import IdentityController
 from backend.controllers.team import TeamController
+from backend.controllers.meeting import MeetingController
 
 urlpatterns = [
     re_path(
@@ -26,4 +27,9 @@ urlpatterns = [
         TeamController.process_request,
         name='backend /teams'
     ),
+    re_path(
+        r"^meetings",
+        MeetingController.process_request,
+        name="backend /meetings"
+    )
 ]

@@ -9,6 +9,7 @@ from django.http.response import JsonResponse
 from backend.services.user import UserService
 from backend.services.identity import IdentityService
 from backend.views.generic import GenericViews
+from backend.serializers import serialize_user
 
 
 class IdentityController:
@@ -55,14 +56,7 @@ class IdentityController:
         if user is None:
             return GenericViews.authentication_required_response(request)
 
-        return JsonResponse({
-            "user": {
-                "id": user.id,
-                "email": user.email,
-                "firstName": user.first_name,
-                "lastName": user.last_name,
-            }
-        }, status=200)
+        return JsonResponse({"user": serialize_user(user)}, status=200)
 
     @staticmethod
     def sign_up(request):
@@ -80,14 +74,7 @@ class IdentityController:
         UserService.create_user(email, password, first_name, last_name)
         IdentityService.sign_in(request, email, password)
         user = IdentityService.get_session_user(request)
-        return JsonResponse({
-            "user": {
-                "id": user.id,
-                "email": user.email,
-                "firstName": user.first_name,
-                "lastName": user.last_name,
-            }
-        }, status=201)
+        return JsonResponse({"user": serialize_user(user)}, status=201)
 
     @staticmethod
     def sign_out(request):
@@ -107,11 +94,4 @@ class IdentityController:
         if user is None:
             return JsonResponse({}, status=200)
 
-        return JsonResponse({
-            "user": {
-                "id": user.id,
-                "email": user.email,
-                "firstName": user.first_name,
-                "lastName": user.last_name,
-            }
-        }, status=200)
+        return JsonResponse({"user": serialize_user(user)}, status=201)

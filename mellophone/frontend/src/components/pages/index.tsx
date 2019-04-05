@@ -6,6 +6,8 @@ import Home from "./Home";
 import SignIn from "./SignIn";
 import Account from "./Account";
 import Team from "./Team";
+import CreateMeeting from "./CreateMeeting";
+import Meeting from "./Meeting";
 import PageNotFound from "./PageNotFound";
 
 function Pages() {
@@ -18,6 +20,20 @@ function Pages() {
         path={new Route()
           .path(Route.TEAMS)
           .path(":teamId")
+          .build()}
+      />
+      <CreateMeeting
+        path={new Route()
+          .path(Route.TEAMS)
+          .path(":teamId")
+          .path(Route.MEETINGS)
+          .path(Route.NEW)
+          .build()}
+      />
+      <Meeting
+        path={new Route()
+          .path(Route.MEETINGS)
+          .path(":meetingId")
           .build()}
       />
       <PageNotFound default />

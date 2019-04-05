@@ -1,14 +1,13 @@
-"""
-Some views are generic because they are used by many controllers, or because a
-request failed to meet a requirement (eg authentication, authorisation).
-"""
-
 from django.http.response import JsonResponse
 
 
 class GenericViews:
     """
     Holds all generic responses for Mellophone as static methods.
+
+    Some views are generic because they are used by many controllers, or
+    because a request failed to meet a requirement (eg authentication,
+    authorisation).
     """
 
     @staticmethod
@@ -29,3 +28,11 @@ class GenericViews:
         can be used.
         """
         return JsonResponse({}, status=404)
+
+    @staticmethod
+    def forbidden_response(request):
+        """
+        If a request is valid but the user is not authorised to view the
+        response, this view can be used.
+        """
+        return JsonResponse({}, status=403)

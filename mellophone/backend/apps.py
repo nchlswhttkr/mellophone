@@ -1,7 +1,3 @@
-"""
-This declare the backend application for Django to use.
-"""
-
 from django.apps import AppConfig
 
 

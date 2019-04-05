@@ -39,5 +39,23 @@ class Meeting(models.Model):
     """
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    date_opened = models.DateField(auto_now_add=True)
-    date_closed = models.DateField(auto_now_add=True)
+    date_held = models.DateField(auto_now_add=True)
+    venue = models.CharField(max_length=100, null=True)
+
+
+class Item(models.Model):
+    """
+    Items are individual points of discussion on a meeting. They can include
+    motions/votes and outcomes/actions.
+    """
+    topic = models.CharField(max_length=100)
+    description = models.TextField()
+
+
+class MeetingAttendee(models.Model):
+    """
+    This records the status of a member and whether or not they attended a
+    meeting.
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)

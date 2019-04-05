@@ -1,7 +1,3 @@
-"""
-A controller for routes that do not belong to a more specific controller.
-"""
-
 import re
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -20,7 +16,7 @@ class IndexController:
     @staticmethod
     def process_request(request):
         """
-        Passes of the request to the relevant route handler
+        Passes of the request to the relevant route handler.
         """
         path, method = request.path, request.method
 
@@ -33,7 +29,7 @@ class IndexController:
     @ensure_csrf_cookie
     def hello_world(request):
         """
-        Effectively a "Hello world!" for the backend, but can also be used to get
-        the 'csrftoken' cookie if the frontend needs it.
+        Effectively a "Hello world!" for the backend, but can also be used to
+        obtain the 'csrftoken' cookie if the frontend needs it.
         """
         return JsonResponse({"message": "Hello Mellophone!"}, status=200)

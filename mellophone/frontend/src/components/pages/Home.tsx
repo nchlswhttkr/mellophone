@@ -25,6 +25,7 @@ export default function Home(_: RouteComponentProps) {
   const createTeam = async (name: string, website: string) => {
     const team = await TeamService.createTeam(name, website);
     sessionStore.upsertTeams([team]);
+    setShowForm(false);
   };
 
   return (
