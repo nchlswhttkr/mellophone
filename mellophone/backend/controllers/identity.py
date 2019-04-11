@@ -1,13 +1,7 @@
-"""
-Handles identity-related routes
-"""
-
 import re
 import json
 import base64
 from django.http.response import JsonResponse
-from backend.services.user import UserService
-from backend.services.identity import IdentityService
 from backend.views.generic import GenericViews
 from backend.serializers import serialize_user
 
@@ -15,32 +9,14 @@ from backend.serializers import serialize_user
 class IdentityController:
     """
     All requests matching /api/identity/... should be routed through here, and
-    connect a request with its appropriate action (usually IdentityService)
+    connect a request with its appropriate action, usually the IdentityService.
     """
 
-    @staticmethod
-    def process_request(request):
-        """
-        Passes of the request to the relevant route handler
-        """
-        path, method = request.path, request.method
+    def __init__(self, identity_service, user_service):
+        self._identity_service = identity_service
+        self._user_service = user_service
 
-        if re.fullmatch(r"/api/identity/sign-in", path) and method == "POST":
-            return IdentityController.sign_in(request)
-
-        if re.fullmatch(r"/api/identity/sign-up", path) and method == "POST":
-            return IdentityController.sign_up(request)
-
-        if re.fullmatch(r"/api/identity/sign-out", path) and method == "POST":
-            return IdentityController.sign_out(request)
-
-        if re.fullmatch(r"/api/identity/whoami", path) and method == "GET":
-            return IdentityController.whoami(request)
-
-        return GenericViews.not_found_response(request)
-
-    @staticmethod
-    def sign_in(request):
+    def sign_in(self, request):
         """
         Attempt to initiate an authenticated session
         """
@@ -49,17 +25,16 @@ class IdentityController:
         email, password = base64.b64decode(
             credentials.encode()).decode().split(':')
 
-        IdentityService.sign_in(request, email=email, password=password)
+        self._identity_service.sign_in(request, email=email, password=password)
 
         # It is not certain that authenticating will succeed
-        user = IdentityService.get_session_user(request)
+        user = self._identity_service.get_session_user(request)
         if user is None:
             return GenericViews.authentication_required_response(request)
 
         return JsonResponse({"user": serialize_user(user)}, status=200)
 
-    @staticmethod
-    def sign_up(request):
+    def sign_up(self, request):
         """
         Create a new user and started an authenticated session with them
         """
@@ -71,26 +46,25 @@ class IdentityController:
         first_name = body["firstName"]
         last_name = body["lastName"]
 
-        UserService.create_user(email, password, first_name, last_name)
-        IdentityService.sign_in(request, email, password)
-        user = IdentityService.get_session_user(request)
+        self._user_service.create_user(email, password, first_name, last_name)
+        self._identity_service.sign_in(request, email, password)
+        user = self._identity_service.get_session_user(request)
         return JsonResponse({"user": serialize_user(user)}, status=201)
 
-    @staticmethod
-    def sign_out(request):
+    def sign_out(self, request):
         """
         End the current session, if one exists
         """
-        IdentityService.sign_out(request)  # succeeds even if no session exists
+        self._identity_service.sign_out(
+            request)  # succeeds even if no session exists
         return JsonResponse({}, status=200)
 
-    @staticmethod
-    def whoami(request):
+    def whoami(self, request):
         """
         Return information about the session user, or an empty object if there
         is no user
         """
-        user = IdentityService.get_session_user(request)
+        user = self._identity_service.get_session_user(request)
         if user is None:
             return JsonResponse({}, status=200)
 

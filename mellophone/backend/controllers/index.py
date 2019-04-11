@@ -1,7 +1,7 @@
-import re
+# pylint: disable=too-few-public-methods,no-self-use
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
-from backend.views.generic import GenericViews
+from django.utils.decorators import method_decorator
 
 
 class IndexController:
@@ -13,21 +13,9 @@ class IndexController:
 
     For now though, it only holds a single view.
     """
-    @staticmethod
-    def process_request(request):
-        """
-        Passes of the request to the relevant route handler.
-        """
-        path, method = request.path, request.method
 
-        if re.fullmatch(r"/api/", path) and method == "GET":
-            return IndexController.hello_world(request)
-
-        return GenericViews.not_found_response(request)
-
-    @staticmethod
-    @ensure_csrf_cookie
-    def hello_world(request):
+    @method_decorator(ensure_csrf_cookie)
+    def hello_world(self, request):
         """
         Effectively a "Hello world!" for the backend, but can also be used to
         obtain the 'csrftoken' cookie if the frontend needs it.
