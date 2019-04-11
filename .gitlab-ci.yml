@@ -1,10 +1,18 @@
 stages:
-  - lint
-  - test
   - build
+  - test
+  - lint
+  - deploy
 
-# For now pipelines on run on the frontend code, these will need to be
-# reassigned on a per-job basis when the backend is added to pipelines.
+variables:
+  PIPENV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pipenv"
+
+cache:
+  paths:
+    # mellophone/frontend/build is not cached, it should be built with each job
+    - .cache
+    - mellophone/frontend/node_modules
+    - .yarn
 
 "FE Linting":
   image: node:10
@@ -35,5 +43,5 @@ stages:
   stage: lint
   script:
     - pip install pipenv
-    - pipenv install --dev
+    - pipenv sync --dev
     - pipenv run lint
