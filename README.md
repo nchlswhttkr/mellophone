@@ -82,3 +82,4 @@ You can find a summary of commands below
 | pipenv run db-migrate | Apply new migrates to the database (must be running at this time)                     |
 | pipenv run server     | Run the backend (a Django server)                                                     |
 | pipenv run lint       | Lint using pylint (just defaults for now)                                             |
+| pipenv run test-unit  | Run the backend testing suite                                                         |
