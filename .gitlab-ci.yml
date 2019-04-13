@@ -49,7 +49,12 @@ cache:
 "BE Testing":
   image: python:3
   stage: test
+  services:
+    - postgres:10
   script:
     - pip install pipenv
     - pipenv sync
+    - pipenv run db-init
+    - pipenv run db-start
     - pipenv run test-unit
+    - pipenv run db-stop
