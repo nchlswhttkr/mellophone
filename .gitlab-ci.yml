@@ -6,7 +6,7 @@ stages:
 
 variables:
   PIPENV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pipenv"
-  PIPENV_DONT_LOAD_ENV: true # provided by gitlab ci
+  PIPENV_DONT_LOAD_ENV: "true" # provided by gitlab ci
   POSTGRES_DB: "postgres"
   POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: ""
