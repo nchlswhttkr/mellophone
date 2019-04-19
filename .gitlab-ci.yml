@@ -44,7 +44,7 @@ cache:
     - yarn build
 
 "BE Linting":
-  image: python:3.6-alpine
+  image: nchlswhttkr/mellophone
   stage: lint
   script:
     - pip3 install pipenv
