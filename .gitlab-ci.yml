@@ -20,7 +20,7 @@ cache:
     - .yarn
 
 "FE Linting":
-  image: node:10
+  image: node:10-alpine
   stage: lint
   script:
     - cd mellophone/frontend
@@ -28,7 +28,7 @@ cache:
     - yarn lint
 
 "FE Testing":
-  image: node:10
+  image: node:10-alpine
   stage: test
   script:
     - cd mellophone/frontend
@@ -36,7 +36,7 @@ cache:
     - yarn test
 
 "FE Build":
-  image: node:10
+  image: node:10-alpine
   stage: build
   script:
     - cd mellophone/frontend
@@ -44,9 +44,10 @@ cache:
     - yarn build
 
 "BE Linting":
-  image: python:3
+  image: python:3.6-alpine
   stage: lint
   script:
+    - pip3 install pipenv
     - pipenv sync --dev
     - pipenv run lint
 
