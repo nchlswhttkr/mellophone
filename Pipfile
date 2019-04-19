@@ -14,7 +14,7 @@ psycopg2 = "~=2.7.5"
 django-cors-headers = "~=2.5.2"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
 
 [scripts]
 db-init = "initdb -E UTF_8 -D data -U postgres"
