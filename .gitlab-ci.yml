@@ -6,12 +6,17 @@ stages:
 
 variables:
   PIPENV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pipenv"
+  PIPENV_DONT_LOAD_ENV: true # provided by gitlab ci
+  POSTGRES_DB: "postgres"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: ""
+  POSTGRES_HOST: "postgres"
 
 cache:
   paths:
-    # mellophone/frontend/build is not cached, it should be built with each job that needs it
     - .cache
     - mellophone/frontend/node_modules
+    - mellophone/frontend/build
     - .yarn
 
 "FE Linting":
@@ -42,19 +47,15 @@ cache:
   image: python:3
   stage: lint
   script:
-    - pip install pipenv
     - pipenv sync --dev
     - pipenv run lint
 
 "BE Testing":
-  image: python:3
+  image: nchlswhttkr/mellophone
   stage: test
   services:
-    - postgres:10
+    - postgres:11
   script:
-    - pip install pipenv
     - pipenv sync
-    - pipenv run db-init
-    - pipenv run db-start
+    - pipenv run db-migrate
     - pipenv run test-unit
-    - pipenv run db-stop
