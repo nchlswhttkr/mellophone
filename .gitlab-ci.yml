@@ -17,7 +17,6 @@ cache:
     - .cache
     - mellophone/frontend/node_modules
     - mellophone/frontend/build
-    - .yarn
 
 "FE Linting":
   image: node:10-alpine
@@ -58,5 +57,13 @@ cache:
     - postgres:11
   script:
     - pipenv sync
-    - pipenv run db-migrate
     - pipenv run test-unit
+
+"E2E Testing":
+  image: nchlswhttkr/mellophone
+  stage: test
+  services:
+    - postgres:11
+  script:
+    - pipenv sync
+    - pipenv run test-e2e

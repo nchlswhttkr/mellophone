@@ -14,6 +14,8 @@ def main():
     link.click()
     assert browser.current_url == 'http://localhost:8000/sign-in'
 
+    browser.quit()
+
 
 if __name__ == "__main__":
     main()

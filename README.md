@@ -26,7 +26,7 @@ yarn
 yarn start
 ```
 
-Here are some common commands you might find yourself running.
+Here are some common commands you might find yourself running (from the frontend root - `/mellophone/frontend`).
 
 | Command           | Action                                                                             |
 | ----------------- | ---------------------------------------------------------------------------------- |
@@ -39,7 +39,7 @@ Here are some common commands you might find yourself running.
 
 ### Backend
 
-To set up the backend you will need [pipenv](https://pipenv.readthedocs.io/en/latest/) and [Postgres (10)](https://www.postgresql.org/download/).
+To set up the backend you will need [pipenv (w/ Python 3.6.X)](https://pipenv.readthedocs.io/en/latest/) and [Postgres (11)](https://www.postgresql.org/download/).
 
 ```
 pipenv install --dev
@@ -54,11 +54,11 @@ pipenv run db-init
 pipenv run db-start
 ```
 
-If you receive an error about the port already being in use, this is likely because the default Postgres server is running - try stopping it with `pg_ctl -D /Library/PostgreSQL/10/data stop` (or wherever Postgres is installed on your computer).
+If you receive an error about the port already being in use, this is likely because the default Postgres server is running - try stopping it with `pg_ctl -D /path/to/PostgreSQL/11/data stop` (substitute in the path to your Postgres installation).
 
 Now that the database is up and running, we can set up Django and run migrations against the database. After this has completed we can run the backend server.
 
-If you want to interact with the backend through the frontend, make sure you have [created a production build of the frontend](#frontend).
+If you want to interact with the backend through the frontend, make sure you have [created a production build of the frontend](#frontend) first.
 
 ```
 pipenv run db-migrate

@@ -44,7 +44,8 @@ class TeamController:
         name = body["name"]
         website = body["website"]
 
-        team = self._team_service.create_team_with_owner(owner, name, website)
+        team = self._team_service.create_team_with_user_as_owner(
+            owner, name, website)
         return JsonResponse({"team": serialize_team(team)}, status=201)
 
     def get_team_by_id(self, request):

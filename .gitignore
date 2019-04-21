@@ -2,5 +2,4 @@
 .idea
 /data
 .cache
-logfile
-geckodriver.log
+*.log
