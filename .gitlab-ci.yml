@@ -65,5 +65,5 @@ cache:
   services:
     - postgres:11
   script:
-    - pipenv sync
+    - pipenv sync --dev
     - pipenv run test-e2e
