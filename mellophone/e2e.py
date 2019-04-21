@@ -1,8 +1,10 @@
+import os
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
 
 def main():
+    print('\n'.join(os.listdir('/usr/local/bin')))
     firefox_options = Options()
     firefox_options.add_argument('--headless')
     browser = webdriver.Firefox(options=firefox_options)
