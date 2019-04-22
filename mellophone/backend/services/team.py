@@ -16,7 +16,7 @@ class TeamService:
 
     @staticmethod
     @transaction.atomic
-    def create_team_with_owner(owner, name, website):
+    def create_team_with_user_as_owner(user, name, website):
         """
         Creates a new team, assigning the given user as an member (eventually
         they will be owner when roles are added in future).
@@ -24,7 +24,7 @@ class TeamService:
         with transaction.atomic():
             team = Team(name=name, website=website)
             team.save()
-            membership = Membership(team=team, user=owner)
+            membership = Membership(team=team, user=user)
             membership.save()
         return team
 
@@ -36,7 +36,7 @@ class TeamService:
         return Team.objects.get(pk=team_id)
 
     @staticmethod
-    def is_user_in_team(user, team_id):
+    def is_user_in_team_with_id(user, team_id):
         """
         Confirm that the a user is a member of a team.
         """

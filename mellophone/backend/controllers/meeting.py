@@ -31,7 +31,7 @@ class MeetingController:
         meeting_id = int(re.match(r"/api/meetings/([0-9]*)", request.path)[1])
         meeting = self._meeting_service.get_meeting_with_id(meeting_id)
 
-        if self._team_service.is_user_in_team(user, meeting.team.id):
+        if self._team_service.is_user_in_team_with_id(user, meeting.team.id):
             return JsonResponse(
                 {"meeting": serialize_meeting(meeting)},
                 status=200

@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'mellophone.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'HOST': 'localhost',
-        'USER': 'postgres',
-        'PASSWORD': ''
+        'NAME': os.environ['POSTGRES_DB'],
+        'HOST': os.environ['POSTGRES_HOST'],
+        'USER': os.environ['POSTGRES_USER'],
+        'PASSWORD': os.environ['POSTGRES_PASSWORD']
     }
 }
 

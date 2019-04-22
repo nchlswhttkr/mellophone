@@ -16,9 +16,12 @@ class GenericViews:
         For responses that required the user be in an authenticated session.
 
         Refer to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401
+
+        Previously, we would also include the WWW-Authenticate header, but this
+        forced the browser to display a login prompt. It's against standards,
+        but we removed it to prevent that prompt showing up.
         """
         response = JsonResponse({}, status=401)
-        response['WWW-Authenticate'] = 'Basic'
         return response
 
     @staticmethod

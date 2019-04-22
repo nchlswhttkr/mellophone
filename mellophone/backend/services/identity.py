@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 
 class IdentityService:
     """
-   Implements all identity-related logic, usually about the current user and
-   their current session (whether they are authenticated).
+    Implements all identity-related logic, usually about the current user and
+    their current session (whether they are authenticated).
     """
 
     @staticmethod
