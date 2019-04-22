@@ -26,7 +26,7 @@ yarn
 yarn start
 ```
 
-Here are some common commands you might find yourself running (from the frontend root - `/mellophone/frontend`).
+Below are some common commands you might run. Remember you will need to be in the frontend root (`/mellophone/frontend`).
 
 | Command           | Action                                                                             |
 | ----------------- | ---------------------------------------------------------------------------------- |
@@ -71,7 +71,7 @@ After you have finished making changes, you can stop the database server.
 pipenv run db-stop
 ```
 
-You can find a summary of commands below
+Below are some common commands you might run.
 
 | Command               | Action                                                                                |
 | --------------------- | ------------------------------------------------------------------------------------- |
@@ -80,10 +80,10 @@ You can find a summary of commands below
 | pipevn run db-init    | Create the Postgres database                                                          |
 | pipenv run db-start   | Start the Postgres server                                                             |
 | pipenv run db-stop    | Stop the Postgres server                                                              |
-| pipenv run db-migrate | Apply new migrates to the database (must be running at this time)                     |
+| pipenv run db-migrate | Apply new migrations to the database (must be running at this time)                   |
 | pipenv run server     | Run the backend (a Django server)                                                     |
 | pipenv run lint       | Lint using pylint (just defaults for now)                                             |
 | pipenv run test-unit  | Run tests against the backend (the database must be running)                          |
 | pipenv run test-e2e   | Run an end-to-end test (requires that you've [built the frontend](#frontend)) \*      |
 
-\* _You'll need Geckodriver and Firefox installed, or you can use the `Dockerfile` of this project as a starting point._
+\* _You'll need Geckodriver and Firefox installed, you can try adapting this from an [old version of this project's Dockerfile](https://github.com/nchlswhttkr/mellophone/blob/55f9d5eb4cb1514ebf6b9a6193e687959b3dcfa7/Dockerfile#L23) if you are unsure about what to do._

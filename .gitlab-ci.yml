@@ -58,16 +58,3 @@ cache:
   script:
     - pipenv sync
     - pipenv run test-unit
-
-"E2E Testing":
-  image: nchlswhttkr/mellophone
-  stage: test
-  services:
-    - postgres:11
-  script:
-    - whoami
-    - ls /usr/local/bin
-    - pipenv sync --dev
-    - pipenv run server &
-    - pipenv run test-e2e
-    - kill -INT $!

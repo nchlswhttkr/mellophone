@@ -1,14 +1,11 @@
-import os
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver import Firefox, FirefoxOptions
 
 
 def main():
-    print('\n'.join(os.listdir('/usr/local/bin')))
-    firefox_options = Options()
-    firefox_options.add_argument('--headless')
-    browser = webdriver.Firefox(options=firefox_options)
-    browser.implicitly_wait(2)
+    options = FirefoxOptions()
+    options.add_argument('-headless')
+    browser = Firefox(options=options)
+    browser.implicitly_wait(5)  # give pages time to render after loading
 
     browser.get('http://localhost:8000')
     link = browser.find_element_by_xpath(
