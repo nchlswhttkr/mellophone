@@ -37,6 +37,9 @@ cache:
 "FE Build":
   image: node:10-alpine
   stage: build
+  artifacts:
+    paths:
+      - mellophone/frontend/build
   script:
     - cd mellophone/frontend
     - yarn
