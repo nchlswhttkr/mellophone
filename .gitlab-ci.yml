@@ -83,7 +83,7 @@ cache:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan 157.230.241.239 > ~/.ssh/known_hosts
-    - echo "$PRODUCTION_PRIVATE_SSH_KEY" | wc -l
     - echo "$PRODUCTION_PRIVATE_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - pipenv sync
     - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
     - rsync -a --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/production -e ssh
