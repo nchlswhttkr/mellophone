@@ -73,6 +73,8 @@ cache:
 "Deploy":
   image: nchlswhttkr/mellophone
   stage: deploy
+  environment:
+    name: production
   only:
     - master
     - deployment # TEMPORARY
