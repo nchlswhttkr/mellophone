@@ -6,11 +6,15 @@ stages:
 
 variables:
   PIPENV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pipenv"
-  PIPENV_DONT_LOAD_ENV: "true" # provided by gitlab ci
+
+  # ignore the pipenv environment variables, rely on gitlab ci
+  PIPENV_DONT_LOAD_ENV: "true"
   POSTGRES_DB: "postgres"
   POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: ""
   POSTGRES_HOST: "postgres"
+  DJANGO_SECRET_KEY: "DJANGO_SECRET_KEY"
+  DJANGO_SETTINGS_MODULE: "mellophone.settings_local"
 
 cache:
   paths:
@@ -61,3 +65,18 @@ cache:
   script:
     - pipenv sync
     - pipenv run test-unit
+
+"Deploy":
+  image: nchlswhttkr/mellophone
+  stage: deploy
+  only:
+    - master
+    - deployment # TEMPORARY
+  script:
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan 157.230.241.239 > ~/.ssh/known_hosts
+    - echo "$PRODUCTION_PRIVATE_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
+    - rsync -a --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/production -e ssh

@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=conductor
+Group=www-data
+WorkingDirectory=/home/conductor/production/mellophone
+ExecStart=/home/conductor/.local/bin/pipenv run gunicorn \
+    --access-logfile - \
+    --workers 3 \
+    --bind unix:/run/gunicorn.sock \
+    mellophone.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

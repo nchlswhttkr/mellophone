@@ -20,11 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # SECURITY WARNING: keep the secret key used in production secret!
-if DEBUG:
-    SECRET_KEY = 'DJANGO_SECRET_KEY'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 ALLOWED_HOSTS = []
 
@@ -33,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'backend.apps.BackendConfig',
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -112,6 +111,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
@@ -122,8 +123,6 @@ STATICFILES_DIRS = [
 # Config for django-cors-headers
 # https://github.com/ottoyiu/django-cors-headers/
 
-CORS_ORIGIN_REGEX_WHITELIST = (
-    r"localhost:[0-9]{4,5}"
-)
+CORS_ORIGIN_REGEX_WHITELIST = ()
 
 CORS_ALLOW_CREDENTIALS = True

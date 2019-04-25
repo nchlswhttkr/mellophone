@@ -1,6 +1,6 @@
 # Mellophone
 
-[![](https://gitlab.com/nchlswhttkr/mellophone/badges/master/build.svg)](https://gitlab.com/nchlswhttkr/mellophone/pipelines)
+[![](https://gitlab.com/nchlswhttkr/mellophone/badges/master/build.svg?style=flat-square)](https://gitlab.com/nchlswhttkr/mellophone/pipelines)
 
 :trumpet: :trumpet: :trumpet:
 
@@ -26,7 +26,7 @@ yarn
 yarn start
 ```
 
-Below are some common commands you might run. Remember you will need to be in the frontend root (`/mellophone/frontend`).
+Below are some common commands you might run. Remember you will need to be in the frontend root (`/mellophone/frontend`). You might wish to consult the [yarn docs](https://yarnpkg.com/lang/en/docs/cli/) or the [package.json itself](/mellophone/frontend/package.json)
 
 | Command           | Action                                                                             |
 | ----------------- | ---------------------------------------------------------------------------------- |
@@ -47,7 +47,7 @@ pipenv install --dev
 
 Installing Postgres will usually create a 'postgres' user (recommended practice) and a server, but for the sake of understanding and visibility I currently run everything from within the project directory. You should also make sure the Postgres binaries are installed in your PATH (`initdb`, `pg_ctl` are two you'll need).
 
-To create the database and start running its server, you can use the following commands. This will use the `/data` directory, creating a default installation (default name, user, password) that we will use in development.
+To create the database and start running its server, you can use the following commands. This will create a `/data` directory in the project, with a password defined in the `.env` file.
 
 ```
 pipenv run db-init
@@ -58,7 +58,7 @@ If you receive an error about the port already being in use, this is likely beca
 
 Now that the database is up and running, we can set up Django and run migrations against the database. After this has completed we can run the backend server.
 
-If you want to interact with the backend through the frontend, make sure you have [created a production build of the frontend](#frontend) first.
+If you want to interact with the backend through the frontend, make sure you have [created a production build of the frontend](#frontend) first, and used Django to collect all the files with `pipenv run mellophone/manage.py collectstatic`.
 
 ```
 pipenv run db-migrate
@@ -71,7 +71,7 @@ After you have finished making changes, you can stop the database server.
 pipenv run db-stop
 ```
 
-Below are some common commands you might run.
+Below are some common commands you might run. You might also wish to consult the [pipenv docs](https://pipenv.readthedocs.io/en/latest#pipenv-usage) and the [Pipefile itself](/Pipfile).
 
 | Command               | Action                                                                                |
 | --------------------- | ------------------------------------------------------------------------------------- |
