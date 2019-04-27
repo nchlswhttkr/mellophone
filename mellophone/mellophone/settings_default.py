@@ -25,7 +25,7 @@ DEBUG = False
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mellophone.pink']
 
 
 # Application definition
@@ -38,11 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -71,6 +69,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'mellophone.wsgi.application'
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+SECURE_BROWSER_XSS_FILTER = True
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
+
+X_FRAME_OPTIONS = 'DENY'
+
+# nginx config makes this redundant, no harm in leaving it in though
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 604800  # 1 week
 
 
 # Database
@@ -118,11 +130,3 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend/build')
 ]
-
-
-# Config for django-cors-headers
-# https://github.com/ottoyiu/django-cors-headers/
-
-CORS_ORIGIN_REGEX_WHITELIST = ()
-
-CORS_ALLOW_CREDENTIALS = True

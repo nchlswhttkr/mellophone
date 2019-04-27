@@ -52,13 +52,13 @@ cache:
   image: nchlswhttkr/mellophone
   stage: build
   script:
-    - pipenv sync --dev
+    - pipenv sync --dev --keep-outdated
 
 "BE Linting":
   image: nchlswhttkr/mellophone
   stage: test
   script:
-    - pipenv sync --dev
+    - pipenv sync --dev --keep-outdated
     - pipenv run lint
 
 "BE Testing":
@@ -67,7 +67,7 @@ cache:
   services:
     - postgres:11
   script:
-    - pipenv sync
+    - pipenv sync --keep-outdated
     - pipenv run test-unit
 
 "Deploy":
@@ -77,7 +77,6 @@ cache:
     name: production
   only:
     - master
-    - deployment # TEMPORARY
   script:
     - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
