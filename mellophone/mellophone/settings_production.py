@@ -15,3 +15,7 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 X_FRAME_OPTIONS = 'DENY'
+
+# nginx config makes this redundant, no harm in leaving it in though
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 604800  # 1 week
