@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "83adb3f669fbb4ed1e2c4a272c17656ac2b0d44ecc739f4789f276938cf8b8c4"
+            "sha256": "4ee69ed3e5d217d0905372bdf6583a47c37ccc0f1019ceeb9a59fa6b059c87f1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -24,13 +24,13 @@
             "index": "pypi",
             "version": "==2.1.8"
         },
-        "django-cors-headers": {
+        "gunicorn": {
             "hashes": [
-                "sha256:1ccedec2973087be9d73f96d58c4f6660c823efc0385581e13efb77f060d0e02",
-                "sha256:fb44f6b9f10de847919305c3f0d38fcfbadfe0dd5cf1c866f37df66ad0dda1bb"
+                "sha256:aa8e0b40b4157b36a5df5e599f45c9c76d6af43845ba3b3b0efe2c70473c2471",
+                "sha256:fa2662097c66f920f53f70621c6c58ca4a3c4d3434205e608e121b5b3b71f4f3"
             ],
             "index": "pypi",
-            "version": "==2.5.2"
+            "version": "==19.9.0"
         },
         "psycopg2": {
             "hashes": [
@@ -156,11 +156,11 @@
         },
         "pylint-django": {
             "hashes": [
-                "sha256:6949f790249d10f95f34e7bc1673ad4570c30bc5dcbd843eab99493b2e04079b",
-                "sha256:befb69b47843ffd8a0af7b0f7555d819f5b2dab425b4f07ed229cc2dbf01ad94"
+                "sha256:c0562562bffbdc97a26d007d818231348633282bec66ba445540a036a0ae76f5",
+                "sha256:e4abeef83f6f6577951ca0b2d12f73fc0c53dd33272fee4982c8cb42e4ae64ad"
             ],
             "index": "pypi",
-            "version": "==2.0.8"
+            "version": "==2.0.9"
         },
         "pylint-plugin-utils": {
             "hashes": [
@@ -211,10 +211,10 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:4c291ca23bbb55c76518905869ef34bdd5f0e46af7afe6861e8375643ffee1a0",
-                "sha256:9a247273df709c4fedb38c711e44292304f73f39ab01beda9f6b9fc375669ac3"
+                "sha256:904bd981d6371bb95a200c0ec9dba5ba7cc980f2d6b125bd793fefe3293be388",
+                "sha256:a9645efd62b9fc1c7cad8ed93e162aad4c6bfd90e143966ddd4099b78cd244be"
             ],
-            "version": "==1.24.2"
+            "version": "==1.25.1"
         },
         "wrapt": {
             "hashes": [

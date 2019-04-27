@@ -1,5 +1,7 @@
 .vscode
 .idea
 /data
-.cache
-*.log
+/.cache/
+/*.log
+/.ssh
+/mellophone/static/

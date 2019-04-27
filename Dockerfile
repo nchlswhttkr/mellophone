@@ -7,9 +7,11 @@ RUN apk add --no-cache \
     gcc \
     git \
     musl-dev \
+    openssh \
     postgresql-dev \
     python3 \
     python3-dev \
+    rsync \
     wget
 
 RUN pip3 install pipenv

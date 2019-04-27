@@ -1,16 +1,19 @@
 stages:
   - build
   - test
-  - lint
   - deploy
 
 variables:
   PIPENV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pipenv"
-  PIPENV_DONT_LOAD_ENV: "true" # provided by gitlab ci
+
+  # ignore the pipenv environment variables, rely on gitlab ci
+  PIPENV_DONT_LOAD_ENV: "true"
   POSTGRES_DB: "postgres"
   POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: ""
   POSTGRES_HOST: "postgres"
+  DJANGO_SECRET_KEY: "DJANGO_SECRET_KEY"
+  DJANGO_SETTINGS_MODULE: "mellophone.settings_local"
 
 cache:
   paths:
@@ -20,7 +23,7 @@ cache:
 
 "FE Linting":
   image: node:10-alpine
-  stage: lint
+  stage: test
   script:
     - cd mellophone/frontend
     - yarn
@@ -34,20 +37,28 @@ cache:
     - yarn
     - yarn test
 
-"FE Build":
+"FE Install/Build":
   image: node:10-alpine
   stage: build
+  artifacts:
+    paths:
+      - mellophone/frontend/build
   script:
     - cd mellophone/frontend
     - yarn
     - yarn build
 
+"BE Install":
+  image: nchlswhttkr/mellophone
+  stage: build
+  script:
+    - pipenv sync --dev --keep-outdated
+
 "BE Linting":
   image: nchlswhttkr/mellophone
-  stage: lint
+  stage: test
   script:
-    - pip3 install pipenv
-    - pipenv sync --dev
+    - pipenv sync --dev --keep-outdated
     - pipenv run lint
 
 "BE Testing":
@@ -56,5 +67,22 @@ cache:
   services:
     - postgres:11
   script:
-    - pipenv sync
+    - pipenv sync --keep-outdated
     - pipenv run test-unit
+
+"Deploy":
+  image: nchlswhttkr/mellophone
+  stage: deploy
+  environment:
+    name: production
+  only:
+    - master
+  script:
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan 157.230.241.239 > ~/.ssh/known_hosts
+    - echo "$PRODUCTION_PRIVATE_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - pipenv sync
+    - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
+    - rsync -a --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/production -e ssh

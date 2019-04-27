@@ -20,30 +20,27 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # SECURITY WARNING: keep the secret key used in production secret!
-if DEBUG:
-    SECRET_KEY = 'DJANGO_SECRET_KEY'
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mellophone.pink']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'backend.apps.BackendConfig',
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -72,6 +69,20 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'mellophone.wsgi.application'
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+SECURE_BROWSER_XSS_FILTER = True
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
+
+X_FRAME_OPTIONS = 'DENY'
+
+# nginx config makes this redundant, no harm in leaving it in though
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 604800  # 1 week
 
 
 # Database
@@ -112,18 +123,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend/build')
 ]
-
-
-# Config for django-cors-headers
-# https://github.com/ottoyiu/django-cors-headers/
-
-CORS_ORIGIN_REGEX_WHITELIST = (
-    r"localhost:[0-9]{4,5}"
-)
-
-CORS_ALLOW_CREDENTIALS = True
