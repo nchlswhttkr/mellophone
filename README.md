@@ -54,7 +54,7 @@ pipenv run db-init
 pipenv run db-start
 ```
 
-If you receive an error about the port already being in use, this is likely because the default Postgres server is running - try stopping it with `pg_ctl -D /path/to/PostgreSQL/11/data stop` (substitute in the path to your Postgres installation).
+If you receive an error about the port already being in use, this is likely because the default Postgres server is running - try stopping it with `pg_ctl -D /path/to/PostgreSQL/11/data stop` (substitute in the path to your Postgres installation). If you are able to connect to the server using `psql`, you can find the directory with the query `SHOW data_directory;`.
 
 Now that the database is up and running, we can set up Django and run migrations against the database. After this has completed we can run the backend server.
 

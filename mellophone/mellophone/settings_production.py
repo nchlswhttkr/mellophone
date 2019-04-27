@@ -4,7 +4,7 @@ from mellophone.settings_default import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['157.230.241.239']
+ALLOWED_HOSTS = ['mellophone.pink']
 
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
