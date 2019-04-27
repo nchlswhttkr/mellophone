@@ -7,6 +7,10 @@ server {
     ssl_prefer_server_ciphers on;
     ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
 
+    location /static/ {
+        root /home/conductor/production/mellophone;
+    }
+
     location / {
         include proxy_params;
         proxy_pass http://unix:/run/gunicorn.sock;
