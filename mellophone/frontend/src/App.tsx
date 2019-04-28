@@ -1,6 +1,6 @@
 import React from "react";
 
-import Pages from "./components/pages";
+import Pages from "./pages";
 import IdentityService from "./network/IdentityService";
 import BaseRequest from "./utils/BaseRequest";
 import { sessionStore } from "./stores";

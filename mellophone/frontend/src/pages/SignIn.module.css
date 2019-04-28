@@ -1,0 +1,17 @@
+.formContainer {
+  margin: 0 auto;
+  padding: 1rem;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.title {
+  margin-top: 0;
+}
+
+.divider {
+  margin: 1.5rem 0;
+  width: 100%;
+}

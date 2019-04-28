@@ -6,6 +6,9 @@ export default class MeetingService {
     meeting: IMeetingToBeCreated,
     teamId: number
   ): Promise<IMeeting> {
+    if (!meeting.name) {
+      throw new Error("Meetings must have a name");
+    }
     const response = await BaseRequest.post<{ meeting: IMeeting }>(
       `/teams/${teamId}/meetings`,
       meeting

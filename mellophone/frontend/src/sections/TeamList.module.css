@@ -1,0 +1,31 @@
+.container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.team {
+  border-bottom: 1px solid #cccccc;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team:last-of-type {
+  border-bottom: 0;
+}
+
+.title {
+  flex-grow: 1;
+  margin-bottom: 16px;
+}
+
+.button {
+  white-space: nowrap;
+}
+
+.link {
+  color: #cd2d79;
+}

@@ -1,0 +1,18 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.form > p {
+  margin: 0;
+  padding: 8px 0;
+}
+
+.error {
+  color: #ff0000;
+}
+
+.button {
+  margin-top: 8px;
+}

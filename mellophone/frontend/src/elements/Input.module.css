@@ -1,0 +1,12 @@
+.label {
+  padding: 8px 0;
+}
+
+.input {
+  display: block;
+  margin: 8px 0 0;
+  box-sizing: border-box;
+  padding: 8px;
+  width: 100%;
+  border: 1px solid #000000;
+}
