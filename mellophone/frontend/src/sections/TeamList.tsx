@@ -27,23 +27,19 @@ class TeamList extends React.Component<Props> {
         {Array.from(teams.values()).map(team => (
           <div key={team.id} className={classes.team}>
             <h3 className={classes.title}>
-              <Link
-                to={new Route()
-                  .path(Route.TEAMS)
-                  .path(team.id.toString())
-                  .build()}>
+              <Link to={new Route(Route.TEAMS, team.id).build()}>
                 {team.name}
               </Link>
             </h3>
             <Button
               className={classes.button}
               onClick={() =>
-                new Route()
-                  .path(Route.TEAMS)
-                  .path(team.id.toString())
-                  .path(Route.MEETINGS)
-                  .path(Route.NEW)
-                  .buildAndNavigate()
+                new Route(
+                  Route.TEAMS,
+                  team.id,
+                  Route.MEETINGS,
+                  Route.NEW
+                ).buildAndNavigate()
               }>
               Create meeting
             </Button>
@@ -54,10 +50,7 @@ class TeamList extends React.Component<Props> {
           <p>
             You are not a member of any teams, why not{" "}
             <Link
-              to={new Route()
-                .path(Route.TEAMS)
-                .path(Route.NEW)
-                .build()}
+              to={new Route(Route.TEAMS, Route.NEW).build()}
               className={classes.link}>
               create a new team
             </Link>

@@ -13,10 +13,7 @@ export default function CreateTeam(_: RouteComponentProps) {
   const createTeam = async (name: string, website: string) => {
     const team = await TeamService.createTeam(name, website);
     sessionStore.upsertTeams([team]);
-    new Route()
-      .path(Route.TEAMS)
-      .path(team.id.toString())
-      .buildAndNavigate();
+    new Route(Route.TEAMS, team.id).navigate();
   };
 
   return (

@@ -43,12 +43,7 @@ function Team(props: RouteComponentProps<Props>) {
         <TeamProfile sessionStore={sessionStore} teamId={teamId} />
         <Button
           onClick={() =>
-            new Route()
-              .path(Route.TEAMS)
-              .path(teamId.toString())
-              .path(Route.MEETINGS)
-              .path(Route.NEW)
-              .buildAndNavigate()
+            new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()
           }>
           Create meeting
         </Button>

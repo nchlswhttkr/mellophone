@@ -17,11 +17,7 @@ export default function MeetingDocument(props: Props) {
       <h2>{meeting.name}</h2>
       <h3>
         Meeting held {meeting.dateHeld.toString()} by{" "}
-        <Link
-          to={new Route()
-            .path(Route.TEAMS)
-            .path(meeting.team.id.toString())
-            .build()}>
+        <Link to={new Route(Route.TEAMS, meeting.team.id).build()}>
           {meeting.team.name}
         </Link>
       </h3>

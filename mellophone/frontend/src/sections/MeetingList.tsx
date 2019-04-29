@@ -17,11 +17,7 @@ export default function MeetingList(props: Props) {
       {props.meetings.map(meeting => (
         <div key={meeting.id}>
           <p>
-            <Link
-              to={new Route()
-                .path(Route.MEETINGS)
-                .path(meeting.id.toString())
-                .build()}>
+            <Link to={new Route(Route.MEETINGS, meeting.id).build()}>
               {meeting.name}
             </Link>
           </p>

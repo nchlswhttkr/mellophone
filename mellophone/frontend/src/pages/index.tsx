@@ -15,34 +15,19 @@ function Pages() {
   return (
     <Router>
       <Home path={new Route().build()} />
-      <SignIn path={new Route().path(Route.SIGN_IN).build()} />
-      <Account path={new Route().path(Route.ACCOUNT).build()} />
-      <CreateTeam
-        path={new Route()
-          .path(Route.TEAMS)
-          .path(Route.NEW)
-          .build()}
-      />
-      <Team
-        path={new Route()
-          .path(Route.TEAMS)
-          .path(":teamId")
-          .build()}
-      />
+      <SignIn path={new Route(Route.SIGN_IN).build()} />
+      <Account path={new Route(Route.ACCOUNT).build()} />
+      <CreateTeam path={new Route(Route.TEAMS, Route.NEW).build()} />
+      <Team path={new Route(Route.TEAMS, ":teamId").build()} />
       <CreateMeeting
-        path={new Route()
-          .path(Route.TEAMS)
-          .path(":teamId")
-          .path(Route.MEETINGS)
-          .path(Route.NEW)
-          .build()}
+        path={new Route(
+          Route.TEAMS,
+          ":teamId",
+          Route.MEETINGS,
+          Route.NEW
+        ).build()}
       />
-      <Meeting
-        path={new Route()
-          .path(Route.MEETINGS)
-          .path(":meetingId")
-          .build()}
-      />
+      <Meeting path={new Route(Route.MEETINGS, ":meetingId").build()} />
       <PageNotFound default />
     </Router>
   );

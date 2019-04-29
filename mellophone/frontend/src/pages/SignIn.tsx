@@ -19,14 +19,14 @@ export default function SignIn(_: RouteComponentProps) {
     await IdentityService.createUser(user, password);
     const identity = await IdentityService.getIdentity();
     sessionStore.setUser(identity);
-    new Route().buildAndNavigate();
+    new Route().navigate();
   };
 
   const signIn = async (email: string, password: string) => {
     await IdentityService.authenticateUser(email, password);
     const identity = await IdentityService.getIdentity();
     sessionStore.setUser(identity);
-    new Route().buildAndNavigate();
+    new Route().navigate();
   };
 
   return (

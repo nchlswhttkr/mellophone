@@ -43,6 +43,6 @@ export default class IdentityService {
   static async clearIdentity(): Promise<void> {
     await BaseRequest.post("/identity/sign-out", {});
     sessionStore.clearSession();
-    new Route().buildAndNavigate();
+    new Route().navigate();
   }
 }

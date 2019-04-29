@@ -20,13 +20,13 @@ const Header = observer((props: Props) => {
         </Link>
         {user ? (
           <Link
-            to={new Route().path(Route.ACCOUNT).build()}
+            to={new Route(Route.ACCOUNT).build()}
             aria-label="View my account">
             <strong>Account</strong>
           </Link>
         ) : (
           <Link
-            to={new Route().path(Route.SIGN_IN).build()}
+            to={new Route(Route.SIGN_IN).build()}
             aria-label="Sign in to Mellophone">
             <strong>Sign in</strong>
           </Link>

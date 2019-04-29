@@ -14,17 +14,14 @@ interface Props {
   teamId: number;
 }
 
-export default function SignIn(props: RouteComponentProps<Props>) {
+export default function CreateMeeting(props: RouteComponentProps<Props>) {
   const teamId = new Number(props.teamId).valueOf();
 
   if (Number.isNaN(teamId)) return null;
 
   const createMeeting = async (meeting: IMeetingToBeCreated) => {
     const meetingId = (await MeetingService.createMeeting(meeting, teamId)).id;
-    new Route()
-      .path(Route.MEETINGS)
-      .path(meetingId.toString())
-      .buildAndNavigate();
+    new Route(Route.MEETINGS, meetingId).navigate();
   };
 
   return (

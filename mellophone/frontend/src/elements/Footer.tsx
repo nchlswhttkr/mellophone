@@ -6,7 +6,6 @@ function Footer() {
   return (
     <footer className={classes.footer}>
       <div>
-        <p>Mellophone is currently under development</p>
         <p>
           <a href="https://github.com/nchlswhttkr/mellophone">GitHub</a>
         </p>
