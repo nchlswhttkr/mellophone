@@ -7,13 +7,12 @@ import { navigate } from "@reach/router";
  * This could probably be a simple function but this was too much fun to write.
  */
 export default class Route {
-  private paths: Array<string>;
+  private paths: Array<string | number>;
   private queries: Array<string>;
 
-  constructor() {
-    this.paths = [];
+  constructor(...paths: Array<string | number>) {
+    this.paths = paths;
     this.queries = [];
-    return this;
   }
 
   path(path: string): Route {
@@ -34,7 +33,12 @@ export default class Route {
     return route;
   }
 
+  // deprecated name, prefer this.navigate()
   buildAndNavigate(): void {
+    this.navigate();
+  }
+
+  navigate(): void {
     navigate(this.build());
   }
 

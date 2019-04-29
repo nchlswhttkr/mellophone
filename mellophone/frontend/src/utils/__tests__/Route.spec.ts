@@ -21,4 +21,9 @@ describe("Utils - Route", () => {
       .build();
     expect(route).toBe("/meetings?tag=2018-nationals");
   });
+
+  it("Accepts paths in the constructor", () => {
+    const route = new Route(Route.TEAMS, Route.NEW).build();
+    expect(route).toBe("/teams/new");
+  });
 });
