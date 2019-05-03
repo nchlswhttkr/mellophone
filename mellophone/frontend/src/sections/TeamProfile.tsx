@@ -1,17 +1,16 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import { ISessionStore } from "../types";
+import { ITeam } from "../types";
 
 interface Props {
-  sessionStore: ISessionStore;
-  teamId: number;
+  team?: ITeam;
 }
 
 @observer
 class TeamProfile extends React.Component<Props> {
   render() {
-    const team = this.props.sessionStore.teams.get(this.props.teamId);
+    const { team } = this.props;
 
     if (!team) return null;
 

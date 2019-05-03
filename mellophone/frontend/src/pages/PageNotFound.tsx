@@ -10,7 +10,7 @@ import { sessionStore } from "../stores";
 export default function PageNotFound(_: RouteComponentProps) {
   return (
     <>
-      <Header sessionStore={sessionStore} />
+      <Header user={sessionStore.user} />
       <Main>
         <h1>Page Not Found</h1>
         <p>

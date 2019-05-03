@@ -31,7 +31,7 @@ export default function SignIn(_: RouteComponentProps) {
 
   return (
     <>
-      <Header sessionStore={sessionStore} />
+      <Header user={sessionStore.user} />
       <div className={classes.formContainer}>
         <h2 className={classes.title}>{newAccount ? "Sign up" : "Sign in"}</h2>
 

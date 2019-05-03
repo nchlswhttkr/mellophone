@@ -1,22 +1,22 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import { ISessionStore } from "../types";
+import { IUser } from "../types";
 import classes from "./AccountBlock.module.css";
 import Button from "../elements/Button";
 
 interface Props {
-  sessionStore: ISessionStore;
+  user?: IUser; // signed out users will be undefined
   signOut: () => Promise<void>;
 }
 
+/**
+ * Show information about the session user, allowing them to sign out.
+ */
 @observer
 class AccountBlock extends React.Component<Props> {
   render() {
-    const {
-      sessionStore: { user },
-      signOut,
-    } = this.props;
+    const { user, signOut } = this.props;
 
     // Don't render for anonymous users or while still uncertain
     if (!user) return null;

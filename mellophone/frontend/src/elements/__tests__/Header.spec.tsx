@@ -1,8 +1,6 @@
 import React from "react";
 import { render, fireEvent, cleanup } from "react-testing-library";
 
-import SessionStore from "../../stores/SessionStore";
-import { ISessionStore } from "../../types";
 import Header from "../Header";
 import {
   createHistory,
@@ -19,20 +17,14 @@ function renderWithHistory(children: React.ReactNode, history: History) {
 
 describe("Components - Sections - Header", () => {
   let history: History;
-  let sessionStore: ISessionStore;
 
   beforeEach(() => {
     history = createHistory(createMemorySource("/"));
-    sessionStore = new SessionStore();
     cleanup();
   });
 
   it("Direct unauthenticated users to sign in", () => {
-    sessionStore.setUser(undefined);
-    const { getByText } = renderWithHistory(
-      <Header sessionStore={sessionStore} />,
-      history
-    );
+    const { getByText } = renderWithHistory(<Header />, history);
 
     fireEvent.click(getByText("Sign in"));
 
@@ -40,16 +32,13 @@ describe("Components - Sections - Header", () => {
   });
 
   it("Direct authenticated users to their account page", () => {
-    sessionStore.setUser({
+    const user = {
       firstName: "John",
       lastName: "Doe",
       email: "john@email.com",
       id: 1,
-    });
-    const { getByText } = renderWithHistory(
-      <Header sessionStore={sessionStore} />,
-      history
-    );
+    };
+    const { getByText } = renderWithHistory(<Header user={user} />, history);
 
     fireEvent.click(getByText("Account"));
 

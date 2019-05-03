@@ -1,5 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import Route from "../utils/Route";
 
 import { sessionStore } from "../stores";
 import Header from "../elements/Header";
@@ -12,13 +13,14 @@ export default function Account(_: RouteComponentProps) {
   const signOut = async () => {
     await IdentityService.clearIdentity();
     sessionStore.clearSession();
+    new Route().navigate();
   };
 
   return (
     <>
-      <Header sessionStore={sessionStore} />
+      <Header user={sessionStore.user} />
       <Main>
-        <AccountBlock sessionStore={sessionStore} signOut={signOut} />
+        <AccountBlock user={sessionStore.user} signOut={signOut} />
       </Main>
       <Footer />
     </>

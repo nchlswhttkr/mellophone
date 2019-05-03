@@ -1,13 +1,12 @@
 import React from "react";
 import { observer } from "mobx-react";
 
-import { ISessionStore, IMeetingToBeCreated } from "../types";
+import { IMeetingToBeCreated } from "../types";
 import classes from "./CreateMeetingForm.module.css";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
 
 interface Props {
-  sessionStore: ISessionStore;
   createMeeting: (meeting: IMeetingToBeCreated) => Promise<void>;
 }
 
@@ -41,8 +40,6 @@ class CreateTeamForm extends React.Component<Props, State> {
 
   render() {
     const { errorMessage } = this.state;
-
-    if (!this.props.sessionStore.user) return null;
 
     return (
       <form className={classes.form}>

@@ -29,7 +29,7 @@ export default function Meeting(props: RouteComponentProps<Props>) {
 
   return (
     <>
-      <Header sessionStore={sessionStore} />
+      <Header user={sessionStore.user} />
       <Main>
         <MeetingDocument meeting={meeting} />
       </Main>

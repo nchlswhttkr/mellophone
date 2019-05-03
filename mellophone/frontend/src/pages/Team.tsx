@@ -38,9 +38,9 @@ function Team(props: RouteComponentProps<Props>) {
 
   return (
     <>
-      <Header sessionStore={sessionStore} />
+      <Header user={sessionStore.user} />
       <Main>
-        <TeamProfile sessionStore={sessionStore} teamId={teamId} />
+        <TeamProfile team={sessionStore.teams.get(teamId)} />
         <Button
           onClick={() =>
             new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()

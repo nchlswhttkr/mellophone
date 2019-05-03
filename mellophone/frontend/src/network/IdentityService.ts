@@ -1,7 +1,5 @@
 import BaseRequest from "../utils/BaseRequest";
 import { IUser, IUserToBeCreated } from "../types";
-import { sessionStore } from "../stores";
-import Route from "../utils/Route";
 
 export default class IdentityService {
   static async authenticateUser(
@@ -42,7 +40,5 @@ export default class IdentityService {
 
   static async clearIdentity(): Promise<void> {
     await BaseRequest.post("/identity/sign-out", {});
-    sessionStore.clearSession();
-    new Route().navigate();
   }
 }

@@ -25,7 +25,7 @@ export default class SessionStore implements ISessionStore {
 
   @action upsertTeams(teams: ITeam[]) {
     for (let team of teams) {
-      this.teams.set(team.id, team);
+      this._teams.set(team.id, team);
     }
   }
 

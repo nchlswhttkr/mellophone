@@ -2,23 +2,19 @@ import React from "react";
 import { observer } from "mobx-react";
 import { Link } from "@reach/router";
 
-import { ISessionStore } from "../types";
+import { ITeam } from "../types";
 import classes from "./TeamList.module.css";
 import Route from "../utils/Route";
 import Button from "../elements/Button";
 
 interface Props {
-  sessionStore: ISessionStore;
+  teams: ITeam[];
 }
 
 @observer
 class TeamList extends React.Component<Props> {
   render() {
-    const {
-      sessionStore: { user, teams },
-    } = this.props;
-
-    if (!user && teams.size === 0) return null;
+    const { teams } = this.props;
 
     return (
       <div className={classes.container}>
@@ -46,7 +42,7 @@ class TeamList extends React.Component<Props> {
           </div>
         ))}
 
-        {teams.size === 0 && (
+        {teams.length === 0 && (
           <p>
             You are not a member of any teams, why not{" "}
             <Link

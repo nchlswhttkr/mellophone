@@ -26,13 +26,10 @@ export default function CreateMeeting(props: RouteComponentProps<Props>) {
 
   return (
     <>
-      <Header sessionStore={sessionStore} />
+      <Header user={sessionStore.user} />
       <Main>
         <h2>Create meeting</h2>
-        <CreateMeetingForm
-          sessionStore={sessionStore}
-          createMeeting={createMeeting}
-        />
+        <CreateMeetingForm createMeeting={createMeeting} />
       </Main>
       <Footer />
     </>

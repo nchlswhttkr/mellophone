@@ -1,5 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import { Observer } from "mobx-react";
 
 import { sessionStore } from "../stores";
 import Header from "../elements/Header";
@@ -18,12 +19,18 @@ export default function Home(_: RouteComponentProps) {
   }, []);
 
   return (
-    <>
-      <Header sessionStore={sessionStore} />
-      <Main>
-        <TeamList sessionStore={sessionStore} />
-      </Main>
-      <Footer />
-    </>
+    <Observer>
+      {() => (
+        <>
+          <Header user={sessionStore.user} />
+          <Main>
+            {sessionStore.user && (
+              <TeamList teams={Array.from(sessionStore.teams.values())} />
+            )}
+          </Main>
+          <Footer />
+        </>
+      )}
+    </Observer>
   );
 }

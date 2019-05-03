@@ -18,10 +18,10 @@ export default function CreateTeam(_: RouteComponentProps) {
 
   return (
     <>
-      <Header sessionStore={sessionStore} />
+      <Header user={sessionStore.user} />
       <Main>
         <h2>Create a new team</h2>
-        <CreateTeamForm sessionStore={sessionStore} createTeam={createTeam} />
+        <CreateTeamForm createTeam={createTeam} />
       </Main>
       <Footer />
     </>
