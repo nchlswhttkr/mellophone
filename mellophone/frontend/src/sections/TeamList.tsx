@@ -20,7 +20,7 @@ class TeamList extends React.Component<Props> {
       <div className={classes.container}>
         <h2>My teams</h2>
 
-        {Array.from(teams.values()).map(team => (
+        {teams.map(team => (
           <div key={team.id} className={classes.team}>
             <h3 className={classes.title}>
               <Link to={new Route(Route.TEAMS, team.id).build()}>
@@ -35,7 +35,7 @@ class TeamList extends React.Component<Props> {
                   team.id,
                   Route.MEETINGS,
                   Route.NEW
-                ).buildAndNavigate()
+                ).navigate()
               }>
               Create meeting
             </Button>
@@ -44,7 +44,7 @@ class TeamList extends React.Component<Props> {
 
         {teams.length === 0 && (
           <p>
-            You are not a member of any teams, why not{" "}
+            You are not a member of any teams, would you like to{" "}
             <Link
               to={new Route(Route.TEAMS, Route.NEW).build()}
               className={classes.link}>

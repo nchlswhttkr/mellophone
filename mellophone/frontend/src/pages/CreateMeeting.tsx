@@ -1,20 +1,20 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { sessionStore } from "../stores";
 import Header from "../elements/Header";
 import Main from "../elements/Main";
 import Footer from "../elements/Footer";
 import Route from "../utils/Route";
-import { IMeetingToBeCreated } from "../types";
+import { IMeetingToBeCreated, IUser } from "../types";
 import MeetingService from "../network/MeetingService";
 import CreateMeetingForm from "../sections/CreateMeetingForm";
+import requireAuthentication from "../utils/requireAuthentication";
 
-interface Props {
-  teamId: number;
+interface Props extends RouteComponentProps<{ teamId: string }> {
+  sessionUser: IUser;
 }
 
-export default function CreateMeeting(props: RouteComponentProps<Props>) {
+function CreateMeeting(props: Props) {
   const teamId = new Number(props.teamId).valueOf();
 
   if (Number.isNaN(teamId)) return null;
@@ -26,7 +26,7 @@ export default function CreateMeeting(props: RouteComponentProps<Props>) {
 
   return (
     <>
-      <Header user={sessionStore.user} />
+      <Header user={props.sessionUser} />
       <Main>
         <h2>Create meeting</h2>
         <CreateMeetingForm createMeeting={createMeeting} />
@@ -35,3 +35,5 @@ export default function CreateMeeting(props: RouteComponentProps<Props>) {
     </>
   );
 }
+
+export default requireAuthentication<Props>(CreateMeeting);

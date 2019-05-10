@@ -34,11 +34,3 @@ export interface IMeetingToBeCreated {
   name: string;
   venue?: string;
 }
-
-export interface ISessionStore {
-  readonly user: IUser | undefined;
-  readonly teams: Map<number, ITeam>;
-  setUser: (user?: IUser) => void;
-  upsertTeams: (teams: ITeam[]) => void;
-  clearSession: () => void;
-}

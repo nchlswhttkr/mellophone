@@ -3,7 +3,7 @@ import { render, fireEvent, cleanup } from "react-testing-library";
 
 import Input from "../Input";
 
-describe("Components - Elements - Input", () => {
+describe("Elements - Input", () => {
   beforeEach(cleanup);
 
   it("Can be read from using refs", () => {
@@ -15,7 +15,8 @@ describe("Components - Elements - Input", () => {
     const target = getByLabelText("Enter your search term");
     fireEvent.input(target, { target: { value: "My search query" } });
 
-    expect(ref.current && ref.current.value).toEqual("My search query");
+    expect(ref.current).toBeTruthy();
+    expect(ref.current!.value).toEqual("My search query");
   });
 
   it("Can be read from using a callback", () => {
@@ -30,7 +31,7 @@ describe("Components - Elements - Input", () => {
     const target = getByLabelText("Enter your search term");
     fireEvent.input(target, { target: { value: "My search query" } });
 
-    expect(onInput).toHaveBeenCalledTimes(1);
+    expect(onInput).toHaveBeenCalledTimes(1); // only one input event
     expect(value).toBe("My search query");
   });
 });

@@ -2,27 +2,39 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 import Route from "../utils/Route";
 
-import { sessionStore } from "../stores";
 import Header from "../elements/Header";
 import Footer from "../elements/Footer";
 import AccountBlock from "../sections/AccountBlock";
-import IdentityService from "../network/IdentityService";
 import Main from "../elements/Main";
+import { IUser } from "../types";
+import requireAuthentication from "../utils/requireAuthentication";
+import { StoresContext } from "../stores";
 
-export default function Account(_: RouteComponentProps) {
+interface Props extends RouteComponentProps {
+  sessionUser: IUser;
+}
+
+function Account(props: Props) {
+  const { sessionUser } = props;
+
+  const { sessionStore } = React.useContext(StoresContext);
+
+  if (!sessionStore) return null;
+
   const signOut = async () => {
-    await IdentityService.clearIdentity();
-    sessionStore.clearSession();
+    await sessionStore.signOut();
     new Route().navigate();
   };
 
   return (
     <>
-      <Header user={sessionStore.user} />
+      <Header user={sessionUser} />
       <Main>
-        <AccountBlock user={sessionStore.user} signOut={signOut} />
+        <AccountBlock user={sessionUser} signOut={signOut} />
       </Main>
       <Footer />
     </>
   );
 }
+
+export default requireAuthentication<Props>(Account);

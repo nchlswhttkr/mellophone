@@ -24,7 +24,7 @@ class SignInForm extends React.Component<Props, State> {
     const username = this.usernameRef.current;
     const password = this.passwordRef.current;
 
-    if (!username || !password) return undefined;
+    if (!username || !password) return;
 
     try {
       await this.props.signIn(username.value, password.value);

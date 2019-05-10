@@ -29,7 +29,7 @@ class SignUpForm extends React.Component<Props, State> {
     const email = this.emailRef.current;
     const password = this.passwordRef.current;
 
-    if (!email || !password || !firstName || !lastName) return undefined;
+    if (!email || !password || !firstName || !lastName) return;
 
     try {
       await this.props.signUp(

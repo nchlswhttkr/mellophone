@@ -3,7 +3,7 @@ import { render, cleanup, fireEvent } from "react-testing-library";
 
 import CreateTeamForm from "../CreateTeamForm";
 
-describe("Components -  Sections - CreateTeamForm", () => {
+describe("Sections - CreateTeamForm", () => {
   let createTeam = jest.fn();
 
   beforeEach(() => {
@@ -35,13 +35,13 @@ describe("Components -  Sections - CreateTeamForm", () => {
     createTeam = jest.fn(() => {
       throw new Error("Unable to create a team at this time.");
     });
-    const { getByLabelText, getByText, queryByText } = render(
+    const { getByText, queryByText } = render(
       <CreateTeamForm createTeam={createTeam} />
     );
 
     fireEvent.click(getByText("Create team"));
 
     expect(createTeam).toBeCalledTimes(1);
-    expect(queryByText("Unable to create a team at this time.")).not.toBeNull();
+    expect(queryByText("Unable to create a team at this time.")).not.toBe(null);
   });
 });

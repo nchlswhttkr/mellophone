@@ -1,26 +1,26 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { IMeeting } from "../types";
-import { sessionStore } from "../stores";
+import { IMeeting, IUser } from "../types";
 import Header from "../elements/Header";
 import Main from "../elements/Main";
 import Footer from "../elements/Footer";
 import MeetingDocument from "../sections/MeetingDocument";
 import MeetingService from "../network/MeetingService";
+import requireAuthentication from "../utils/requireAuthentication";
 
-interface Props {
-  meetingId: string;
+interface Props extends RouteComponentProps<{ meetingId: string }> {
+  sessionUser: IUser;
 }
 
-export default function Meeting(props: RouteComponentProps<Props>) {
+function Meeting(props: Props) {
   const meetingId = new Number(props.meetingId).valueOf();
   if (Number.isNaN(meetingId)) return null;
 
-  const [meeting, setMeeting] = React.useState<IMeeting | undefined>(undefined);
+  const [meeting, setMeeting] = React.useState<IMeeting>();
 
   React.useEffect(() => {
-    MeetingService.fetchMeeting(meetingId)
+    MeetingService.getMeetingById(meetingId)
       .then(meeting => setMeeting(meeting))
       .catch(
         error => process.env.NODE_ENV !== "production" && console.error(error)
@@ -29,7 +29,7 @@ export default function Meeting(props: RouteComponentProps<Props>) {
 
   return (
     <>
-      <Header user={sessionStore.user} />
+      <Header user={props.sessionUser} />
       <Main>
         <MeetingDocument meeting={meeting} />
       </Main>
@@ -38,3 +38,5 @@ export default function Meeting(props: RouteComponentProps<Props>) {
     </>
   );
 }
+
+export default requireAuthentication<Props>(Meeting);

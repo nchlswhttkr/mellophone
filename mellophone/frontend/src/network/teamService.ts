@@ -1,8 +1,14 @@
 import BaseRequest from "../utils/BaseRequest";
 import { ITeam } from "../types";
 
-export default class TeamService {
-  static async createTeam(name: string, website: string): Promise<ITeam> {
+export interface ITeamService {
+  postTeam(name: string, website: string): Promise<ITeam>;
+  getTeamsOfSessionUser(): Promise<ITeam[]>;
+  getTeamById(id: number): Promise<ITeam>;
+}
+
+const teamService: ITeamService = {
+  async postTeam(name: string, website: string) {
     if (!name || !website) {
       throw new Error("Teams must have a name and website.");
     }
@@ -11,15 +17,17 @@ export default class TeamService {
       website,
     });
     return response.team;
-  }
+  },
 
-  static async fetchSessionUserTeams(): Promise<ITeam[]> {
+  async getTeamsOfSessionUser() {
     const response = await BaseRequest.get<{ teams: ITeam[] }>("/teams");
     return response.teams;
-  }
+  },
 
-  static async fetchTeam(id: number): Promise<ITeam> {
+  async getTeamById(id: number): Promise<ITeam> {
     const response = await BaseRequest.get<{ team: ITeam }>(`/teams/${id}`);
     return response.team;
-  }
-}
+  },
+};
+
+export default teamService;

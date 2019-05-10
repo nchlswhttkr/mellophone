@@ -4,7 +4,7 @@ import { navigate } from "@reach/router";
  * This is used to build routes as needed through the application. When built
  * with no arguments, it will default to the home page.
  *
- * This could probably be a simple function but this was too much fun to write.
+ * This _could_ be a simple function, but it was too much fun to write this.
  */
 export default class Route {
   private paths: Array<string | number>;
@@ -31,11 +31,6 @@ export default class Route {
       route += `?${this.queries.join("&")}`;
     }
     return route;
-  }
-
-  // deprecated name, prefer this.navigate()
-  buildAndNavigate(): void {
-    this.navigate();
   }
 
   navigate(): void {

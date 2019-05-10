@@ -3,7 +3,7 @@ import { render, cleanup, fireEvent } from "react-testing-library";
 
 import SignUpForm from "../SignUpForm";
 
-describe("Components -  Sections - SignUpForm", () => {
+describe("Sections - SignUpForm", () => {
   beforeEach(cleanup);
 
   it("Signs up a user who enters a username and password", () => {
@@ -39,7 +39,7 @@ describe("Components -  Sections - SignUpForm", () => {
 
   it("Displays the error message of signUp if it throws an error", () => {
     const signUp = jest.fn(() => {
-      throw new Error("Unable to sign up an unknown reason");
+      throw new Error("Unable to sign up for an unknown reason");
     });
     const { getByLabelText, getByText, queryByText } = render(
       <SignUpForm signUp={signUp} />
@@ -68,6 +68,8 @@ describe("Components -  Sections - SignUpForm", () => {
       },
       "hunter2"
     );
-    expect(queryByText("Unable to sign up an unknown reason")).not.toBeNull();
+    expect(queryByText("Unable to sign up for an unknown reason")).not.toBe(
+      null
+    );
   });
 });

@@ -26,4 +26,11 @@ describe("Utils - Route", () => {
     const route = new Route(Route.TEAMS, Route.NEW).build();
     expect(route).toBe("/teams/new");
   });
+
+  it("Exposes a method for navigating to a newly declared route", () => {
+    // It's not something to rigidly test, but it's nice to check navigation
+    expect(window.location.pathname).not.toBe("/foo/bar");
+    new Route("foo", "bar").navigate();
+    expect(window.location.pathname).toBe("/foo/bar");
+  });
 });

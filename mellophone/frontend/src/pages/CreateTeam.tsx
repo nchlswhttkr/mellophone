@@ -1,24 +1,31 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { sessionStore } from "../stores";
 import Header from "../elements/Header";
 import Main from "../elements/Main";
 import Footer from "../elements/Footer";
-import TeamService from "../network/TeamService";
 import CreateTeamForm from "../sections/CreateTeamForm";
 import Route from "../utils/Route";
+import { IUser } from "../types";
+import requireAuthentication from "../utils/requireAuthentication";
+import { StoresContext } from "../stores";
 
-export default function CreateTeam(_: RouteComponentProps) {
+interface Props extends RouteComponentProps {
+  sessionUser: IUser;
+}
+
+function CreateTeam(props: Props) {
+  const { teamStore } = React.useContext(StoresContext);
+  if (!teamStore) return null;
+
   const createTeam = async (name: string, website: string) => {
-    const team = await TeamService.createTeam(name, website);
-    sessionStore.upsertTeams([team]);
+    const team = await teamStore.createTeam(name, website);
     new Route(Route.TEAMS, team.id).navigate();
   };
 
   return (
     <>
-      <Header user={sessionStore.user} />
+      <Header user={props.sessionUser} />
       <Main>
         <h2>Create a new team</h2>
         <CreateTeamForm createTeam={createTeam} />
@@ -27,3 +34,5 @@ export default function CreateTeam(_: RouteComponentProps) {
     </>
   );
 }
+
+export default requireAuthentication<Props>(CreateTeam);

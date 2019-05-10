@@ -2,36 +2,39 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
 import { IUserToBeCreated } from "../types";
-import { sessionStore } from "../stores";
 import Header from "../elements/Header";
 import Footer from "../elements/Footer";
 import SignInForm from "../sections/SignInForm";
 import SignUpForm from "../sections/SignUpForm";
 import classes from "./SignIn.module.css";
-import IdentityService from "../network/IdentityService";
 import Button from "../elements/Button";
 import Route from "../utils/Route";
+import { StoresContext } from "../stores";
 
 export default function SignIn(_: RouteComponentProps) {
   const [newAccount, setNewAccount] = React.useState<boolean>(false);
 
+  const { sessionStore } = React.useContext(StoresContext);
+  if (!sessionStore) return null;
+
   const signUp = async (user: IUserToBeCreated, password: string) => {
-    await IdentityService.createUser(user, password);
-    const identity = await IdentityService.getIdentity();
-    sessionStore.setUser(identity);
+    await sessionStore.signUp(
+      user.email,
+      password,
+      user.firstName,
+      user.lastName
+    );
     new Route().navigate();
   };
 
   const signIn = async (email: string, password: string) => {
-    await IdentityService.authenticateUser(email, password);
-    const identity = await IdentityService.getIdentity();
-    sessionStore.setUser(identity);
+    await sessionStore.signIn(email, password);
     new Route().navigate();
   };
 
   return (
     <>
-      <Header user={sessionStore.user} />
+      <Header />
       <div className={classes.formContainer}>
         <h2 className={classes.title}>{newAccount ? "Sign up" : "Sign in"}</h2>
 

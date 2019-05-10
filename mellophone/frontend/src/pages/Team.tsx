@@ -1,46 +1,42 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { sessionStore } from "../stores";
 import Header from "../elements/Header";
 import Main from "../elements/Main";
 import Footer from "../elements/Footer";
-import TeamService from "../network/TeamService";
 import TeamProfile from "../sections/TeamProfile";
 import MeetingList from "../sections/MeetingList";
 import MeetingService from "../network/MeetingService";
-import { IMeeting } from "../types";
+import { IMeeting, IUser, ITeam } from "../types";
 import Button from "../elements/Button";
 import Route from "../utils/Route";
+import { StoresContext } from "../stores";
+import requireAuthentication from "../utils/requireAuthentication";
 
-interface Props {
-  teamId: string;
+interface Props extends RouteComponentProps<{ teamId: string }> {
+  sessionUser: IUser;
 }
 
-function Team(props: RouteComponentProps<Props>) {
-  const teamId = new Number(props.teamId).valueOf();
-  const [meetings, setMeetings] = React.useState<IMeeting[] | undefined>(
-    undefined
-  );
+function Team(props: Props) {
+  const [team, setTeam] = React.useState<ITeam>();
+  const [meetings, setMeetings] = React.useState<IMeeting[]>();
 
+  const teamId = new Number(props.teamId).valueOf();
   if (Number.isNaN(teamId)) return null;
 
+  const { sessionStore, teamStore } = React.useContext(StoresContext);
+  if (!sessionStore || !teamStore) return null;
+
   React.useEffect(() => {
-    TeamService.fetchTeam(teamId)
-      .then(team => sessionStore.upsertTeams([team]))
-      .catch(
-        error => process.env.NODE_ENV !== "production" && console.error(error)
-      );
-    MeetingService.fetchMeetingsOfTeam(teamId)
-      .then(meetings => setMeetings(meetings))
-      .catch();
+    teamStore.retrieveTeamWithId(teamId).then(setTeam);
+    MeetingService.getMeetingsOfTeam(teamId).then(setMeetings);
   }, []);
 
   return (
     <>
-      <Header user={sessionStore.user} />
+      <Header user={props.sessionUser} />
       <Main>
-        <TeamProfile team={sessionStore.teams.get(teamId)} />
+        <TeamProfile team={team} />
         <Button
           onClick={() =>
             new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()
@@ -54,4 +50,5 @@ function Team(props: RouteComponentProps<Props>) {
     </>
   );
 }
-export default Team;
+
+export default requireAuthentication<Props>(Team);

@@ -1,47 +1,29 @@
 import React from "react";
-import { render, fireEvent, cleanup } from "react-testing-library";
+import { cleanup, render } from "react-testing-library";
 
 import Header from "../Header";
-import {
-  createHistory,
-  createMemorySource,
-  LocationProvider,
-  History,
-} from "@reach/router";
 
-function renderWithHistory(children: React.ReactNode, history: History) {
-  return render(
-    <LocationProvider history={history}>{children}</LocationProvider>
-  );
-}
-
-describe("Components - Sections - Header", () => {
-  let history: History;
+describe("Elements - Header", () => {
+  const mockUser = {
+    firstName: "John",
+    lastName: "Doe",
+    email: "john@email.com",
+    id: 1,
+  };
 
   beforeEach(() => {
-    history = createHistory(createMemorySource("/"));
     cleanup();
   });
 
-  it("Direct unauthenticated users to sign in", () => {
-    const { getByText } = renderWithHistory(<Header />, history);
+  it("Directs unauthenticated users to sign in", () => {
+    const { queryByText } = render(<Header />);
 
-    fireEvent.click(getByText("Sign in"));
-
-    expect(history.location.pathname).toBe("/sign-in");
+    expect(queryByText("Sign in")).not.toBe(null);
   });
 
-  it("Direct authenticated users to their account page", () => {
-    const user = {
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@email.com",
-      id: 1,
-    };
-    const { getByText } = renderWithHistory(<Header user={user} />, history);
+  it("Directs authenticated users to their account", async () => {
+    const { queryByText } = render(<Header user={mockUser} />);
 
-    fireEvent.click(getByText("Account"));
-
-    expect(history.location.pathname).toBe("/account");
+    expect(queryByText("Account")).not.toBe(null);
   });
 });

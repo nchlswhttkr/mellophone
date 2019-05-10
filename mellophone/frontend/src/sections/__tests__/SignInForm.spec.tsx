@@ -3,7 +3,7 @@ import { render, cleanup, fireEvent } from "react-testing-library";
 
 import SignInForm from "../SignInForm";
 
-describe("Components -  Sections - SignInForm", () => {
+describe("Sections - SignInForm", () => {
   beforeEach(cleanup);
 
   it("Signs in a user who enters a username and password", () => {
@@ -42,6 +42,6 @@ describe("Components -  Sections - SignInForm", () => {
 
     expect(signIn).toBeCalledTimes(1);
     expect(signIn).toBeCalledWith("username@email.com", "hunter2");
-    expect(queryByText("Unable to sign in an unknown reason")).not.toBeNull();
+    expect(queryByText("Unable to sign in an unknown reason")).not.toBe(null);
   });
 });

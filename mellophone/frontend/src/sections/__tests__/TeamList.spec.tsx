@@ -1,27 +1,25 @@
 import React from "react";
-import { render, cleanup, fireEvent, queryByText } from "react-testing-library";
-
-import TeamList from "../TeamList";
-import { ITeam } from "../../types";
-import SessionStore from "../../stores/SessionStore";
+import { render, cleanup, fireEvent } from "react-testing-library";
 import { navigate } from "@reach/router";
 
-describe("Components - Sections - TeamList", () => {
-  beforeEach(cleanup);
+import TeamList from "../TeamList";
 
-  it("Directs users to create a new team if they are in no teams", () => {
-    const { getByText, queryByText } = render(<TeamList teams={[]} />);
-
-    const prompt = queryByText("You are not a member of any teams", {
-      exact: false,
-    });
-    fireEvent.click(getByText("create a new team"));
-
-    expect(prompt).not.toBeNull();
-    expect(window.location.pathname).toBe("/teams/new");
+describe("Sections - TeamList", () => {
+  beforeEach(() => {
+    cleanup();
+    navigate("/");
   });
 
-  it("Shows a list of teams for an authenticated user", () => {
+  it("Directs users to create a new team if they are in no teams", () => {
+    const { queryByText } = render(<TeamList teams={[]} />);
+
+    expect(
+      queryByText("You are not a member of any teams", { exact: false })
+    ).not.toBe(null);
+    expect(queryByText("create a new team")).not.toBe(null);
+  });
+
+  it("Shows a list of teams", () => {
     const teams = [
       {
         id: 1,
@@ -36,12 +34,11 @@ describe("Components - Sections - TeamList", () => {
     ];
     const { queryByText } = render(<TeamList teams={teams} />);
 
-    expect(queryByText("Western Brass")).not.toBeNull();
-    expect(queryByText("Glen Eira Band")).not.toBeNull();
+    expect(queryByText("Western Brass")).not.toBe(null);
+    expect(queryByText("Glen Eira Band")).not.toBe(null);
   });
 
   it("Directs a user to a team's profile when they select its name", () => {
-    navigate("/");
     const teams = [
       {
         id: 33,
@@ -54,18 +51,6 @@ describe("Components - Sections - TeamList", () => {
     fireEvent.click(getByText("Western Brass"));
 
     expect(window.location.pathname).toBe("/teams/33");
-  });
-
-  it("Allows a user to create a new meeting for their team", () => {
-    navigate("/");
-    const teams = [
-      {
-        id: 33,
-        name: "Western Brass",
-        website: "https://facebook.com/WesternBrass",
-      },
-    ];
-    const { getByText } = render(<TeamList teams={teams} />);
 
     fireEvent.click(getByText("Create meeting"));
 

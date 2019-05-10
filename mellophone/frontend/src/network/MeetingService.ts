@@ -16,14 +16,14 @@ export default class MeetingService {
     return response.meeting;
   }
 
-  static async fetchMeeting(meetingId: number): Promise<IMeeting> {
+  static async getMeetingById(meetingId: number): Promise<IMeeting> {
     const response = await BaseRequest.get<{ meeting: IMeeting }>(
       `/meetings/${meetingId}`
     );
     return response.meeting;
   }
 
-  static async fetchMeetingsOfTeam(teamId: number): Promise<IMeeting[]> {
+  static async getMeetingsOfTeam(teamId: number): Promise<IMeeting[]> {
     const response = await BaseRequest.get<{ meetings: IMeeting[] }>(
       `/teams/${teamId}/meetings`
     );

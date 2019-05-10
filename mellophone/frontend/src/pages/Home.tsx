@@ -2,35 +2,42 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 import { Observer } from "mobx-react";
 
-import { sessionStore } from "../stores";
 import Header from "../elements/Header";
 import Main from "../elements/Main";
 import Footer from "../elements/Footer";
 import TeamList from "../sections/TeamList";
-import TeamService from "../network/TeamService";
+import { StoresContext } from "../stores";
+import { IUser } from "../types";
+import requireAuthentication from "../utils/requireAuthentication";
 
-export default function Home(_: RouteComponentProps) {
+interface Props extends RouteComponentProps {
+  sessionUser: IUser;
+}
+
+function Home(props: Props) {
+  const { teamStore } = React.useContext(StoresContext);
+  if (!teamStore) return null;
+
   React.useEffect(() => {
-    TeamService.fetchSessionUserTeams()
-      .then(teams => sessionStore.upsertTeams(teams))
-      .catch(
-        error => process.env.NODE_ENV !== "production" && console.error(error)
-      );
+    teamStore.loadTeamsOfSessionUser();
   }, []);
 
   return (
     <Observer>
-      {() => (
-        <>
-          <Header user={sessionStore.user} />
-          <Main>
-            {sessionStore.user && (
-              <TeamList teams={Array.from(sessionStore.teams.values())} />
-            )}
-          </Main>
-          <Footer />
-        </>
-      )}
+      {() => {
+        const { sessionUserTeams } = teamStore;
+        return (
+          <>
+            <Header user={props.sessionUser} />
+            <Main>
+              {sessionUserTeams && <TeamList teams={sessionUserTeams} />}
+            </Main>
+            <Footer />
+          </>
+        );
+      }}
     </Observer>
   );
 }
+
+export default requireAuthentication<Props>(Home);
