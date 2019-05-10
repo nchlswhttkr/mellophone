@@ -18,7 +18,8 @@ export default function PageNotFound(_: RouteComponentProps) {
           if you've entered the wrong route, or consider{" "}
           <a
             href="https://github.com/nchlswhttkr/mellophone/issues/new"
-            target="_blank">
+            target="_blank"
+            rel="noopener noreferrer">
             opening an issue
           </a>{" "}
           if you think a page should exist here.

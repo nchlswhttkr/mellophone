@@ -14,18 +14,19 @@ interface Props {
 }
 
 export default function Meeting(props: RouteComponentProps<Props>) {
-  const meetingId = new Number(props.meetingId).valueOf();
-  if (Number.isNaN(meetingId)) return null;
-
   const [meeting, setMeeting] = React.useState<IMeeting | undefined>(undefined);
 
+  const meetingId = Number(props.meetingId).valueOf();
+
   React.useEffect(() => {
-    MeetingService.fetchMeeting(meetingId)
-      .then(meeting => setMeeting(meeting))
-      .catch(
-        error => process.env.NODE_ENV !== "production" && console.error(error)
-      );
-  }, []);
+    if (!Number.isNaN(meetingId)) {
+      MeetingService.fetchMeeting(meetingId)
+        .then(meeting => setMeeting(meeting))
+        .catch(
+          error => process.env.NODE_ENV !== "production" && console.error(error)
+        );
+    }
+  }, [meetingId]);
 
   return (
     <>

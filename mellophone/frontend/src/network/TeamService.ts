@@ -1,6 +1,5 @@
 import BaseRequest from "../utils/BaseRequest";
 import { ITeam } from "../types";
-import { sessionStore } from "../stores";
 
 export default class TeamService {
   static async createTeam(name: string, website: string): Promise<ITeam> {

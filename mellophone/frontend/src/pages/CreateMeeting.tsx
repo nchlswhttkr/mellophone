@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function CreateMeeting(props: RouteComponentProps<Props>) {
-  const teamId = new Number(props.teamId).valueOf();
+  const teamId = Number(props.teamId).valueOf();
 
   if (Number.isNaN(teamId)) return null;
 
