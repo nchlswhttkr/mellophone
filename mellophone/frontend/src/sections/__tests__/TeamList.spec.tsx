@@ -39,6 +39,9 @@ describe("Sections - TeamList", () => {
   });
 
   it("Directs a user to a team's profile when they select its name", () => {
+    expect(window.location.pathname).not.toBe("/teams/33");
+    expect(window.location.pathname).not.toBe("/teams/33/meetings/new");
+
     const teams = [
       {
         id: 33,
