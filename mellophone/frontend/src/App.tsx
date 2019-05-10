@@ -1,5 +1,6 @@
 import React from "react";
 import { Router } from "@reach/router";
+import { autorun } from "mobx";
 
 import { ApplicationStores, StoresContext } from "./stores";
 import SessionStore from "./stores/SessionStore";
@@ -36,6 +37,16 @@ export default class App extends React.Component<{}, State> {
       .loadSessionUser()
       .then(() => this.setState({ status: "ready" }))
       .catch(() => this.setState({ status: "errored" }));
+  }
+
+  clearTeamsIfAnonymousDisposer = autorun(() => {
+    if (!this.state.stores.sessionStore.user) {
+      this.state.stores.teamStore.clearTeamsOfSessionUser();
+    }
+  });
+
+  componentWillUnmount() {
+    this.clearTeamsIfAnonymousDisposer();
   }
 
   render() {
