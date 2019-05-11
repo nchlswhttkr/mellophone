@@ -40,4 +40,4 @@ function Home(props: Props) {
   );
 }
 
-export default requireAuthentication<Props>(Home);
+export default requireAuthentication<Props>(Home, () => <h1>Mellophone</h1>);

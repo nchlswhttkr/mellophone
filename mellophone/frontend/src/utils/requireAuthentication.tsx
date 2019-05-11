@@ -18,7 +18,8 @@ import { Observer } from "mobx-react";
  * details of said user. This HOC accomplishes both.
  */
 const requireAuthentication = <Props extends RouteComponentProps>(
-  Child: React.ElementType
+  Child: React.ElementType,
+  Fallback?: React.ElementType
 ) => (props: OmitSessionUser<Props>) => {
   const { sessionStore } = React.useContext(StoresContext);
   if (!sessionStore) return null;
@@ -27,7 +28,7 @@ const requireAuthentication = <Props extends RouteComponentProps>(
   React.useEffect(
     () =>
       autorun(() => {
-        if (!sessionStore.user) {
+        if (!sessionStore.user && !Fallback) {
           new Route(Route.SIGN_IN).navigate();
         }
       }),
@@ -37,9 +38,11 @@ const requireAuthentication = <Props extends RouteComponentProps>(
   return (
     <Observer>
       {() => {
-        if (!sessionStore.user) return null;
+        if (sessionStore.user) {
+          return <Child {...props} sessionUser={sessionStore.user} />;
+        }
 
-        return <Child {...props} sessionUser={sessionStore.user} />;
+        return Fallback ? <Fallback {...props} /> : null;
       }}
     </Observer>
   );

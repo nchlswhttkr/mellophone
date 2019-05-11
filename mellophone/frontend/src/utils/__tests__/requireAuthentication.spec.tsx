@@ -69,4 +69,18 @@ describe("Utils - requireAuthentication", () => {
     await wait(() => expect(window.location.pathname).toBe("/sign-in"));
     expect(container.childElementCount).toBe(0);
   });
+
+  it("Renders a fallback if one is provided for anonymous users instead of redirecting", () => {
+    expect(window.location.pathname).not.toBe("/sign-in");
+
+    const Component = requireAuthentication(SessionUserEmail, () => (
+      <h1>This is a fallback component</h1>
+    ));
+    const { queryByText } = renderWithStores(<Component />, {
+      sessionStore,
+    });
+
+    expect(queryByText("This is a fallback component")).not.toBe(null);
+    expect(window.location.pathname).not.toBe("/sign-in");
+  });
 });
