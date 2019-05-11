@@ -21,7 +21,7 @@ interface Props {
 function Main(props: Props) {
   return (
     <main className={classnames(classes.main, props.className)}>
-      <div>{props.children}</div>
+      {props.children}
     </main>
   );
 }

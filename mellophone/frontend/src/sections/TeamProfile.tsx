@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import { ITeam } from "../types";
 
 interface Props {
-  team?: ITeam;
+  team: ITeam | undefined;
 }
 
 @observer

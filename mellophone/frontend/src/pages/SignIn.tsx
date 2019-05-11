@@ -2,8 +2,7 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
 import { IUserToBeCreated } from "../types";
-import Header from "../elements/Header";
-import Footer from "../elements/Footer";
+import Main from "../elements/Main";
 import SignInForm from "../sections/SignInForm";
 import SignUpForm from "../sections/SignUpForm";
 import classes from "./SignIn.module.css";
@@ -33,24 +32,20 @@ export default function SignIn(_: RouteComponentProps) {
   };
 
   return (
-    <>
-      <Header />
-      <div className={classes.formContainer}>
-        <h2 className={classes.title}>{newAccount ? "Sign up" : "Sign in"}</h2>
+    <Main className={classes.formContainer}>
+      <h2 className={classes.title}>{newAccount ? "Sign up" : "Sign in"}</h2>
 
-        {newAccount ? (
-          <SignUpForm signUp={signUp} />
-        ) : (
-          <SignInForm signIn={signIn} />
-        )}
+      {newAccount ? (
+        <SignUpForm signUp={signUp} />
+      ) : (
+        <SignInForm signIn={signIn} />
+      )}
 
-        <hr className={classes.divider} />
+      <hr className={classes.divider} />
 
-        <Button onClick={() => setNewAccount(!newAccount)}>
-          {newAccount ? "Sign in to an existing account" : "Create an account"}
-        </Button>
-      </div>
-      <Footer />
-    </>
+      <Button onClick={() => setNewAccount(!newAccount)}>
+        {newAccount ? "Sign in to an existing account" : "Create an account"}
+      </Button>
+    </Main>
   );
 }

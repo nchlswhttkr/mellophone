@@ -11,12 +11,6 @@ describe("Sections - AccountBlock", () => {
     signOut.mockReset();
   });
 
-  it("Shows nothing if no user is authenticated", () => {
-    const { container } = render(<AccountBlock signOut={signOut} />);
-
-    expect(container.childElementCount).toBe(0);
-  });
-
   it("Shows a user's profile if they are authenticated", () => {
     const user = {
       firstName: "John",
@@ -37,7 +31,7 @@ describe("Sections - AccountBlock", () => {
     expect(id).not.toBe(null);
   });
 
-  it("Triggers signOut when a user clicks to sign out", async () => {
+  it("Triggers signOut when a user clicks to sign out", () => {
     const user = {
       firstName: "John",
       lastName: "Doe",

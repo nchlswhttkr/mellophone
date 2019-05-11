@@ -17,6 +17,8 @@ import CreateMeeting from "./pages/CreateMeeting";
 import Meeting from "./pages/Meeting";
 import PageNotFound from "./pages/PageNotFound";
 import CreateTeam from "./pages/CreateTeam";
+import Header from "./elements/Header";
+import Footer from "./elements/Footer";
 
 interface State {
   status: "pending" | "errored" | "ready";
@@ -63,6 +65,7 @@ export default class App extends React.Component<{}, State> {
 
     return (
       <StoresContext.Provider value={stores}>
+        <Header sessionStore={stores.sessionStore} />
         <Router>
           <Home path={new Route().build()} />
           <SignIn path={new Route(Route.SIGN_IN).build()} />
@@ -80,6 +83,7 @@ export default class App extends React.Component<{}, State> {
           <Meeting path={new Route(Route.MEETINGS, ":meetingId").build()} />
           <PageNotFound default />
         </Router>
+        <Footer />
       </StoresContext.Provider>
     );
   }

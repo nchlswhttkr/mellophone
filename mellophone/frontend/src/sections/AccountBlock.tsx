@@ -6,7 +6,7 @@ import classes from "./AccountBlock.module.css";
 import Button from "../elements/Button";
 
 interface Props {
-  user?: IUser; // signed out users will be undefined
+  user: IUser;
   signOut: () => Promise<void>;
 }
 
@@ -17,9 +17,6 @@ interface Props {
 class AccountBlock extends React.Component<Props> {
   render() {
     const { user, signOut } = this.props;
-
-    // Don't render for anonymous users or while still uncertain
-    if (!user) return null;
 
     return (
       <div className={classes.root}>

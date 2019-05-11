@@ -3,7 +3,7 @@ import { IUser } from "../types";
 import { IIdentityService } from "../network/identityService";
 
 export interface ISessionStore {
-  user?: IUser;
+  user: IUser | undefined;
   signIn(username: string, password: string): Promise<void>;
   signUp(
     username: string,
@@ -23,7 +23,7 @@ export interface ISessionStore {
  */
 export default class SessionStore implements ISessionStore {
   private identityService: IIdentityService;
-  @observable user?: IUser;
+  @observable user: IUser | undefined = undefined;
 
   constructor(identityService: IIdentityService) {
     this.identityService = identityService;

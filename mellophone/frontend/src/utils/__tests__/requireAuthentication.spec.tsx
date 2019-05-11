@@ -1,5 +1,5 @@
 import React from "react";
-import { cleanup, wait, prettyDOM } from "react-testing-library";
+import { cleanup, wait } from "react-testing-library";
 import { ISessionStore } from "../../stores/SessionStore";
 import requireAuthentication from "../requireAuthentication";
 import { IUser } from "../../types";
@@ -9,9 +9,7 @@ import { navigate } from "@reach/router";
 
 describe("Utils - requireAuthentication", () => {
   let sessionStore: ISessionStore;
-  function SessionUserEmail(props: { sessionUser: IUser }) {
-    return <p>{props.sessionUser.email}</p>;
-  }
+  const ChildComponent = () => <h1>This is a child component</h1>;
   const mockUser: IUser = {
     id: 1,
     email: "nicholas@email.com",
@@ -34,7 +32,7 @@ describe("Utils - requireAuthentication", () => {
   it("Redirects when the loaded user is anonymous", async () => {
     expect(window.location.pathname).not.toBe("/sign-in");
 
-    const Component = requireAuthentication(SessionUserEmail);
+    const Component = requireAuthentication(ChildComponent);
     const { container } = renderWithStores(<Component />, { sessionStore });
 
     await wait(() => expect(window.location.pathname).toBe("/sign-in"));
@@ -46,10 +44,10 @@ describe("Utils - requireAuthentication", () => {
     expect(window.location.pathname).not.toBe("/sign-in");
 
     sessionStore.user = mockUser;
-    const Component = requireAuthentication(SessionUserEmail);
+    const Component = requireAuthentication(ChildComponent);
     const { queryByText } = renderWithStores(<Component />, { sessionStore });
 
-    expect(queryByText(mockUser.email)).not.toBe(null);
+    expect(queryByText("This is a child component")).not.toBe(null);
     expect(window.location.pathname).not.toBe("/sign-in");
   });
 
@@ -57,12 +55,12 @@ describe("Utils - requireAuthentication", () => {
     expect(window.location.pathname).not.toBe("/sign-in");
 
     sessionStore.user = mockUser;
-    const Component = requireAuthentication(SessionUserEmail);
+    const Component = requireAuthentication(ChildComponent);
     const { container, queryByText } = renderWithStores(<Component />, {
       sessionStore,
     });
 
-    expect(queryByText(mockUser.email)).not.toBe(null);
+    expect(queryByText("This is a child component")).not.toBe(null);
 
     // If the session user disappears, they should be redirected to sign in
     sessionStore.user = undefined;
@@ -73,9 +71,8 @@ describe("Utils - requireAuthentication", () => {
   it("Renders a fallback if one is provided for anonymous users instead of redirecting", () => {
     expect(window.location.pathname).not.toBe("/sign-in");
 
-    const Component = requireAuthentication(SessionUserEmail, () => (
-      <h1>This is a fallback component</h1>
-    ));
+    const FallbackComponent = () => <h1>This is a fallback component</h1>;
+    const Component = requireAuthentication(ChildComponent, FallbackComponent);
     const { queryByText } = renderWithStores(<Component />, {
       sessionStore,
     });
