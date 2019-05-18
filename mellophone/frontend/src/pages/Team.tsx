@@ -18,23 +18,22 @@ interface Props {
 }
 
 function Team(props: RouteComponentProps<Props>) {
-  const teamId = new Number(props.teamId).valueOf();
-  const [meetings, setMeetings] = React.useState<IMeeting[] | undefined>(
-    undefined
-  );
+  const [meetings, setMeetings] = React.useState<IMeeting[]>();
 
-  if (Number.isNaN(teamId)) return null;
+  const teamId = Number(props.teamId).valueOf();
 
   React.useEffect(() => {
-    TeamService.fetchTeam(teamId)
-      .then(team => sessionStore.upsertTeams([team]))
-      .catch(
-        error => process.env.NODE_ENV !== "production" && console.error(error)
-      );
-    MeetingService.fetchMeetingsOfTeam(teamId)
-      .then(meetings => setMeetings(meetings))
-      .catch();
-  }, []);
+    if (!Number.isNaN(teamId)) {
+      TeamService.fetchTeam(teamId)
+        .then(team => sessionStore.upsertTeams([team]))
+        .catch(
+          error => process.env.NODE_ENV !== "production" && console.error(error)
+        );
+      MeetingService.fetchMeetingsOfTeam(teamId)
+        .then(setMeetings)
+        .catch();
+    }
+  }, [teamId]);
 
   return (
     <>
