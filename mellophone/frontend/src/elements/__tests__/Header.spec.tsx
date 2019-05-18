@@ -2,49 +2,43 @@ import React from "react";
 import { cleanup, render, wait } from "react-testing-library";
 
 import Header from "../Header";
-import { ISessionStore } from "../../stores/SessionStore";
-import { observable } from "mobx";
+import SessionStore from "../../stores/SessionStore";
 
 describe("Elements - Header", () => {
-  let sessionStore: ISessionStore;
+  const mockUser = {
+    id: 1,
+    firstName: "Nicholas",
+    lastName: "Whittaker",
+    email: "nicholas@email.com",
+  };
 
-  beforeEach(() => {
-    cleanup();
-    sessionStore = {
-      user: {
-        firstName: "John",
-        lastName: "Doe",
-        email: "john@email.com",
-        id: 1,
-      },
-      signIn: jest.fn(),
-      signUp: jest.fn(),
-      signOut: jest.fn(),
-      loadSessionUser: jest.fn(),
-    };
-  });
+  beforeEach(cleanup);
 
   it("Directs unauthenticated users to sign in", () => {
-    sessionStore.user = undefined;
-    const { queryByText } = render(<Header sessionStore={sessionStore} />);
+    const store = new SessionStore();
+    const { queryByText } = render(<Header sessionStore={store} />);
 
     expect(queryByText("Sign in")).not.toBe(null);
   });
 
   it("Directs authenticated users to their account", () => {
-    const { queryByText } = render(<Header sessionStore={sessionStore} />);
+    const store = new SessionStore();
+    store.setUser(mockUser);
+    const { queryByText } = render(<Header sessionStore={store} />);
 
     expect(queryByText("Account")).not.toBe(null);
   });
 
-  it("Rerenders when a user signs in or signs out", async () => {
-    const store = observable(sessionStore);
+  it("Reacts when a user signs in or signs out", async () => {
+    const store = new SessionStore();
     const { queryByText } = render(<Header sessionStore={store} />);
 
+    await wait(() => expect(queryByText("Sign in")).not.toBe(null));
+
+    store.setUser(mockUser);
     expect(queryByText("Account")).not.toBe(null);
 
-    store.user = undefined;
-
+    store.setUser();
     await wait(() => expect(queryByText("Sign in")).not.toBe(null));
   });
 });

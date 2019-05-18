@@ -10,9 +10,10 @@ import Button from "../elements/Button";
 import Route from "../utils/Route";
 import { StoresContext } from "../stores";
 import requireAuthentication from "../utils/requireAuthentication";
+import teamService from "../network/teamService";
+import { Observer } from "mobx-react";
 
 function Team(props: RouteComponentProps<{ teamId: string }>) {
-  const [team, setTeam] = React.useState<ITeam>();
   const [meetings, setMeetings] = React.useState<IMeeting[]>();
 
   const teamId = new Number(props.teamId).valueOf();
@@ -22,22 +23,37 @@ function Team(props: RouteComponentProps<{ teamId: string }>) {
   if (!sessionStore || !teamStore) return null;
 
   React.useEffect(() => {
-    teamStore.retrieveTeamWithId(teamId).then(setTeam);
+    teamService.getTeamById(teamId).then(team => {
+      teamStore.addTeam(team);
+      teamStore.addToSessionUserTeams(team.id);
+    });
     MeetingService.getMeetingsOfTeam(teamId).then(setMeetings);
   }, []);
 
   return (
-    <Main>
-      <TeamProfile team={team} />
-      <Button
-        onClick={() =>
-          new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()
-        }>
-        Create meeting
-      </Button>
-      <hr style={{ margin: "1rem 0" }} />
-      <MeetingList meetings={meetings} />
-    </Main>
+    <Observer>
+      {() => {
+        const team = teamStore.teams.get(teamId);
+        return (
+          <Main>
+            <TeamProfile team={team} />
+            <Button
+              onClick={() =>
+                new Route(
+                  Route.TEAMS,
+                  teamId,
+                  Route.MEETINGS,
+                  Route.NEW
+                ).navigate()
+              }>
+              Create meeting
+            </Button>
+            <hr style={{ margin: "1rem 0" }} />
+            <MeetingList meetings={meetings} />
+          </Main>
+        );
+      }}
+    </Observer>
   );
 }
 

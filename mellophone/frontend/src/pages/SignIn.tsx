@@ -9,6 +9,7 @@ import classes from "./SignIn.module.css";
 import Button from "../elements/Button";
 import Route from "../utils/Route";
 import { StoresContext } from "../stores";
+import identityService from "../network/identityService";
 
 export default function SignIn(_: RouteComponentProps) {
   const [newAccount, setNewAccount] = React.useState<boolean>(false);
@@ -16,18 +17,23 @@ export default function SignIn(_: RouteComponentProps) {
   const { sessionStore } = React.useContext(StoresContext);
   if (!sessionStore) return null;
 
-  const signUp = async (user: IUserToBeCreated, password: string) => {
-    await sessionStore.signUp(
-      user.email,
+  const signUp = async (
+    userToBeCreated: IUserToBeCreated,
+    password: string
+  ) => {
+    const user = await identityService.signUp(
+      userToBeCreated.email,
       password,
-      user.firstName,
-      user.lastName
+      userToBeCreated.firstName,
+      userToBeCreated.lastName
     );
+    sessionStore.setUser(user);
     new Route().navigate();
   };
 
   const signIn = async (email: string, password: string) => {
-    await sessionStore.signIn(email, password);
+    const user = await identityService.signIn(email, password);
+    sessionStore.setUser(user);
     new Route().navigate();
   };
 

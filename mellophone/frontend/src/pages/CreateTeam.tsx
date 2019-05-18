@@ -6,13 +6,15 @@ import CreateTeamForm from "../sections/CreateTeamForm";
 import Route from "../utils/Route";
 import requireAuthentication from "../utils/requireAuthentication";
 import { StoresContext } from "../stores";
+import teamService from "../network/teamService";
 
 function CreateTeam(_: RouteComponentProps) {
   const { teamStore } = React.useContext(StoresContext);
   if (!teamStore) return null;
 
   const createTeam = async (name: string, website: string) => {
-    const team = await teamStore.createTeam(name, website);
+    const team = await teamService.postTeam(name, website);
+    teamStore.addTeam(team);
     new Route(Route.TEAMS, team.id).navigate();
   };
 

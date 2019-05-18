@@ -1,9 +1,8 @@
-import { ITeamService } from "../../network/teamService";
 import { ITeam } from "../../types";
 import TeamStore from "../TeamStore";
+import { computed } from "mobx";
 
 describe("Stores - TeamStore", () => {
-  let teamService: ITeamService;
   const mockTeams: ITeam[] = [
     {
       id: 1,
@@ -17,89 +16,83 @@ describe("Stores - TeamStore", () => {
     },
   ];
 
-  beforeEach(() => {
-    teamService = {
-      getTeamById: jest.fn(),
-      getTeamsOfSessionUser: jest.fn(),
-      postTeam: jest.fn(),
-    };
+  it("Adds teams to the store", () => {
+    const store = new TeamStore();
+
+    mockTeams.forEach(team => store.addTeam(team));
+
+    expect(store.teams.get(mockTeams[0].id)).toEqual(mockTeams[0]);
+    expect(store.teams.get(mockTeams[1].id)).toEqual(mockTeams[1]);
   });
 
-  it("Requests teams of the session user and represents them", async () => {
-    teamService.getTeamsOfSessionUser = jest.fn(async () => mockTeams);
-    const teamStore = new TeamStore(teamService);
+  it("Exposes teams from the store as observables", () => {
+    const team = mockTeams[0];
+    const modifiedTeam = { ...team, name: "A new team name" };
+    const store = new TeamStore();
 
-    await teamStore.loadTeamsOfSessionUser();
-    const storedTeams = teamStore.sessionUserTeams;
+    store.addTeam(team);
+    const observedTeam = computed(() => store.teams.get(team.id));
+    expect(observedTeam.get()).toEqual(team);
 
-    expect(teamService.getTeamsOfSessionUser).toBeCalledTimes(1);
-    expect(storedTeams).toEqual(mockTeams);
-
-    const teamToModify = await teamStore.retrieveTeamWithId(storedTeams[0].id);
-    teamToModify.name = "Moonee Valley Brass";
-    teamToModify.website = "https://github.com";
-
-    expect(storedTeams[0]).toEqual(teamToModify);
+    store.addTeam(modifiedTeam);
+    expect(observedTeam.get()).toEqual(modifiedTeam);
   });
 
-  it("Stores the teams of a session users as observables", async () => {
-    teamService.getTeamsOfSessionUser = jest.fn(async () => mockTeams);
-    const teamStore = new TeamStore(teamService);
+  it("Updates the session user's teams as they are added", () => {
+    const store = new TeamStore();
 
-    await teamStore.loadTeamsOfSessionUser();
-    const storedTeams = teamStore.sessionUserTeams;
+    mockTeams.forEach(team => store.addTeam(team));
+    expect(store.sessionUserTeams).toHaveLength(0);
 
-    const teamToModify = await teamStore.retrieveTeamWithId(storedTeams[0].id);
-    teamToModify.name = "Moonee Valley Brass";
-    teamToModify.website = "https://github.com";
-
-    expect(storedTeams[0]).toEqual(teamToModify);
+    store.addToSessionUserTeams(mockTeams[0].id);
+    expect(store.sessionUserTeams).toHaveLength(1);
+    expect(store.sessionUserTeams[0]).toEqual(mockTeams[0]);
   });
 
-  it("Returns a cached team when it exists", async () => {
-    teamService.getTeamsOfSessionUser = jest.fn(async () => mockTeams);
-    const teamStore = new TeamStore(teamService);
+  it("Removes teams from the session user's team if they are removed", () => {
+    const store = new TeamStore();
 
-    await teamStore.loadTeamsOfSessionUser();
-    const cachedTeam = await teamStore.retrieveTeamWithId(mockTeams[0].id);
+    mockTeams.forEach(team => store.addTeam(team));
+    store.addToSessionUserTeams(mockTeams[0].id);
+    store.removeFromSessionUserTeams(mockTeams[0].id);
 
-    expect(teamService.getTeamsOfSessionUser).toBeCalledTimes(1);
-    expect(teamService.getTeamById).toBeCalledTimes(0);
-    expect(cachedTeam).toEqual(mockTeams[0]);
+    expect(store.sessionUserTeams).toHaveLength(0);
   });
 
-  it("Requests a team if it is not cached", async () => {
-    teamService.getTeamById = jest.fn(async () => mockTeams[0]);
-    const teamStore = new TeamStore(teamService);
+  it("Clears all teams", () => {
+    const store = new TeamStore();
 
-    const team = await teamStore.retrieveTeamWithId(123);
+    mockTeams.forEach(team => store.addTeam(team));
+    store.clearTeams();
 
-    expect(teamService.getTeamById).toBeCalledTimes(1);
-    expect(teamService.getTeamById).toBeCalledWith(123);
-    expect(team).toEqual(mockTeams[0]);
+    expect(store.teams.size).toBe(0);
   });
 
-  it("Caches the team of a session user for subsequent requests", async () => {
-    teamService.getTeamsOfSessionUser = jest.fn(async () => mockTeams);
-    const teamStore = new TeamStore(teamService);
+  it("Clears the session user's teams when teams are cleared", () => {
+    const store = new TeamStore();
 
-    await teamStore.loadTeamsOfSessionUser();
-    await teamStore.loadTeamsOfSessionUser();
+    mockTeams.forEach(team => store.addTeam(team));
+    store.addToSessionUserTeams(mockTeams[0].id);
 
-    expect(teamService.getTeamsOfSessionUser).toBeCalledTimes(1);
+    expect(store.sessionUserTeams).toHaveLength(1);
+
+    store.clearTeams();
+
+    expect(store.sessionUserTeams).toHaveLength(0);
   });
 
-  it("Clears the cache of a session user, forcing a new request", async () => {
-    teamService.getTeamsOfSessionUser = jest.fn(async () => mockTeams);
-    const teamStore = new TeamStore(teamService);
+  it("Exposes the session user's teams as observables", () => {
+    const store = new TeamStore();
+    const sessionUserTeams = computed(() => store.sessionUserTeams);
 
-    await teamStore.loadTeamsOfSessionUser();
-    teamStore.clearTeamsOfSessionUser();
+    mockTeams.forEach(team => store.addTeam(team));
+    store.addToSessionUserTeams(mockTeams[0].id);
 
-    expect(teamStore.sessionUserTeams).toHaveLength(0);
+    expect(sessionUserTeams.get()).toHaveLength(1);
 
-    await teamStore.loadTeamsOfSessionUser();
+    let team = store.teams.get(mockTeams[0].id);
+    team!.name = "A new team name";
 
-    expect(teamService.getTeamsOfSessionUser).toBeCalledTimes(2);
+    expect(sessionUserTeams.get()[0].name).toBe(team!.name);
   });
 });

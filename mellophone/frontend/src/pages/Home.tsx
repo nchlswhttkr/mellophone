@@ -6,13 +6,19 @@ import Main from "../elements/Main";
 import TeamList from "../sections/TeamList";
 import { StoresContext } from "../stores";
 import requireAuthentication from "../utils/requireAuthentication";
+import teamService from "../network/teamService";
 
 function Home(_: RouteComponentProps) {
   const { teamStore } = React.useContext(StoresContext);
   if (!teamStore) return null;
 
   React.useEffect(() => {
-    teamStore.loadTeamsOfSessionUser();
+    teamService.getTeamsOfSessionUser().then(teams =>
+      teams.forEach(team => {
+        teamStore.addTeam(team);
+        teamStore.addToSessionUserTeams(team.id);
+      })
+    );
   }, []);
 
   return (

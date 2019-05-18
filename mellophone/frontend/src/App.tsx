@@ -1,12 +1,11 @@
 import React from "react";
 import { Router } from "@reach/router";
-import { autorun } from "mobx";
+import { autorun, configure } from "mobx";
 
 import { ApplicationStores, StoresContext } from "./stores";
 import SessionStore from "./stores/SessionStore";
 import TeamStore from "./stores/TeamStore";
 import identityService from "./network/identityService";
-import teamService from "./network/teamService";
 import Route from "./utils/Route";
 
 import Home from "./pages/Home";
@@ -25,25 +24,35 @@ interface State {
   stores: ApplicationStores;
 }
 
+// https://mobx.js.org/refguide/api.html#configure
+configure({
+  enforceActions: "observed",
+});
+
 export default class App extends React.Component<{}, State> {
   state: State = {
     status: "pending",
     stores: {
-      sessionStore: new SessionStore(identityService),
-      teamStore: new TeamStore(teamService),
+      sessionStore: new SessionStore(),
+      teamStore: new TeamStore(),
     },
   };
 
   componentDidMount() {
-    this.state.stores.sessionStore
-      .loadSessionUser()
-      .then(() => this.setState({ status: "ready" }))
-      .catch(() => this.setState({ status: "errored" }));
+    identityService
+      .getSessionUser()
+      .then(user => {
+        this.state.stores.sessionStore.setUser(user);
+        this.setState({ status: "ready" });
+      })
+      .catch(() => {
+        this.setState({ status: "errored" });
+      });
   }
 
   clearTeamsIfAnonymousDisposer = autorun(() => {
     if (!this.state.stores.sessionStore.user) {
-      this.state.stores.teamStore.clearTeamsOfSessionUser();
+      this.state.stores.teamStore.clearTeams();
     }
   });
 
@@ -59,7 +68,7 @@ export default class App extends React.Component<{}, State> {
     if (status === "errored")
       return (
         <p style={{ color: "red" }}>
-          Something went wrong when running Mellophone.
+          Something went wrong when loading Mellophone.
         </p>
       );
 
