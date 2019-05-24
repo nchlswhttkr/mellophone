@@ -12,9 +12,8 @@ RUN apt update -qqy && apt install -qqy \
     python3-pip \
     unzip
 
-RUN pip3 install --user pipenv
-
 RUN useradd -m conductor
 USER conductor
 WORKDIR /home/conductor
 
+RUN pip3 install --user pipenv
