@@ -1,8 +1,6 @@
 FROM ubuntu:bionic-20181204
 
-ENV DEBIAN_FRONTEND noninteractive 
-
-RUN apt update -qqy && apt install -qqy \
+RUN apt update -qqy && DEBIAN_FRONTEND=noninteractive apt install -qqy \
     curl \
     libpq-dev \
     nginx \
@@ -12,8 +10,11 @@ RUN apt update -qqy && apt install -qqy \
     python3-pip \
     unzip
 
+RUN pip3 install --upgrade pip
+
 RUN useradd -m conductor
 USER conductor
 WORKDIR /home/conductor
 
+ENV PATH="/home/conductor/.local/bin:${PATH}" LANG="C.UTF-8"
 RUN pip3 install --user pipenv
