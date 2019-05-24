@@ -4,7 +4,11 @@
 
 :trumpet: :trumpet: :trumpet:
 
-An app for teams, at the moment for writing and sharing meeting minutes.
+An app for teams, allowing them to write and share meeting minutes.
+
+I started this project to implement what I've learned over the past few years, and to explore new technologies and libraries that interest me. Striving for good, readable code is nice, but there's nothing wrong with [having a little fun](/mellophone/frontend/src/utils/Route.ts#L7) from time to time.
+
+https://mellophone.pink
 
 ## Contributing
 
@@ -20,10 +24,16 @@ To run the frontend you will need [Yarn](https://yarnpkg.org/) (as well as [Node
 
 To set up the frontend, you will need to install its dependencies and start the development server.
 
-```
+```sh
 cd mellophone/frontend
 yarn
 yarn start
+```
+
+Chances are you'll need to run the backend as well. If you're not interested in [developing on the backend](#backend), you can use the following script to start a backend server to connect to. You will need to have [Docker Compose](https://docs.docker.com/install/) installed.
+
+```sh
+sh scripts/run-backend.sh
 ```
 
 Below are some common commands you might run. Remember you will need to be in the frontend root (`/mellophone/frontend`). You might wish to consult the [yarn docs](https://yarnpkg.com/lang/en/docs/cli/) or the [package.json itself](/mellophone/frontend/package.json)
@@ -33,57 +43,55 @@ Below are some common commands you might run. Remember you will need to be in th
 | yarn              | Install dependencies (and ensure all dependencies are up to date with `yarn.lock`) |
 | yarn start        | Run a development server                                                           |
 | yarn build        | Create a production build (if you want to run the backend with a static frontend)  |
-| yarn test         | Run unit and integration tests of the frontend code                                |
-| yarn lint         | Check for linting issues                                                           |
+| yarn test         | Run tests against the frontend code                                                |
 | yarn lint --write | Check for and fix any linting issues                                               |
 
 ### Backend
 
-To set up the backend you will need [pipenv (w/ Python 3.6.X)](https://pipenv.readthedocs.io/en/latest/) and [Postgres (11)](https://www.postgresql.org/download/).
+To set up the backend you will need [Docker Compose](https://docs.docker.com/install/) installed.
 
-```
-pipenv install --dev
-```
-
-Installing Postgres will usually create a 'postgres' user (recommended practice) and a server, but for the sake of understanding and visibility I currently run everything from within the project directory. You should also make sure the Postgres binaries are installed in your PATH (`initdb`, `pg_ctl` are two you'll need).
-
-To create the database and start running its server, you can use the following commands. This will create a `/data` directory in the project, with a password defined in the `.env` file.
-
-```
-pipenv run db-init
-pipenv run db-start
+```sh
+pipenv sync --dev
 ```
 
-If you receive an error about the port already being in use, this is likely because the default Postgres server is running - try stopping it with `pg_ctl -D /path/to/PostgreSQL/11/data stop` (substitute in the path to your Postgres installation). If you are able to connect to the server using `psql`, you can find the directory with the query `SHOW data_directory;`.
+From here, you can start and stop the PostgreSQL server as needed.
 
-Now that the database is up and running, we can set up Django and run migrations against the database. After this has completed we can run the backend server.
-
-If you want to interact with the backend through the frontend, make sure you have [created a production build of the frontend](#frontend) first, and used Django to collect all the files with `pipenv run mellophone/manage.py collectstatic`.
-
+```sh
+docker-compose up -d db
+docker-compose stop db
 ```
-pipenv run db-migrate
+
+To start working on the backend, it's recommended you work from inside the development container.
+
+```sh
+docker-compose run -p 8000:8000 dev
+```
+
+If you want to interact with the backend through the frontend but don't want to install and build the frontend, you can install the latest build on the `master` branch. You can use the `get-frontend-build.sh` script to accomplish this.
+
+```sh
+# docker-compose run -p 8000:8000 dev
+sh scripts/get-frontend-build.sh
+```
+
+Now you can start the backend server in development mode, and interact with it at [localhost:8000](http://localhost:8000). Before running the server, it is a good idea to apply any new database migrations.
+
+```sh
+# docker-compose run -p 8000:8000 dev
+pipenv run migrate
 pipenv run server
-```
-
-After you have finished making changes, you can stop the database server.
-
-```
-pipenv run db-stop
 ```
 
 Below are some common commands you might run. You might also wish to consult the [pipenv docs](https://pipenv.readthedocs.io/en/latest#pipenv-usage) and the [Pipefile itself](/Pipfile).
 
-| Command               | Action                                                                                |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| pipenv install        | Install dependencies (and ensure all dependencies are up to date with `Pipfile.lock`) |
-| pipenv install --dev  | As above, but also include dev dependencies, such as linting/testing libraries        |
-| pipevn run db-init    | Create the Postgres database                                                          |
-| pipenv run db-start   | Start the Postgres server                                                             |
-| pipenv run db-stop    | Stop the Postgres server                                                              |
-| pipenv run db-migrate | Apply new migrations to the database (must be running at this time)                   |
-| pipenv run server     | Run the backend (a Django server)                                                     |
-| pipenv run lint       | Lint using pylint (just defaults for now)                                             |
-| pipenv run test-unit  | Run tests against the backend (the database must be running)                          |
-| pipenv run test-e2e   | Run an end-to-end test (requires that you've [built the frontend](#frontend)) \*      |
+| Command              | Action                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| pipenv sync          | Install dependencies (and ensure all dependencies are up to date with `Pipfile.lock`) |
+| pipenv sync --dev    | As above, but also include dev dependencies, such as linting/testing libraries        |
+| pipenv run migrate   | Apply new migrations to the database (must be running at this time)                   |
+| pipenv run server    | Run the backend (a Django server)                                                     |
+| pipenv run lint      | Lint using pylint (just defaults for now)                                             |
+| pipenv run test-unit | Run tests against the backend (the database must be running)                          |
+| pipenv run test-e2e  | Run an end-to-end test (requires that you've [built the frontend](#frontend)) \*      |
 
-\* _You'll need Geckodriver and Firefox installed, you can try adapting this from an [old version of this project's Dockerfile](https://github.com/nchlswhttkr/mellophone/blob/55f9d5eb4cb1514ebf6b9a6193e687959b3dcfa7/Dockerfile#L23) if you are unsure about what to do._
+\* _Currently still under development - You'll need Geckodriver and Firefox installed, you can try adapting this from an [older version of this project's Dockerfile](https://github.com/nchlswhttkr/mellophone/blob/55f9d5eb4cb1514ebf6b9a6193e687959b3dcfa7/Dockerfile#L23) if you are unsure about what to do._
