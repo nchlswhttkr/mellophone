@@ -4,6 +4,7 @@ RUN apt update -qqy && DEBIAN_FRONTEND=noninteractive apt install -qqy \
     curl \
     libpq-dev \
     nginx \
+    openssh-client \
     postgresql \
     postgresql-contrib \
     python3-dev \
