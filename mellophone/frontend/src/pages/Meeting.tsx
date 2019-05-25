@@ -10,15 +10,16 @@ import requireAuthentication from "../utils/requireAuthentication";
 function Meeting(props: RouteComponentProps<{ meetingId: string }>) {
   const [meeting, setMeeting] = React.useState<IMeeting>();
 
-  const meetingId = new Number(props.meetingId).valueOf();
-  if (Number.isNaN(meetingId)) return null;
+  const meetingId = Number(props.meetingId).valueOf();
 
   React.useEffect(() => {
-    MeetingService.getMeetingById(meetingId)
-      .then(meeting => setMeeting(meeting))
-      .catch(
-        error => process.env.NODE_ENV !== "production" && console.error(error)
-      );
+    if (!Number.isNaN(meetingId)) {
+      MeetingService.getMeetingById(meetingId)
+        .then(meeting => setMeeting(meeting))
+        .catch(
+          error => process.env.NODE_ENV !== "production" && console.error(error)
+        );
+    }
   }, [meetingId]);
 
   return <Main>{meeting && <MeetingDocument meeting={meeting} />}</Main>;

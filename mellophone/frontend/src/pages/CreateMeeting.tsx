@@ -9,7 +9,7 @@ import CreateMeetingForm from "../sections/CreateMeetingForm";
 import requireAuthentication from "../utils/requireAuthentication";
 
 function CreateMeeting(props: RouteComponentProps<{ teamId: string }>) {
-  const teamId = new Number(props.teamId).valueOf();
+  const teamId = Number(props.teamId).valueOf();
 
   if (Number.isNaN(teamId)) return null;
 

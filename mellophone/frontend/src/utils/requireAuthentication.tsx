@@ -19,7 +19,6 @@ const requireAuthentication = (
   Fallback?: React.ElementType
 ) => (props: RouteComponentProps) => {
   const { sessionStore } = React.useContext(StoresContext);
-  if (!sessionStore) return null;
 
   // If a user is/becomes anonymous, redirect them to sign in
   React.useEffect(
@@ -29,7 +28,7 @@ const requireAuthentication = (
           new Route(Route.SIGN_IN).navigate();
         }
       }),
-    []
+    [sessionStore]
   );
 
   return (

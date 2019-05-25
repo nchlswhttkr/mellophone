@@ -21,10 +21,7 @@ describe("Utils - requireAuthentication", () => {
     cleanup();
     sessionStore = observable({
       user: undefined,
-      loadSessionUser: jest.fn(),
-      signIn: jest.fn(),
-      signUp: jest.fn(),
-      signOut: jest.fn(),
+      setUser: jest.fn(),
     });
     navigate("/");
   });

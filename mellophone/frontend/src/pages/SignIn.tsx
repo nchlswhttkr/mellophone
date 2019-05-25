@@ -15,7 +15,6 @@ export default function SignIn(_: RouteComponentProps) {
   const [newAccount, setNewAccount] = React.useState<boolean>(false);
 
   const { sessionStore } = React.useContext(StoresContext);
-  if (!sessionStore) return null;
 
   const signUp = async (
     userToBeCreated: IUserToBeCreated,

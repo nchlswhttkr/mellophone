@@ -11,7 +11,6 @@ import identityService from "../network/identityService";
 
 function Account(_: RouteComponentProps) {
   const { sessionStore } = React.useContext(StoresContext);
-  if (!sessionStore) return null;
 
   const signOut = async () => {
     identityService.signOut().then(() => {

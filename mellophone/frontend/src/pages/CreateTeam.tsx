@@ -10,7 +10,6 @@ import teamService from "../network/teamService";
 
 function CreateTeam(_: RouteComponentProps) {
   const { teamStore } = React.useContext(StoresContext);
-  if (!teamStore) return null;
 
   const createTeam = async (name: string, website: string) => {
     const team = await teamService.postTeam(name, website);

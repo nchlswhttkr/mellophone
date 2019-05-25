@@ -1,6 +1,5 @@
-import { observable, runInAction, computed, action } from "mobx";
+import { observable, computed, action } from "mobx";
 import { ITeam } from "../types";
-import { ITeamService } from "../network/teamService";
 
 export interface ITeamStore {
   teams: Map<number, ITeam>;

@@ -10,7 +10,6 @@ import teamService from "../network/teamService";
 
 function Home(_: RouteComponentProps) {
   const { teamStore } = React.useContext(StoresContext);
-  if (!teamStore) return null;
 
   React.useEffect(() => {
     teamService.getTeamsOfSessionUser().then(teams =>
@@ -19,7 +18,7 @@ function Home(_: RouteComponentProps) {
         teamStore.addToSessionUserTeams(team.id);
       })
     );
-  }, []);
+  }, [teamStore]);
 
   return (
     <Observer>

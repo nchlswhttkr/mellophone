@@ -5,7 +5,7 @@ import Main from "../elements/Main";
 import TeamProfile from "../sections/TeamProfile";
 import MeetingList from "../sections/MeetingList";
 import MeetingService from "../network/MeetingService";
-import { IMeeting, ITeam } from "../types";
+import { IMeeting } from "../types";
 import Button from "../elements/Button";
 import Route from "../utils/Route";
 import { StoresContext } from "../stores";
@@ -15,20 +15,19 @@ import { Observer } from "mobx-react";
 
 function Team(props: RouteComponentProps<{ teamId: string }>) {
   const [meetings, setMeetings] = React.useState<IMeeting[]>();
+  const { teamStore } = React.useContext(StoresContext);
 
-  const teamId = new Number(props.teamId).valueOf();
-  if (Number.isNaN(teamId)) return null;
-
-  const { sessionStore, teamStore } = React.useContext(StoresContext);
-  if (!sessionStore || !teamStore) return null;
+  const teamId = Number(props.teamId).valueOf();
 
   React.useEffect(() => {
-    teamService.getTeamById(teamId).then(team => {
-      teamStore.addTeam(team);
-      teamStore.addToSessionUserTeams(team.id);
-    });
-    MeetingService.getMeetingsOfTeam(teamId).then(setMeetings);
-  }, [teamId]);
+    if (!Number.isNaN(teamId)) {
+      teamService.getTeamById(teamId).then(team => {
+        teamStore.addTeam(team);
+        teamStore.addToSessionUserTeams(team.id);
+      });
+      MeetingService.getMeetingsOfTeam(teamId).then(setMeetings);
+    }
+  }, [teamId, teamStore]);
 
   return (
     <Observer>
