@@ -1,21 +1,22 @@
-FROM alpine:3.9.3
+FROM ubuntu:bionic-20181204
 
-ENV LANG en_US.UTF-8
-
-# psycopg2 - http://initd.org/psycopg/docs/install.html#build-prerequisites
-RUN apk add --no-cache \
-    gcc \
-    git \
-    musl-dev \
-    openssh \
-    postgresql-dev \
-    python3 \
+RUN apt update -qqy && DEBIAN_FRONTEND=noninteractive apt install -qqy \
+    curl \
+    libpq-dev \
+    nginx \
+    openssh-client \
+    postgresql \
+    postgresql-contrib \
     python3-dev \
+    python3-pip \
     rsync \
-    wget
+    unzip
 
-RUN pip3 install pipenv
+RUN pip3 install --upgrade pip
 
-RUN adduser -D mellophone
-USER mellophone
-WORKDIR /home/mellophone
+RUN useradd -m conductor
+USER conductor
+WORKDIR /home/conductor
+
+ENV PATH="/home/conductor/.local/bin:${PATH}" LANG="C.UTF-8"
+RUN pip3 install --user pipenv

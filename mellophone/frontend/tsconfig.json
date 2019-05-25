@@ -17,7 +17,5 @@
     "experimentalDecorators": true
   },
   "include": ["src"],
-  "exclude": [
-    "src/setupProxy.js" // proxy backend calls, not compiled with build
-  ]
+  "exclude": ["src/setupProxy.js"]
 }

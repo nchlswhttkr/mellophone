@@ -28,7 +28,7 @@ function Team(props: RouteComponentProps<{ teamId: string }>) {
       teamStore.addToSessionUserTeams(team.id);
     });
     MeetingService.getMeetingsOfTeam(teamId).then(setMeetings);
-  }, []);
+  }, [teamId]);
 
   return (
     <Observer>

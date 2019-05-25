@@ -8,10 +8,10 @@ import MeetingService from "../network/MeetingService";
 import requireAuthentication from "../utils/requireAuthentication";
 
 function Meeting(props: RouteComponentProps<{ meetingId: string }>) {
+  const [meeting, setMeeting] = React.useState<IMeeting>();
+
   const meetingId = new Number(props.meetingId).valueOf();
   if (Number.isNaN(meetingId)) return null;
-
-  const [meeting, setMeeting] = React.useState<IMeeting>();
 
   React.useEffect(() => {
     MeetingService.getMeetingById(meetingId)
@@ -19,7 +19,7 @@ function Meeting(props: RouteComponentProps<{ meetingId: string }>) {
       .catch(
         error => process.env.NODE_ENV !== "production" && console.error(error)
       );
-  }, []);
+  }, [meetingId]);
 
   return <Main>{meeting && <MeetingDocument meeting={meeting} />}</Main>;
 }
