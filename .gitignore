@@ -1,7 +1,12 @@
+# editors
 .vscode
 .idea
-/data
-/.cache/
-/*.log
-/.ssh
-/mellophone/static/
+
+# secrets
+/secrets
+
+# build outputs/development files
+/mellophone/static
+/docker
+.venv
+.cache

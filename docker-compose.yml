@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  dev:
+    image: "nchlswhttkr/mellophone"
+    working_dir: "/home/conductor/mellophone"
+    environment:
+      - "WORKON_HOME=~/mellophone/docker/dev/venv"
+    volumes:
+      - ".:/home/conductor/mellophone"
+    ports:
+      - "8000:8000"
+    command: "bash"
+  db:
+    image: "postgres:10"
+    environment:
+      - "POSTGRES_DB=postgres"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=mellophone"
+    ports:
+      - "5432:5432"
+    volumes:
+      - "./docker/db:/var/lib/postgresql"
