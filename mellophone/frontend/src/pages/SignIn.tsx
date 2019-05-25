@@ -26,13 +26,13 @@ export default function SignIn(_: RouteComponentProps) {
       userToBeCreated.firstName,
       userToBeCreated.lastName
     );
-    sessionStore.setUser(user);
+    sessionStore.user = user;
     new Route().navigate();
   };
 
   const signIn = async (email: string, password: string) => {
     const user = await identityService.signIn(email, password);
-    sessionStore.setUser(user);
+    sessionStore.user = user;
     new Route().navigate();
   };
 

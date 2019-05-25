@@ -18,17 +18,17 @@ describe("Stores - SessionStore", () => {
   it("Clears the session user", () => {
     const store = new SessionStore();
 
-    store.setUser(mockUser);
+    store.user = mockUser;
     expect(store.user).not.toBe(undefined);
 
-    store.setUser();
+    store.user = undefined;
     expect(store.user).toBe(undefined);
   });
 
   it("Updates the session user when one is provided", () => {
     const store = new SessionStore();
 
-    store.setUser(mockUser);
+    store.user = mockUser;
     expect(store.user).toEqual(mockUser);
   });
 
@@ -39,13 +39,13 @@ describe("Stores - SessionStore", () => {
     const user = computed(() => store.user);
     expect(user.get()).toBe(undefined);
 
-    store.setUser(mockUser);
+    store.user = mockUser;
     expect(user.get()).toMatchObject(expect.objectContaining(mockUser));
 
-    store.setUser({ ...mockUser, firstName: "Nick" });
+    store.user = { ...mockUser, firstName: "Nick" };
     expect(user.get()).toMatchObject(expect.objectContaining(modifiedUser));
 
-    store.setUser();
+    store.user = undefined;
     expect(user.get()).toBe(undefined);
   });
 });

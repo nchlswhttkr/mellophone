@@ -1,6 +1,6 @@
 import React from "react";
 import { cleanup, wait } from "react-testing-library";
-import { ISessionStore } from "../../stores/SessionStore";
+import SessionStore, { ISessionStore } from "../../stores/SessionStore";
 import requireAuthentication from "../requireAuthentication";
 import { IUser } from "../../types";
 import { observable } from "mobx";
@@ -19,10 +19,7 @@ describe("Utils - requireAuthentication", () => {
 
   beforeEach(() => {
     cleanup();
-    sessionStore = observable({
-      user: undefined,
-      setUser: jest.fn(),
-    });
+    sessionStore = new SessionStore();
     navigate("/");
   });
 

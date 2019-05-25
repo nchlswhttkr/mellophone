@@ -14,7 +14,7 @@ function Account(_: RouteComponentProps) {
 
   const signOut = async () => {
     identityService.signOut().then(() => {
-      sessionStore.setUser();
+      sessionStore.user = undefined;
       new Route().navigate();
     });
   };

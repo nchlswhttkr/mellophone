@@ -2,7 +2,7 @@ import React from "react";
 import { Router } from "@reach/router";
 import { autorun, configure } from "mobx";
 
-import { ApplicationStores, StoresContext } from "./stores";
+import { StoresContext } from "./stores";
 import SessionStore from "./stores/SessionStore";
 import TeamStore from "./stores/TeamStore";
 import identityService from "./network/identityService";
@@ -21,7 +21,6 @@ import Footer from "./elements/Footer";
 
 interface State {
   status: "pending" | "errored" | "ready";
-  stores: ApplicationStores;
 }
 
 // https://mobx.js.org/refguide/api.html#configure
@@ -32,17 +31,18 @@ configure({
 export default class App extends React.Component<{}, State> {
   state: State = {
     status: "pending",
-    stores: {
-      sessionStore: new SessionStore(),
-      teamStore: new TeamStore(),
-    },
+  };
+
+  stores = {
+    sessionStore: new SessionStore(),
+    teamStore: new TeamStore(),
   };
 
   componentDidMount() {
     identityService
       .getSessionUser()
       .then(user => {
-        this.state.stores.sessionStore.setUser(user);
+        this.stores.sessionStore.user = user;
         this.setState({ status: "ready" });
       })
       .catch(() => {
@@ -51,8 +51,8 @@ export default class App extends React.Component<{}, State> {
   }
 
   clearTeamsIfAnonymousDisposer = autorun(() => {
-    if (!this.state.stores.sessionStore.user) {
-      this.state.stores.teamStore.clearTeams();
+    if (!this.stores.sessionStore.user) {
+      this.stores.teamStore.clearTeams();
     }
   });
 
@@ -61,7 +61,7 @@ export default class App extends React.Component<{}, State> {
   }
 
   render() {
-    const { status, stores } = this.state;
+    const { status } = this.state;
 
     if (status === "pending") return null;
 
@@ -73,8 +73,8 @@ export default class App extends React.Component<{}, State> {
       );
 
     return (
-      <StoresContext.Provider value={stores}>
-        <Header sessionStore={stores.sessionStore} />
+      <StoresContext.Provider value={this.stores}>
+        <Header sessionStore={this.stores.sessionStore} />
         <Router>
           <Home path={new Route().build()} />
           <SignIn path={new Route(Route.SIGN_IN).build()} />

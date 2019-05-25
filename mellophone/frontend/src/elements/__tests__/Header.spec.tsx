@@ -23,7 +23,7 @@ describe("Elements - Header", () => {
 
   it("Directs authenticated users to their account", () => {
     const store = new SessionStore();
-    store.setUser(mockUser);
+    store.user = mockUser;
     const { queryByText } = render(<Header sessionStore={store} />);
 
     expect(queryByText("Account")).not.toBe(null);
@@ -35,10 +35,10 @@ describe("Elements - Header", () => {
 
     await wait(() => expect(queryByText("Sign in")).not.toBe(null));
 
-    store.setUser(mockUser);
+    store.user = mockUser;
     expect(queryByText("Account")).not.toBe(null);
 
-    store.setUser();
+    store.user = undefined;
     await wait(() => expect(queryByText("Sign in")).not.toBe(null));
   });
 });
