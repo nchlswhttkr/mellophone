@@ -9,6 +9,7 @@ RUN apt update -qqy && DEBIAN_FRONTEND=noninteractive apt install -qqy \
     postgresql-contrib \
     python3-dev \
     python3-pip \
+    rsync \
     unzip
 
 RUN pip3 install --upgrade pip
