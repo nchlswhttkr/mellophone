@@ -1,8 +1,17 @@
 import { IMeeting, IMeetingToBeCreated } from "../types";
 import BaseRequest from "../utils/BaseRequest";
 
-export default class MeetingService {
-  static async createMeeting(
+export interface IMeetingService {
+  createMeeting(
+    meeting: IMeetingToBeCreated,
+    teamId: number
+  ): Promise<IMeeting>;
+  getMeetingById(meetingId: number): Promise<IMeeting>;
+  getMeetingsOfTeam(teamId: number): Promise<IMeeting[]>;
+}
+
+export default <IMeetingService>{
+  async createMeeting(
     meeting: IMeetingToBeCreated,
     teamId: number
   ): Promise<IMeeting> {
@@ -14,19 +23,19 @@ export default class MeetingService {
       meeting
     );
     return response.meeting;
-  }
+  },
 
-  static async getMeetingById(meetingId: number): Promise<IMeeting> {
+  async getMeetingById(meetingId: number): Promise<IMeeting> {
     const response = await BaseRequest.get<{ meeting: IMeeting }>(
       `/meetings/${meetingId}`
     );
     return response.meeting;
-  }
+  },
 
-  static async getMeetingsOfTeam(teamId: number): Promise<IMeeting[]> {
+  async getMeetingsOfTeam(teamId: number): Promise<IMeeting[]> {
     const response = await BaseRequest.get<{ meetings: IMeeting[] }>(
       `/teams/${teamId}/meetings`
     );
     return response.meetings;
-  }
-}
+  },
+};

@@ -7,7 +7,7 @@ export interface ITeamService {
   getTeamById(id: number): Promise<ITeam>;
 }
 
-const teamService: ITeamService = {
+export default <ITeamService>{
   async postTeam(name: string, website: string) {
     if (!name || !website) {
       throw new Error("Teams must have a name and website.");
@@ -29,5 +29,3 @@ const teamService: ITeamService = {
     return response.team;
   },
 };
-
-export default teamService;
