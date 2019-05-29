@@ -4,7 +4,7 @@ import { RouteComponentProps } from "@reach/router";
 import Main from "../elements/Main";
 import TeamProfile from "../sections/TeamProfile";
 import MeetingList from "../sections/MeetingList";
-import MeetingService from "../network/MeetingService";
+import meetingService from "../network/meetingService";
 import { IMeeting } from "../types";
 import Button from "../elements/Button";
 import Route from "../utils/Route";
@@ -25,7 +25,7 @@ function Team(props: RouteComponentProps<{ teamId: string }>) {
         teamStore.addTeam(team);
         teamStore.addToSessionUserTeams(team.id);
       });
-      MeetingService.getMeetingsOfTeam(teamId).then(setMeetings);
+      meetingService.getMeetingsOfTeam(teamId).then(setMeetings);
     }
   }, [teamId, teamStore]);
 
