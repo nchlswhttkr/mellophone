@@ -11,7 +11,7 @@ import Route from "../utils/Route";
 import { StoresContext } from "../stores";
 import requireAuthentication from "../utils/requireAuthentication";
 import teamService from "../network/teamService";
-import { Observer } from "mobx-react";
+import { Observer } from "mobx-react-lite";
 
 function Team(props: RouteComponentProps<{ teamId: string }>) {
   const [meetings, setMeetings] = React.useState<IMeeting[]>();

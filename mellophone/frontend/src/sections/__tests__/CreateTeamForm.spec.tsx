@@ -1,17 +1,15 @@
 import React from "react";
-import { render, cleanup, fireEvent } from "react-testing-library";
+import { render, cleanup, fireEvent, wait } from "react-testing-library";
 
 import CreateTeamForm from "../CreateTeamForm";
 
 describe("Sections - CreateTeamForm", () => {
-  let createTeam = jest.fn();
-
   beforeEach(() => {
-    createTeam.mockReset();
     cleanup();
   });
 
   it("Creates a team when the form is submitted", () => {
+    const createTeam = jest.fn(async () => undefined);
     const { getByLabelText, getByText } = render(
       <CreateTeamForm createTeam={createTeam} />
     );
@@ -31,9 +29,10 @@ describe("Sections - CreateTeamForm", () => {
     );
   });
 
-  it("Displays the error message of createTeam if it throws an error", () => {
-    createTeam = jest.fn(() => {
-      throw new Error("Unable to create a team at this time.");
+  it("Displays the error message of createTeam if it throws an error", async () => {
+    const message = "Unable to create a team at this time.";
+    const createTeam = jest.fn(async () => {
+      throw new Error(message);
     });
     const { getByText, queryByText } = render(
       <CreateTeamForm createTeam={createTeam} />
@@ -41,7 +40,7 @@ describe("Sections - CreateTeamForm", () => {
 
     fireEvent.click(getByText("Create team"));
 
+    await wait(() => expect(queryByText(message)).not.toBe(null));
     expect(createTeam).toBeCalledTimes(1);
-    expect(queryByText("Unable to create a team at this time.")).not.toBe(null);
   });
 });

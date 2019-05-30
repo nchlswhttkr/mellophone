@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
-import { Observer } from "mobx-react";
+import { Observer } from "mobx-react-lite";
 
 import AccountBlock from "../sections/AccountBlock";
 import Main from "../elements/Main";

@@ -3,7 +3,7 @@ import { autorun } from "mobx";
 import Route from "./Route";
 import { StoresContext } from "../stores";
 import { RouteComponentProps } from "@reach/router";
-import { Observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 
 /**
  * A HOC (https://reactjs.org/docs/higher-order-components.html) that enforces
@@ -17,31 +17,26 @@ import { Observer } from "mobx-react";
 const requireAuthentication = (
   Child: React.ElementType,
   Fallback?: React.ElementType
-) => (props: RouteComponentProps) => {
-  const { sessionStore } = React.useContext(StoresContext);
+) =>
+  observer((props: RouteComponentProps) => {
+    const { sessionStore } = React.useContext(StoresContext);
 
-  // If a user is/becomes anonymous, redirect them to sign in
-  React.useEffect(
-    () =>
-      autorun(() => {
-        if (!sessionStore.user && !Fallback) {
-          new Route(Route.SIGN_IN).navigate();
-        }
-      }),
-    [sessionStore]
-  );
+    // If a user is/becomes anonymous, redirect them to sign in
+    React.useEffect(
+      () =>
+        autorun(() => {
+          if (!sessionStore.user && !Fallback) {
+            new Route(Route.SIGN_IN).navigate();
+          }
+        }),
+      [sessionStore]
+    );
 
-  return (
-    <Observer>
-      {() => {
-        if (sessionStore.user) {
-          return <Child {...props} />;
-        }
+    if (sessionStore.user) {
+      return <Child {...props} />;
+    }
 
-        return Fallback ? <Fallback {...props} /> : null;
-      }}
-    </Observer>
-  );
-};
+    return Fallback ? <Fallback {...props} /> : null;
+  });
 
 export default requireAuthentication;

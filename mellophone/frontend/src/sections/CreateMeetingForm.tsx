@@ -1,67 +1,48 @@
 import React from "react";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 
 import { IMeetingToBeCreated } from "../types";
 import classes from "./CreateMeetingForm.module.css";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
+import ErrorMessage from "../elements/ErrorMessage";
 
 interface Props {
   createMeeting: (meeting: IMeetingToBeCreated) => Promise<void>;
 }
 
-interface State {
-  errorMessage: string;
-}
+function CreateTeamForm(props: Props) {
+  const [error, setError] = React.useState<Error>();
+  const nameRef = React.useRef<HTMLInputElement>(null);
+  const venueRef = React.useRef<HTMLInputElement>(null);
 
-@observer
-class CreateTeamForm extends React.Component<Props, State> {
-  state = {
-    errorMessage: "",
-  };
-
-  nameRef = React.createRef<HTMLInputElement>();
-  venueRef = React.createRef<HTMLInputElement>();
-
-  onSubmit = async () => {
-    const name = this.nameRef.current;
-    const venue = this.venueRef.current;
+  const onSubmit = () => {
+    const name = nameRef.current;
+    const venue = venueRef.current;
     if (name && venue) {
-      try {
-        await this.props.createMeeting({
+      props
+        .createMeeting({
           name: name.value,
           venue: venue.value,
-        });
-      } catch (error) {
-        this.setState({ errorMessage: error.message });
-      }
+        })
+        .catch(setError);
     }
   };
 
-  render() {
-    const { errorMessage } = this.state;
-
-    return (
-      <form className={classes.form}>
-        <Input
-          className={classes.input}
-          label="Meeting name"
-          ref={this.nameRef}
-        />
-        <Input
-          className={classes.input}
-          label="Venue (optional)"
-          ref={this.venueRef}
-        />
-
-        {errorMessage && <p className={classes.error}>{errorMessage}</p>}
-
-        <Button className={classes.button} onClick={this.onSubmit}>
-          Create meeting
-        </Button>
-      </form>
-    );
-  }
+  return (
+    <form className={classes.form}>
+      <Input className={classes.input} label="Meeting name" ref={nameRef} />
+      <Input
+        className={classes.input}
+        label="Venue (optional)"
+        ref={venueRef}
+      />
+      <ErrorMessage error={error} />
+      <Button className={classes.button} onClick={onSubmit}>
+        Create meeting
+      </Button>
+    </form>
+  );
 }
 
-export default CreateTeamForm;
+export default observer(CreateTeamForm);

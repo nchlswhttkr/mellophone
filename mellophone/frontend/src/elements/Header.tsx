@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "@reach/router";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 
 import classes from "./Header.module.css";
 import Route from "../utils/Route";

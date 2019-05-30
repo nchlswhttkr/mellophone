@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
-import { Observer } from "mobx-react";
+import { Observer } from "mobx-react-lite";
 
 import Main from "../elements/Main";
 import TeamList from "../sections/TeamList";

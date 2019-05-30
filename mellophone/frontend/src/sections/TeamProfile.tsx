@@ -1,5 +1,5 @@
 import React from "react";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 
 import { ITeam } from "../types";
 
@@ -7,20 +7,15 @@ interface Props {
   team: ITeam | undefined;
 }
 
-@observer
-class TeamProfile extends React.Component<Props> {
-  render() {
-    const { team } = this.props;
+function TeamProfile({ team }: Props) {
+  if (!team) return null;
 
-    if (!team) return null;
-
-    return (
-      <>
-        <h2>{team.name}</h2>
-        <p>{team.website}</p>
-      </>
-    );
-  }
+  return (
+    <>
+      <h2>{team.name}</h2>
+      <p>{team.website}</p>
+    </>
+  );
 }
 
-export default TeamProfile;
+export default observer(TeamProfile);
