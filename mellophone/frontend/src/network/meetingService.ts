@@ -10,7 +10,7 @@ export interface IMeetingService {
   getMeetingsOfTeam(teamId: number): Promise<IMeeting[]>;
 }
 
-export default <IMeetingService>{
+export default {
   async createMeeting(
     meeting: IMeetingToBeCreated,
     teamId: number
@@ -38,4 +38,4 @@ export default <IMeetingService>{
     );
     return response.meetings;
   },
-};
+} as IMeetingService;

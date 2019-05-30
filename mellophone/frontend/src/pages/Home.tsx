@@ -22,7 +22,7 @@ function Home(_: RouteComponentProps) {
         })
       )
       .catch(setError);
-  }, [teamStore]);
+  }, [teamStore, getTeamsOfSessionUser]);
 
   return (
     <Observer>

@@ -14,7 +14,8 @@ function Meeting(props: RouteComponentProps<{ meetingId: string }>) {
 
   React.useEffect(() => {
     if (!Number.isNaN(meetingId)) {
-      meetingService.getMeetingById(meetingId)
+      meetingService
+        .getMeetingById(meetingId)
         .then(meeting => setMeeting(meeting))
         .catch(
           error => process.env.NODE_ENV !== "production" && console.error(error)

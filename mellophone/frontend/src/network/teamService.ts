@@ -7,7 +7,7 @@ export interface ITeamService {
   getTeamById(id: number): Promise<ITeam>;
 }
 
-export default <ITeamService>{
+export default {
   async postTeam(name: string, website: string) {
     if (!name || !website) {
       throw new Error("Teams must have a name and website.");
@@ -28,4 +28,4 @@ export default <ITeamService>{
     const response = await BaseRequest.get<{ team: ITeam }>(`/teams/${id}`);
     return response.team;
   },
-};
+} as ITeamService;

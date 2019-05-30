@@ -13,7 +13,7 @@ export interface IIdentityService {
   getSessionUser(): Promise<IUser | undefined>;
 }
 
-export default <IIdentityService>{
+export default {
   async signIn(email: string, password: string): Promise<IUser> {
     if (!email || !password) {
       throw new Error("An email and password is needed to sign in.");
@@ -53,4 +53,4 @@ export default <IIdentityService>{
   async signOut(): Promise<void> {
     await BaseRequest.post("/identity/sign-out", {});
   },
-};
+} as IIdentityService;
