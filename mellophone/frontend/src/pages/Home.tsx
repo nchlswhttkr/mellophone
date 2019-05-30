@@ -7,6 +7,7 @@ import TeamList from "../sections/TeamList";
 import { StoresContext } from "../stores";
 import requireAuthentication from "../utils/requireAuthentication";
 import { NetworkContext } from "../network";
+import ErrorMessage from "../elements/ErrorMessage";
 
 function Home(_: RouteComponentProps) {
   const [error, setError] = React.useState<Error>();
@@ -30,7 +31,7 @@ function Home(_: RouteComponentProps) {
         const { sessionUserTeams } = teamStore;
         return (
           <Main>
-            <p style={{ color: "red" }}>{error && error.message}</p>
+            <ErrorMessage error={error} />
             {!error && sessionUserTeams.length > 0 && (
               <TeamList teams={sessionUserTeams} />
             )}

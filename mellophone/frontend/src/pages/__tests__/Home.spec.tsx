@@ -12,9 +12,9 @@ describe("Pages - Home", () => {
 
   it("Renders a landing page when no user is authenticated", () => {
     const sessionStore = new SessionStore();
-    const { queryByText } = new TestRenderer(<Home />)
+    const { queryByText } = new TestRenderer()
       .withStores({ sessionStore })
-      .render();
+      .render(<Home />);
 
     expect(queryByText("Welcome to Mellophone")).not.toBe(null);
   });
@@ -25,10 +25,10 @@ describe("Pages - Home", () => {
     const teams = [mock.team()];
     const getTeamsOfSessionUser = jest.fn(async () => teams);
 
-    const { queryByText } = new TestRenderer(<Home />)
+    const { queryByText } = new TestRenderer()
       .withStores({ sessionStore })
       .withNetwork({ getTeamsOfSessionUser })
-      .render();
+      .render(<Home />);
 
     await wait(() => expect(queryByText(teams[0].name)).not.toBe(null));
     expect(getTeamsOfSessionUser).toBeCalledTimes(1);
@@ -42,10 +42,10 @@ describe("Pages - Home", () => {
       throw new Error(message);
     });
 
-    const { queryByText } = new TestRenderer(<Home />)
+    const { queryByText } = new TestRenderer()
       .withStores({ sessionStore })
       .withNetwork({ getTeamsOfSessionUser })
-      .render();
+      .render(<Home />);
 
     await wait(() => expect(queryByText(message)).not.toBe(null));
     expect(getTeamsOfSessionUser).toBeCalledTimes(1);
@@ -62,10 +62,10 @@ describe("Pages - Home", () => {
     });
     const getTeamsOfSessionUser = jest.fn(async () => []);
 
-    const { queryByText } = new TestRenderer(<Home />)
+    const { queryByText } = new TestRenderer()
       .withStores({ sessionStore, teamStore })
       .withNetwork({ getTeamsOfSessionUser })
-      .render();
+      .render(<Home />);
 
     expect(queryByText(teams[0].name)).not.toBe(null);
     expect(queryByText(teams[1].name)).not.toBe(null);
@@ -83,10 +83,10 @@ describe("Pages - Home", () => {
     const newTeam = mock.team();
     const getTeamsOfSessionUser = jest.fn(async () => [newTeam]);
 
-    const { queryByText } = new TestRenderer(<Home />)
+    const { queryByText } = new TestRenderer()
       .withStores({ sessionStore, teamStore })
       .withNetwork({ getTeamsOfSessionUser })
-      .render();
+      .render(<Home />);
 
     expect(queryByText(initialTeams[0].name)).not.toBe(null);
     expect(queryByText(initialTeams[1].name)).not.toBe(null);

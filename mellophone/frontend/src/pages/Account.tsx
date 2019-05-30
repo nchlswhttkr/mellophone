@@ -7,23 +7,31 @@ import Main from "../elements/Main";
 import requireAuthentication from "../utils/requireAuthentication";
 import { StoresContext } from "../stores";
 import Route from "../utils/Route";
-import identityService from "../network/identityService";
+import { NetworkContext } from "../network";
+import ErrorMessage from "../elements/ErrorMessage";
 
 function Account(_: RouteComponentProps) {
+  const [error, setError] = React.useState<Error>();
   const { sessionStore } = React.useContext(StoresContext);
+  const { signOut } = React.useContext(NetworkContext);
 
-  const signOut = async () => {
-    identityService.signOut().then(() => {
-      sessionStore.user = undefined;
-      new Route().navigate();
-    });
+  const onSignOut = async () => {
+    signOut()
+      .then(() => {
+        sessionStore.user = undefined;
+        new Route().navigate();
+      })
+      .catch(setError);
   };
 
   const { user } = sessionStore;
   return (
     <Observer>
       {() => (
-        <Main>{user && <AccountBlock user={user} signOut={signOut} />}</Main>
+        <Main>
+          <ErrorMessage error={error} />
+          {user && <AccountBlock user={user} signOut={onSignOut} />}
+        </Main>
       )}
     </Observer>
   );

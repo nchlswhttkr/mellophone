@@ -1,6 +1,7 @@
 import { ITeam } from "../../types";
 import TeamStore from "../TeamStore";
 import { computed } from "mobx";
+import mock from "../../utils/mock";
 
 describe("Stores - TeamStore", () => {
   const mockTeams: ITeam[] = [
@@ -94,5 +95,16 @@ describe("Stores - TeamStore", () => {
     team!.name = "A new team name";
 
     expect(sessionUserTeams.get()[0].name).toBe(team!.name);
+  });
+
+  it("Does not add a duplicate team to the session user", () => {
+    const store = new TeamStore();
+    const team = mock.team();
+
+    store.addTeam(team);
+    store.addToSessionUserTeams(team.id);
+    store.addToSessionUserTeams(team.id);
+
+    expect(store.sessionUserTeams).toHaveLength(1);
   });
 });

@@ -9,18 +9,19 @@ import classes from "./SignIn.module.css";
 import Button from "../elements/Button";
 import Route from "../utils/Route";
 import { StoresContext } from "../stores";
-import identityService from "../network/identityService";
+import { NetworkContext } from "../network";
 
 export default function SignIn(_: RouteComponentProps) {
-  const [newAccount, setNewAccount] = React.useState<boolean>(false);
+  const [newAccount, setNewAccount] = React.useState<boolean>(true);
+  const { signIn, signUp } = React.useContext(NetworkContext);
 
   const { sessionStore } = React.useContext(StoresContext);
 
-  const signUp = async (
+  const onSignUp = async (
     userToBeCreated: IUserToBeCreated,
     password: string
   ) => {
-    const user = await identityService.signUp(
+    const user = await signUp(
       userToBeCreated.email,
       password,
       userToBeCreated.firstName,
@@ -30,20 +31,22 @@ export default function SignIn(_: RouteComponentProps) {
     new Route().navigate();
   };
 
-  const signIn = async (email: string, password: string) => {
-    const user = await identityService.signIn(email, password);
+  const onSignIn = async (email: string, password: string) => {
+    const user = await signIn(email, password);
     sessionStore.user = user;
     new Route().navigate();
   };
 
   return (
     <Main className={classes.formContainer}>
-      <h2 className={classes.title}>{newAccount ? "Sign up" : "Sign in"}</h2>
+      <h2 className={classes.title}>
+        {newAccount ? "Sign up to Mellophone" : "Sign in to Mellophone"}
+      </h2>
 
       {newAccount ? (
-        <SignUpForm signUp={signUp} />
+        <SignUpForm signUp={onSignUp} />
       ) : (
-        <SignInForm signIn={signIn} />
+        <SignInForm signIn={onSignIn} />
       )}
 
       <hr className={classes.divider} />

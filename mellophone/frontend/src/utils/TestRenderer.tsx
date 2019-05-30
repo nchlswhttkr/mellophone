@@ -6,30 +6,29 @@ import { INetworkLayer, NetworkLayer, NetworkContext } from "../network";
 import { render, RenderResult } from "react-testing-library";
 
 export default class TestRenderer {
-  component: React.ReactNode;
-  stores: Partial<ApplicationStores>;
-  network: Partial<INetworkLayer>;
+  stores: ApplicationStores;
+  network: INetworkLayer;
 
-  constructor(component: React.ReactNode) {
-    this.component = component;
-    this.stores = {};
-    this.network = {};
+  constructor() {
+    this.stores = {
+      sessionStore: new SessionStore(),
+      teamStore: new TeamStore(),
+    };
+    this.network = Object.assign({}, NetworkLayer);
   }
 
   withStores(stores: Partial<ApplicationStores>): TestRenderer {
-    this.stores = stores;
+    Object.assign(this.stores, stores);
     return this;
   }
 
   withNetwork(network: Partial<INetworkLayer>): TestRenderer {
-    this.network = network;
+    Object.assign(this.network, network);
     return this;
   }
 
-  render(): RenderResult {
+  render(component: React.ReactNode): RenderResult {
     const stores = {
-      sessionStore: new SessionStore(),
-      teamStore: new TeamStore(),
       ...this.stores,
     };
     const network = {
@@ -40,7 +39,7 @@ export default class TestRenderer {
     return render(
       <NetworkContext.Provider value={network}>
         <StoresContext.Provider value={stores}>
-          {this.component}
+          {component}
         </StoresContext.Provider>
       </NetworkContext.Provider>
     );
