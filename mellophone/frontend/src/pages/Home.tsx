@@ -6,18 +6,22 @@ import Main from "../elements/Main";
 import TeamList from "../sections/TeamList";
 import { StoresContext } from "../stores";
 import requireAuthentication from "../utils/requireAuthentication";
-import teamService from "../network/teamService";
+import { NetworkContext } from "../network";
 
 function Home(_: RouteComponentProps) {
+  const [error, setError] = React.useState<Error>();
   const { teamStore } = React.useContext(StoresContext);
+  const { getTeamsOfSessionUser } = React.useContext(NetworkContext);
 
   React.useEffect(() => {
-    teamService.getTeamsOfSessionUser().then(teams =>
-      teams.forEach(team => {
-        teamStore.addTeam(team);
-        teamStore.addToSessionUserTeams(team.id);
-      })
-    );
+    getTeamsOfSessionUser()
+      .then(teams =>
+        teams.forEach(team => {
+          teamStore.addTeam(team);
+          teamStore.addToSessionUserTeams(team.id);
+        })
+      )
+      .catch(setError);
   }, [teamStore]);
 
   return (
@@ -26,7 +30,10 @@ function Home(_: RouteComponentProps) {
         const { sessionUserTeams } = teamStore;
         return (
           <Main>
-            {sessionUserTeams && <TeamList teams={sessionUserTeams} />}
+            <p style={{ color: "red" }}>{error && error.message}</p>
+            {!error && sessionUserTeams.length > 0 && (
+              <TeamList teams={sessionUserTeams} />
+            )}
           </Main>
         );
       }}
@@ -34,4 +41,6 @@ function Home(_: RouteComponentProps) {
   );
 }
 
-export default requireAuthentication(Home, () => <h1>Mellophone</h1>);
+export default requireAuthentication(Home, () => (
+  <h1>Welcome to Mellophone</h1>
+));

@@ -1,10 +1,10 @@
 import React from "react";
-import { cleanup, wait } from "react-testing-library";
+import { render, cleanup, wait } from "react-testing-library";
+
 import SessionStore, { ISessionStore } from "../../stores/SessionStore";
 import requireAuthentication from "../requireAuthentication";
 import { IUser } from "../../types";
-import { observable } from "mobx";
-import { renderWithStores } from "../../utils/testRenderers";
+import TestRenderer from "../TestRenderer";
 import { navigate } from "@reach/router";
 
 describe("Utils - requireAuthentication", () => {
@@ -27,7 +27,9 @@ describe("Utils - requireAuthentication", () => {
     expect(window.location.pathname).not.toBe("/sign-in");
 
     const Component = requireAuthentication(ChildComponent);
-    const { container } = renderWithStores(<Component />, { sessionStore });
+    const { container } = new TestRenderer(<Component />)
+      .withStores({ sessionStore })
+      .render();
 
     await wait(() => expect(window.location.pathname).toBe("/sign-in"));
 
@@ -39,7 +41,9 @@ describe("Utils - requireAuthentication", () => {
 
     sessionStore.user = mockUser;
     const Component = requireAuthentication(ChildComponent);
-    const { queryByText } = renderWithStores(<Component />, { sessionStore });
+    const { queryByText } = new TestRenderer(<Component />)
+      .withStores({ sessionStore })
+      .render();
 
     expect(queryByText("This is a child component")).not.toBe(null);
     expect(window.location.pathname).not.toBe("/sign-in");
@@ -50,9 +54,9 @@ describe("Utils - requireAuthentication", () => {
 
     sessionStore.user = mockUser;
     const Component = requireAuthentication(ChildComponent);
-    const { container, queryByText } = renderWithStores(<Component />, {
-      sessionStore,
-    });
+    const { container, queryByText } = new TestRenderer(<Component />)
+      .withStores({ sessionStore })
+      .render();
 
     expect(queryByText("This is a child component")).not.toBe(null);
 
@@ -67,9 +71,9 @@ describe("Utils - requireAuthentication", () => {
 
     const FallbackComponent = () => <h1>This is a fallback component</h1>;
     const Component = requireAuthentication(ChildComponent, FallbackComponent);
-    const { queryByText } = renderWithStores(<Component />, {
-      sessionStore,
-    });
+    const { queryByText } = new TestRenderer(<Component />)
+      .withStores({ sessionStore })
+      .render();
 
     expect(queryByText("This is a fallback component")).not.toBe(null);
     expect(window.location.pathname).not.toBe("/sign-in");

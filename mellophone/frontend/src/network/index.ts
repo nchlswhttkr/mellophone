@@ -4,12 +4,12 @@ import identityService, { IIdentityService } from "./identityService";
 import meetingService, { IMeetingService } from "./meetingService";
 import teamService, { ITeamService } from "./teamService";
 
-interface INetworkLayer
+export interface INetworkLayer
   extends IIdentityService,
     ITeamService,
     IMeetingService {}
 
-const NetworkLayer: INetworkLayer = {
+export const NetworkLayer: INetworkLayer = {
   ...identityService,
   ...meetingService,
   ...teamService,
