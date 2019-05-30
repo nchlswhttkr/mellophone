@@ -32,9 +32,7 @@ function Home(_: RouteComponentProps) {
         return (
           <Main>
             <ErrorMessage error={error} />
-            {!error && sessionUserTeams.length > 0 && (
-              <TeamList teams={sessionUserTeams} />
-            )}
+            {!error && <TeamList teams={sessionUserTeams} />}
           </Main>
         );
       }}

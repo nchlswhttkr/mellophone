@@ -94,4 +94,19 @@ describe("Pages - Home", () => {
     // renders after the request fulfills
     await wait(() => expect(queryByText(newTeam.name)).not.toBe(null));
   });
+
+  it("Promps a user to create a team if they are not a member of any teams", () => {
+    const getTeamsOfSessionUser = jest.fn(async () => []);
+    const sessionStore = new SessionStore();
+    sessionStore.user = mock.user();
+    const { queryByText } = new TestRenderer()
+      .withStores({ sessionStore })
+      .withNetwork({ getTeamsOfSessionUser })
+      .render(<Home />);
+
+    expect(
+      queryByText("You are not a member of any teams", { exact: false })
+    ).not.toBe(null);
+    expect(queryByText("create a new team")).not.toBe(null);
+  });
 });
