@@ -1,5 +1,5 @@
 import React from "react";
-import { observable } from "mobx";
+import { observable, runInAction } from "mobx";
 import { cleanup, render, wait } from "react-testing-library";
 
 import Header from "../Header";
@@ -28,9 +28,9 @@ it("Reacts when a user signs in or signs out", async () => {
 
   await wait(() => expect(queryByText("Sign in")).not.toBe(null));
 
-  user.set(mock.user());
-  expect(queryByText("Account")).not.toBe(null);
+  runInAction(() => user.set(mock.user()));
+  await wait(() => expect(queryByText("Account")).not.toBe(null));
 
-  user.set(undefined);
+  runInAction(() => user.set(undefined));
   await wait(() => expect(queryByText("Sign in")).not.toBe(null));
 });

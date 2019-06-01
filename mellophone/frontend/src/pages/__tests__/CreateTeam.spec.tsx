@@ -23,7 +23,7 @@ it("Creates a team, stores it and redirects to their profile", async () => {
   const team = mock.team();
   const postTeam = jest.fn(async () => team);
   const sessionStore = new SessionStore();
-  sessionStore.user.set(mock.user());
+  sessionStore.signIn(mock.user());
   const teamStore = new TeamStore();
   const { getByLabelText, getByText } = new TestRenderer()
     .withNetwork({ postTeam })

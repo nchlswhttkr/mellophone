@@ -18,7 +18,7 @@ function Account(_: RouteComponentProps) {
   const onSignOut = () => {
     return signOut()
       .then(() => {
-        sessionStore.user.set(undefined);
+        sessionStore.signOut();
         new Route().navigate();
       })
       .catch(setError);

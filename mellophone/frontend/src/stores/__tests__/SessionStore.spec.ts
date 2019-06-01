@@ -10,10 +10,10 @@ it("Holds an anonymous user by default", () => {
 it("Clears the session user", () => {
   const store = new SessionStore();
 
-  store.user.set(mock.user());
+  store.signIn(mock.user());
   expect(store.user.get()).not.toBe(undefined);
 
-  store.user.set(undefined);
+  store.signOut();
   expect(store.user.get()).toBe(undefined);
 });
 
@@ -21,7 +21,7 @@ it("Updates the session user when one is provided", () => {
   const store = new SessionStore();
   const user = mock.user();
 
-  store.user.set(user);
+  store.signIn(user);
   expect(store.user.get()).toEqual(user);
 });
 
@@ -31,12 +31,12 @@ it("Exposes an observable for the current session user", () => {
 
   expect(store.user.get()).toBe(undefined);
 
-  store.user.set(user);
+  store.signIn(user);
   expect(store.user.get()).toEqual(user);
 
-  store.user.set({ ...user, firstName: "A new first name" });
+  store.signIn({ ...user, firstName: "A new first name" });
   expect(store.user.get()).not.toEqual(user);
 
-  store.user.set(undefined);
+  store.signOut();
   expect(store.user.get()).toBe(undefined);
 });

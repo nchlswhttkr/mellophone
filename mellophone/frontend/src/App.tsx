@@ -1,6 +1,6 @@
 import React from "react";
 import { Router } from "@reach/router";
-import { autorun, configure } from "mobx";
+import { autorun } from "mobx";
 
 import { NetworkContext } from "./network";
 import { StoresContext } from "./stores";
@@ -19,15 +19,6 @@ import CreateTeam from "./pages/CreateTeam";
 import Header from "./elements/Header";
 import Footer from "./elements/Footer";
 
-interface State {
-  status: "pending" | "errored" | "ready";
-}
-
-// https://mobx.js.org/refguide/api.html#configure
-configure({
-  enforceActions: "observed",
-});
-
 export default function App() {
   const [status, setStatus] = React.useState<string>("pending");
   const [stores] = React.useState({
@@ -39,7 +30,7 @@ export default function App() {
   React.useEffect(() => {
     getSessionUser()
       .then(user => {
-        stores.sessionStore.user.set(user);
+        user && stores.sessionStore.signIn(user);
         setStatus("ready");
       })
       .catch(() => setStatus("errored"));

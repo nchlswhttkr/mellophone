@@ -11,27 +11,29 @@ interface Props {
   user: IObservableValue<IUser | undefined>;
 }
 
-const Header = (props: Props) => (
-  <header className={classes.header}>
-    <nav>
-      <Link to={new Route().build()} className={classes.title}>
-        <h2>Mellophone</h2>
-      </Link>
-      {props.user.get() ? (
-        <Link
-          to={new Route(Route.ACCOUNT).build()}
-          aria-label="View my account">
-          <strong>Account</strong>
+function Header(props: Props) {
+  return (
+    <header className={classes.header}>
+      <nav>
+        <Link to={new Route().build()} className={classes.title}>
+          <h2>Mellophone</h2>
         </Link>
-      ) : (
-        <Link
-          to={new Route(Route.SIGN_IN).build()}
-          aria-label="Sign in to Mellophone">
-          <strong>Sign in</strong>
-        </Link>
-      )}
-    </nav>
-  </header>
-);
+        {props.user.get() ? (
+          <Link
+            to={new Route(Route.ACCOUNT).build()}
+            aria-label="View my account">
+            <strong>Account</strong>
+          </Link>
+        ) : (
+          <Link
+            to={new Route(Route.SIGN_IN).build()}
+            aria-label="Sign in to Mellophone">
+            <strong>Sign in</strong>
+          </Link>
+        )}
+      </nav>
+    </header>
+  );
+}
 
 export default observer(Header);

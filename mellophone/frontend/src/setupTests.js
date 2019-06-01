@@ -1,3 +1,6 @@
+import configureMobx from "./utils/configureMobx";
+configureMobx();
+
 // https://github.com/testing-library/react-testing-library/issues/281#issuecomment-480349256
 
 // this is just a little hack to silence a warning that we'll get until react

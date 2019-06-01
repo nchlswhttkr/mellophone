@@ -27,7 +27,7 @@ it("Redirects when the loaded user is anonymous", async () => {
 
 it("Renders the child component when an authenticated user is loaded", () => {
   const sessionStore = new SessionStore();
-  sessionStore.user.set(mock.user());
+  sessionStore.signIn(mock.user());
   const Component = requireAuthentication(ChildComponent);
   const { queryByText } = new TestRenderer()
     .withStores({ sessionStore })
@@ -39,7 +39,7 @@ it("Renders the child component when an authenticated user is loaded", () => {
 
 it("Redirects when a user goes becomes anonymous after the initial mount", async () => {
   const sessionStore = new SessionStore();
-  sessionStore.user.set(mock.user());
+  sessionStore.signIn(mock.user());
   const Component = requireAuthentication(ChildComponent);
   const { container, queryByText } = new TestRenderer()
     .withStores({ sessionStore })
@@ -48,7 +48,7 @@ it("Redirects when a user goes becomes anonymous after the initial mount", async
   expect(queryByText("This is a child component")).not.toBe(null);
 
   // If the session user disappears, they should be redirected to sign in
-  sessionStore.user.set(undefined);
+  sessionStore.signOut();
   await wait(() => expect(window.location.pathname).toBe("/sign-in"));
   expect(container.childElementCount).toBe(0);
 });

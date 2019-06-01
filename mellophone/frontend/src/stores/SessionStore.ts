@@ -1,9 +1,11 @@
-import { observable, IObservableValue } from "mobx";
+import { observable, IObservableValue, action } from "mobx";
 
 import { IUser } from "../types";
 
 export interface ISessionStore {
   user: IObservableValue<IUser | undefined>;
+  signIn(user: IUser): void;
+  signOut(): void;
 }
 
 /**
@@ -13,5 +15,13 @@ export interface ISessionStore {
  * You can know whether a user is authenticated by null-checking.
  */
 export default class SessionStore implements ISessionStore {
-  user = observable.box<IUser | undefined>();
+  readonly user = observable.box<IUser | undefined>();
+
+  @action signIn(user: IUser): void {
+    this.user.set(user);
+  }
+
+  @action signOut(): void {
+    this.user.set(undefined);
+  }
 }
