@@ -1,6 +1,6 @@
 import React from "react";
 import { observable, runInAction } from "mobx";
-import { cleanup, render, wait } from "react-testing-library";
+import { cleanup, render, wait } from "@testing-library/react";
 
 import Header from "../Header";
 import mock from "../../utils/mock";

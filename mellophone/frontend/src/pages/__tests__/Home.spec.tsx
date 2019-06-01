@@ -1,5 +1,5 @@
 import React from "react";
-import { wait, cleanup } from "react-testing-library";
+import { wait, cleanup } from "@testing-library/react";
 
 import Home from "../Home";
 import SessionStore from "../../stores/SessionStore";

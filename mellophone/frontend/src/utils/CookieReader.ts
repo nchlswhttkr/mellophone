@@ -3,12 +3,12 @@
 export default class CookieReader {
   /**
    * Attempts to obtain the value of the 'csrftoken' cookie (expected from
-   * Django), and falls back to undefined if one is not found.
+   * Django), and falls back to an empty string when one is not found.
    */
-  static getCsrfToken(): string | undefined {
+  static getCsrfToken(): string {
     const match = document.cookie.match(
       /csrftoken="?([\u0021\u0023-\u002B\u002D-\u003A\u003C-\u005B\u005D-\u007E]*)"?/
     );
-    return match ? match[1] : undefined;
+    return match ? match[1] : "";
   }
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import { observer } from "mobx-react-lite";
 
 import Main from "../elements/Main";
 import SignInForm from "../sections/SignInForm";
@@ -11,13 +12,16 @@ import { StoresContext } from "../stores";
 import { NetworkContext } from "../network";
 import ErrorMessage from "../elements/ErrorMessage";
 
-export default function SignIn(_: RouteComponentProps) {
+function SignIn(_: RouteComponentProps) {
   const [error, setError] = React.useState<Error>();
-  const [newAccount, setNewAccount] = React.useState<boolean>(true);
+  const [newAccount, setNewAccount] = React.useState<boolean>(
+    !localStorage.getItem("hasAccount")
+  );
   const { signIn, signUp } = React.useContext(NetworkContext);
   const { sessionStore } = React.useContext(StoresContext);
 
   React.useEffect(() => setError(undefined), [newAccount]);
+  React.useEffect(() => sessionStore.user.get() && new Route().navigate(), []);
 
   const onSignUp = (
     email: string,
@@ -28,6 +32,7 @@ export default function SignIn(_: RouteComponentProps) {
     return signUp(email, password, firstName, lastName)
       .then(user => {
         sessionStore.signIn(user);
+        localStorage.setItem("hasAccount", "yes");
         new Route().navigate();
       })
       .catch(setError);
@@ -37,6 +42,7 @@ export default function SignIn(_: RouteComponentProps) {
     return signIn(email, password)
       .then(user => {
         sessionStore.signIn(user);
+        localStorage.setItem("hasAccount", "yes");
         new Route().navigate();
       })
       .catch(setError);
@@ -64,3 +70,5 @@ export default function SignIn(_: RouteComponentProps) {
     </Main>
   );
 }
+
+export default observer(SignIn);

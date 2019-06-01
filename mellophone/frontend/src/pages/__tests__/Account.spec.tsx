@@ -1,5 +1,5 @@
 import React from "react";
-import { wait, fireEvent, cleanup } from "react-testing-library";
+import { wait, fireEvent, cleanup } from "@testing-library/react";
 import { observable } from "mobx";
 
 import Account from "../Account";

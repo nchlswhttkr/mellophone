@@ -1,7 +1,6 @@
 import React from "react";
-import { fireEvent, cleanup, wait } from "react-testing-library";
+import { fireEvent, cleanup, wait } from "@testing-library/react";
 import { navigate } from "@reach/router";
-import { observable } from "mobx";
 
 import SignIn from "../SignIn";
 import mock from "../../utils/mock";
@@ -11,6 +10,7 @@ import SessionStore from "../../stores/SessionStore";
 beforeEach(() => {
   cleanup();
   navigate("/sign-in");
+  localStorage.clear();
 });
 
 it("Can toggle back and forth between signing in and signing up", () => {
@@ -112,4 +112,19 @@ it("Displays an error when signing in fails", async () => {
 
   await wait(() => expect(queryByText(message)).not.toBe(null));
   expect(signIn).toBeCalledTimes(1);
+});
+
+it("Redirects users who have already authenticated to home page", () => {
+  const sessionStore = new SessionStore();
+  sessionStore.signIn(mock.user());
+  new TestRenderer().withStores({ sessionStore }).render(<SignIn />);
+
+  expect(window.location.pathname).toBe("/");
+});
+
+it("Shows return users the sign in form", () => {
+  localStorage.setItem("hasAccount", "yes");
+  const { queryByText } = new TestRenderer().render(<SignIn />);
+
+  expect(queryByText("Sign in to Mellophone")).not.toBe(null);
 });

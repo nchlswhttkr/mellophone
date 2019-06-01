@@ -1,5 +1,5 @@
 import React from "react";
-import { cleanup, wait } from "react-testing-library";
+import { cleanup, wait } from "@testing-library/react";
 
 import SessionStore from "../../stores/SessionStore";
 import requireAuthentication from "../requireAuthentication";

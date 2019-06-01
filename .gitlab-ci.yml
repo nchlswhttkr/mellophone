@@ -24,7 +24,7 @@ cache:
     - mellophone/frontend/build
 
 "FE Linting":
-  image: node:10-alpine
+  image: node:10
   stage: test
   script:
     - cd mellophone/frontend
@@ -32,15 +32,15 @@ cache:
     - yarn lint
 
 "FE Testing":
-  image: node:10-alpine
+  image: node:10
   stage: test
   script:
     - cd mellophone/frontend
     - yarn
-    - yarn test
+    - yarn test --verbose
 
 "FE Install/Build":
-  image: node:10-alpine
+  image: node:10
   stage: build
   artifacts:
     paths:
@@ -48,7 +48,7 @@ cache:
   script:
     - cd mellophone/frontend
     - yarn
-    - yarn build
+    - REACT_APP_RELEASE_ID=$CI_COMMIT_SHORT_SHA yarn build
 
 "BE Install":
   image: nchlswhttkr/mellophone
@@ -67,7 +67,7 @@ cache:
   image: nchlswhttkr/mellophone
   stage: test
   services:
-    - postgres:11
+    - postgres:10
   script:
     - pipenv sync --keep-outdated
     - pipenv run test-unit
@@ -86,6 +86,6 @@ cache:
     - chmod 700 ~/.ssh
     - ssh-keyscan 157.230.241.239 > ~/.ssh/known_hosts
     - echo "$PRODUCTION_PRIVATE_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
-    - pipenv sync
+    - pipenv sync --keep-outdated
     - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
-    - rsync -a --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/production -e ssh
+    - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/production

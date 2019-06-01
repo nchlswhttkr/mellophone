@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, wait, cleanup } from "react-testing-library";
+import { render, fireEvent, wait, cleanup } from "@testing-library/react";
 import { navigate } from "@reach/router";
 import { observable } from "mobx";
 

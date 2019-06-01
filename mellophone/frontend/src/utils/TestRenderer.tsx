@@ -3,7 +3,7 @@ import { ApplicationStores, StoresContext } from "../stores";
 import SessionStore from "../stores/SessionStore";
 import TeamStore from "../stores/TeamStore";
 import { INetworkLayer, NetworkLayer, NetworkContext } from "../network";
-import { render, RenderResult } from "react-testing-library";
+import { render, RenderResult } from "@testing-library/react";
 
 export default class TestRenderer {
   stores: ApplicationStores;
