@@ -10,10 +10,6 @@ interface Props {
   createTeam: (name: string, website: string) => Promise<void>;
 }
 
-interface State {
-  errorMessage: string;
-}
-
 function CreateTeamForm(props: Props) {
   const [error, setError] = React.useState<Error>();
   const nameRef = React.useRef<HTMLInputElement>(null);

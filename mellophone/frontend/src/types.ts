@@ -5,12 +5,6 @@ export interface IUser {
   email: string;
 }
 
-export interface IUserToBeCreated {
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
 export interface ITeam {
   id: number;
   name: string;

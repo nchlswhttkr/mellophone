@@ -1,49 +1,50 @@
 import React from "react";
-import { render, cleanup, fireEvent } from "react-testing-library";
+import { render, cleanup, fireEvent, wait } from "react-testing-library";
 
 import AccountBlock from "../AccountBlock";
+import mock from "../../utils/mock";
 
-describe("Sections - AccountBlock", () => {
-  let signOut = jest.fn();
+beforeEach(() => {
+  cleanup();
+});
 
-  beforeEach(() => {
-    cleanup();
-    signOut.mockReset();
+it("Renders nothing when no user exists", () => {
+  const { container } = render(<AccountBlock signOut={Promise.resolve} />);
+  expect(container.childElementCount).toBe(0);
+});
+
+it("Shows a user's profile if they are authenticated", () => {
+  const user = mock.user();
+  const { queryByText } = render(
+    <AccountBlock user={user} signOut={Promise.resolve} />
+  );
+
+  expect(queryByText(`${user.firstName} ${user.lastName}`)).not.toBe(null);
+  expect(queryByText(user.email)).not.toBe(null);
+  expect(queryByText(`User #${user.id} of Mellophone!`)).not.toBe(null);
+});
+
+it("Triggers signOut when a user clicks to sign out", () => {
+  const user = mock.user();
+  const signOut = jest.fn(async () => undefined);
+  const { getByText } = render(<AccountBlock user={user} signOut={signOut} />);
+
+  fireEvent.click(getByText("Sign out"));
+
+  expect(signOut).toBeCalledTimes(1);
+});
+
+it("Shows an error when signing out fails", async () => {
+  const message = "An error occured while signing out";
+  const user = mock.user();
+  const signOut = jest.fn(async () => {
+    throw new Error(message);
   });
+  const { getByText, queryByText } = render(
+    <AccountBlock user={user} signOut={signOut} />
+  );
 
-  it("Shows a user's profile if they are authenticated", () => {
-    const user = {
-      firstName: "John",
-      lastName: "Doe",
-      id: 16,
-      email: "john@email.com",
-    };
-    const { queryByText } = render(
-      <AccountBlock user={user} signOut={signOut} />
-    );
+  fireEvent.click(getByText("Sign out"));
 
-    const name = queryByText("John Doe");
-    const email = queryByText("john@email.com");
-    const id = queryByText("User #16 of Mellophone!");
-
-    expect(name).not.toBe(null);
-    expect(email).not.toBe(null);
-    expect(id).not.toBe(null);
-  });
-
-  it("Triggers signOut when a user clicks to sign out", () => {
-    const user = {
-      firstName: "John",
-      lastName: "Doe",
-      id: 16,
-      email: "john@email.com",
-    };
-    const { getByText } = render(
-      <AccountBlock user={user} signOut={signOut} />
-    );
-
-    fireEvent.click(getByText("Sign out"));
-
-    expect(signOut).toBeCalledTimes(1);
-  });
+  await wait(() => expect(queryByText(message)).not.toBe(null));
 });

@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
-import { Observer } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 
 import Main from "../elements/Main";
 import TeamList from "../sections/TeamList";
@@ -26,20 +26,13 @@ function Home(_: RouteComponentProps) {
   }, [teamStore, getTeamsOfSessionUser]);
 
   return (
-    <Observer>
-      {() => {
-        const { sessionUserTeams } = teamStore;
-        return (
-          <Main>
-            <ErrorMessage error={error} />
-            {!error && <TeamList teams={sessionUserTeams} />}
-          </Main>
-        );
-      }}
-    </Observer>
+    <Main>
+      <ErrorMessage error={error} />
+      {!error && <TeamList teams={teamStore.sessionUserTeams} />}
+    </Main>
   );
 }
 
-export default requireAuthentication(Home, () => (
+export default requireAuthentication(observer(Home), () => (
   <h1>Welcome to Mellophone</h1>
 ));

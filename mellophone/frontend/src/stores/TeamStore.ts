@@ -7,7 +7,7 @@ export interface ITeamStore {
   addTeam(team: ITeam): void;
   addToSessionUserTeams(teamId: number): void;
   removeFromSessionUserTeams(removeId: number): void;
-  clearTeams(): void;
+  clearSessionUserTeamIds(): void;
 }
 /**
  * A collection for the session user's teams. It allows teams to be cached to
@@ -41,7 +41,7 @@ export default class TeamStore implements ITeamStore {
     );
   }
 
-  @action clearTeams() {
-    this.teams.clear();
+  @action clearSessionUserTeamIds() {
+    this.sessionUserTeamIds = [];
   }
 }

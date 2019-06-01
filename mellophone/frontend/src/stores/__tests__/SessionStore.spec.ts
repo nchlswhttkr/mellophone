@@ -1,51 +1,45 @@
-import SessionStore from "../SessionStore";
 import { computed } from "mobx";
 
-describe("Stores - SessionStore", () => {
-  const mockUser = {
-    id: 1,
-    firstName: "Nicholas",
-    lastName: "Whittaker",
-    email: "nicholas@email.com",
-  };
+import SessionStore from "../SessionStore";
+import mock from "../../utils/mock";
 
-  it("Holds an anonymous user by default", () => {
-    const store = new SessionStore();
+it("Holds an anonymous user by default", () => {
+  const store = new SessionStore();
 
-    expect(store.user).toEqual(undefined);
-  });
+  expect(store.user).toEqual(undefined);
+});
 
-  it("Clears the session user", () => {
-    const store = new SessionStore();
+it("Clears the session user", () => {
+  const store = new SessionStore();
 
-    store.user = mockUser;
-    expect(store.user).not.toBe(undefined);
+  store.user = mock.user();
+  expect(store.user).not.toBe(undefined);
 
-    store.user = undefined;
-    expect(store.user).toBe(undefined);
-  });
+  store.user = undefined;
+  expect(store.user).toBe(undefined);
+});
 
-  it("Updates the session user when one is provided", () => {
-    const store = new SessionStore();
+it("Updates the session user when one is provided", () => {
+  const store = new SessionStore();
+  const user = mock.user();
 
-    store.user = mockUser;
-    expect(store.user).toEqual(mockUser);
-  });
+  store.user = user;
+  expect(store.user).toEqual(user);
+});
 
-  it("Exposes an observable for the current session user", () => {
-    const store = new SessionStore();
-    const modifiedUser = { ...mockUser, firstName: "Nick" };
+it("Exposes an observable for the current session user", () => {
+  const user = mock.user();
+  const store = new SessionStore();
 
-    const user = computed(() => store.user);
-    expect(user.get()).toBe(undefined);
+  const observedStoreUser = computed(() => store.user);
+  expect(observedStoreUser.get()).toBe(undefined);
 
-    store.user = mockUser;
-    expect(user.get()).toMatchObject(expect.objectContaining(mockUser));
+  store.user = user;
+  expect(observedStoreUser.get()).toEqual(user);
 
-    store.user = { ...mockUser, firstName: "Nick" };
-    expect(user.get()).toMatchObject(expect.objectContaining(modifiedUser));
+  store.user = { ...user, firstName: "A new first name" };
+  expect(observedStoreUser.get()).not.toEqual(user);
 
-    store.user = undefined;
-    expect(user.get()).toBe(undefined);
-  });
+  store.user = undefined;
+  expect(observedStoreUser.get()).toBe(undefined);
 });

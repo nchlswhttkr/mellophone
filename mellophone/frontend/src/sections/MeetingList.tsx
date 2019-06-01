@@ -3,12 +3,13 @@ import { Link } from "@reach/router";
 
 import { IMeeting } from "../types";
 import Route from "../utils/Route";
+import { observer } from "mobx-react-lite";
 
 interface Props {
   meetings?: IMeeting[];
 }
 
-export default function MeetingList(props: Props) {
+function MeetingList(props: Props) {
   if (!props.meetings) return null;
 
   return (
@@ -28,3 +29,5 @@ export default function MeetingList(props: Props) {
     </>
   );
 }
+
+export default observer(MeetingList);

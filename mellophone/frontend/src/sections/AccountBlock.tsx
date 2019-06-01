@@ -4,9 +4,10 @@ import { observer } from "mobx-react-lite";
 import { IUser } from "../types";
 import classes from "./AccountBlock.module.css";
 import Button from "../elements/Button";
+import ErrorMessage from "../elements/ErrorMessage";
 
 interface Props {
-  user: IUser;
+  user?: IUser;
   signOut: () => Promise<void>;
 }
 
@@ -14,6 +15,14 @@ interface Props {
  * Show information about the session user, allowing them to sign out.
  */
 function AccountBlock({ user, signOut }: Props) {
+  const [error, setError] = React.useState<Error>();
+
+  const onSignOut = () => {
+    signOut().catch(setError);
+  };
+
+  if (!user) return null;
+
   return (
     <div className={classes.root}>
       <div aria-hidden="true" className={classes.avatarContainer}>
@@ -28,9 +37,10 @@ function AccountBlock({ user, signOut }: Props) {
         </h2>
         <p>{user.email}</p>
         <p>User #{user.id} of Mellophone!</p>
-        <Button className={classes.button} onClick={signOut}>
+        <Button className={classes.button} onClick={onSignOut}>
           Sign out
         </Button>
+        <ErrorMessage error={error} />
       </div>
     </div>
   );

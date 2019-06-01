@@ -3,44 +3,42 @@ import { render, cleanup, fireEvent, wait } from "react-testing-library";
 
 import CreateTeamForm from "../CreateTeamForm";
 
-describe("Sections - CreateTeamForm", () => {
-  beforeEach(() => {
-    cleanup();
+beforeEach(() => {
+  cleanup();
+});
+
+it("Creates a team when the form is submitted", () => {
+  const createTeam = jest.fn(async () => undefined);
+  const { getByLabelText, getByText } = render(
+    <CreateTeamForm createTeam={createTeam} />
+  );
+
+  fireEvent.input(getByLabelText("Team name"), {
+    target: { value: "Western Brass" },
   });
-
-  it("Creates a team when the form is submitted", () => {
-    const createTeam = jest.fn(async () => undefined);
-    const { getByLabelText, getByText } = render(
-      <CreateTeamForm createTeam={createTeam} />
-    );
-
-    fireEvent.input(getByLabelText("Team name"), {
-      target: { value: "Western Brass" },
-    });
-    fireEvent.input(getByLabelText("Website"), {
-      target: { value: "https://facebook.com/WesternBrass" },
-    });
-    fireEvent.click(getByText("Create team"));
-
-    expect(createTeam).toBeCalledTimes(1);
-    expect(createTeam).toBeCalledWith(
-      "Western Brass",
-      "https://facebook.com/WesternBrass"
-    );
+  fireEvent.input(getByLabelText("Website"), {
+    target: { value: "https://facebook.com/WesternBrass" },
   });
+  fireEvent.click(getByText("Create team"));
 
-  it("Displays the error message of createTeam if it throws an error", async () => {
-    const message = "Unable to create a team at this time.";
-    const createTeam = jest.fn(async () => {
-      throw new Error(message);
-    });
-    const { getByText, queryByText } = render(
-      <CreateTeamForm createTeam={createTeam} />
-    );
+  expect(createTeam).toBeCalledTimes(1);
+  expect(createTeam).toBeCalledWith(
+    "Western Brass",
+    "https://facebook.com/WesternBrass"
+  );
+});
 
-    fireEvent.click(getByText("Create team"));
-
-    await wait(() => expect(queryByText(message)).not.toBe(null));
-    expect(createTeam).toBeCalledTimes(1);
+it("Displays the error message of createTeam if it throws an error", async () => {
+  const message = "Unable to create a team at this time.";
+  const createTeam = jest.fn(async () => {
+    throw new Error(message);
   });
+  const { getByText, queryByText } = render(
+    <CreateTeamForm createTeam={createTeam} />
+  );
+
+  fireEvent.click(getByText("Create team"));
+
+  await wait(() => expect(queryByText(message)).not.toBe(null));
+  expect(createTeam).toBeCalledTimes(1);
 });

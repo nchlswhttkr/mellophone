@@ -1,22 +1,22 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
-import { Observer } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 
-import AccountBlock from "../sections/AccountBlock";
 import Main from "../elements/Main";
+import AccountBlock from "../sections/AccountBlock";
+import ErrorMessage from "../elements/ErrorMessage";
 import requireAuthentication from "../utils/requireAuthentication";
 import { StoresContext } from "../stores";
 import Route from "../utils/Route";
 import { NetworkContext } from "../network";
-import ErrorMessage from "../elements/ErrorMessage";
 
 function Account(_: RouteComponentProps) {
   const [error, setError] = React.useState<Error>();
   const { sessionStore } = React.useContext(StoresContext);
   const { signOut } = React.useContext(NetworkContext);
 
-  const onSignOut = async () => {
-    signOut()
+  const onSignOut = () => {
+    return signOut()
       .then(() => {
         sessionStore.user = undefined;
         new Route().navigate();
@@ -26,15 +26,11 @@ function Account(_: RouteComponentProps) {
 
   const { user } = sessionStore;
   return (
-    <Observer>
-      {() => (
-        <Main>
-          <ErrorMessage error={error} />
-          {user && <AccountBlock user={user} signOut={onSignOut} />}
-        </Main>
-      )}
-    </Observer>
+    <Main>
+      <ErrorMessage error={error} />
+      <AccountBlock user={user} signOut={onSignOut} />
+    </Main>
   );
 }
 
-export default requireAuthentication(Account);
+export default requireAuthentication(observer(Account));

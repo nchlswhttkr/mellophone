@@ -3,60 +3,44 @@ import { render, cleanup, fireEvent } from "react-testing-library";
 import { navigate } from "@reach/router";
 
 import TeamList from "../TeamList";
+import mock from "../../utils/mock";
 
-describe("Sections - TeamList", () => {
-  beforeEach(() => {
-    cleanup();
-    navigate("/");
-  });
+beforeEach(() => {
+  cleanup();
+  navigate("/");
+});
 
-  it("Directs users to create a new team if they are in no teams", () => {
-    const { queryByText } = render(<TeamList teams={[]} />);
+it("Directs users to create a new team if they are in no teams", () => {
+  const { queryByText } = render(<TeamList teams={[]} />);
 
-    expect(
-      queryByText("You are not a member of any teams", { exact: false })
-    ).not.toBe(null);
-    expect(queryByText("create a new team")).not.toBe(null);
-  });
+  expect(
+    queryByText("You are not a member of any teams", { exact: false })
+  ).not.toBe(null);
+  expect(queryByText("create a new team")).not.toBe(null);
+});
 
-  it("Shows a list of teams", () => {
-    const teams = [
-      {
-        id: 1,
-        name: "Western Brass",
-        website: "https://facebook.com/WesternBrass",
-      },
-      {
-        id: 2,
-        name: "Glen Eira Band",
-        website: "http://gleneiraband.com.au",
-      },
-    ];
-    const { queryByText } = render(<TeamList teams={teams} />);
+it("Shows a list of teams", () => {
+  const teams = [mock.team(), mock.team()];
+  const { queryByText } = render(<TeamList teams={teams} />);
 
-    expect(queryByText("Western Brass")).not.toBe(null);
-    expect(queryByText("Glen Eira Band")).not.toBe(null);
-  });
+  expect(queryByText(teams[0].name)).not.toBe(null);
+  expect(queryByText(teams[1].name)).not.toBe(null);
+});
 
-  it("Directs a user to a team's profile when they select its name", () => {
-    expect(window.location.pathname).not.toBe("/teams/33");
-    expect(window.location.pathname).not.toBe("/teams/33/meetings/new");
+it("Directs a user to a team's profile when they select its name", () => {
+  const team = mock.team();
+  const { getByText } = render(<TeamList teams={[team]} />);
 
-    const teams = [
-      {
-        id: 33,
-        name: "Western Brass",
-        website: "https://facebook.com/WesternBrass",
-      },
-    ];
-    const { getByText } = render(<TeamList teams={teams} />);
+  fireEvent.click(getByText(team.name));
 
-    fireEvent.click(getByText("Western Brass"));
+  expect(window.location.pathname).toBe(`/teams/${team.id}`);
+});
 
-    expect(window.location.pathname).toBe("/teams/33");
+it("Directs a user to create a meeting for a team", () => {
+  const team = mock.team();
+  const { getByText } = render(<TeamList teams={[team]} />);
 
-    fireEvent.click(getByText("Create meeting"));
+  fireEvent.click(getByText("Create meeting"));
 
-    expect(window.location.pathname).toBe("/teams/33/meetings/new");
-  });
+  expect(window.location.pathname).toBe(`/teams/${team.id}/meetings/new`);
 });

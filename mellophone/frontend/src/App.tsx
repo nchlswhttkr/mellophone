@@ -2,10 +2,10 @@ import React from "react";
 import { Router } from "@reach/router";
 import { autorun, configure } from "mobx";
 
+import { NetworkContext } from "./network";
 import { StoresContext } from "./stores";
 import SessionStore from "./stores/SessionStore";
 import TeamStore from "./stores/TeamStore";
-import identityService from "./network/identityService";
 import Route from "./utils/Route";
 
 import Home from "./pages/Home";
@@ -28,72 +28,60 @@ configure({
   enforceActions: "observed",
 });
 
-export default class App extends React.Component<{}, State> {
-  state: State = {
-    status: "pending",
-  };
-
-  stores = {
+export default function App() {
+  const [status, setStatus] = React.useState<string>("pending");
+  const [stores] = React.useState({
     sessionStore: new SessionStore(),
     teamStore: new TeamStore(),
-  };
+  });
+  const { getSessionUser } = React.useContext(NetworkContext);
 
-  componentDidMount() {
-    identityService
-      .getSessionUser()
+  React.useEffect(() => {
+    getSessionUser()
       .then(user => {
-        this.stores.sessionStore.user = user;
-        this.setState({ status: "ready" });
+        stores.sessionStore.user = user;
+        setStatus("ready");
       })
-      .catch(() => {
-        this.setState({ status: "errored" });
-      });
-  }
+      .catch(() => setStatus("errored"));
 
-  clearTeamsIfAnonymousDisposer = autorun(() => {
-    if (!this.stores.sessionStore.user) {
-      this.stores.teamStore.clearTeams();
-    }
+    // If a user signs out, clear their teams
+    return autorun(() => {
+      if (!stores.sessionStore.user) {
+        stores.teamStore.clearSessionUserTeamIds();
+      }
+    });
   });
 
-  componentWillUnmount() {
-    this.clearTeamsIfAnonymousDisposer();
-  }
+  if (status === "pending") return null;
 
-  render() {
-    const { status } = this.state;
-
-    if (status === "pending") return null;
-
-    if (status === "errored")
-      return (
-        <p style={{ color: "red" }}>
-          Something went wrong when loading Mellophone.
-        </p>
-      );
-
+  if (status === "errored")
     return (
-      <StoresContext.Provider value={this.stores}>
-        <Header sessionStore={this.stores.sessionStore} />
-        <Router>
-          <Home path={new Route().build()} />
-          <SignIn path={new Route(Route.SIGN_IN).build()} />
-          <Account path={new Route(Route.ACCOUNT).build()} />
-          <CreateTeam path={new Route(Route.TEAMS, Route.NEW).build()} />
-          <Team path={new Route(Route.TEAMS, ":teamId").build()} />
-          <CreateMeeting
-            path={new Route(
-              Route.TEAMS,
-              ":teamId",
-              Route.MEETINGS,
-              Route.NEW
-            ).build()}
-          />
-          <Meeting path={new Route(Route.MEETINGS, ":meetingId").build()} />
-          <PageNotFound default />
-        </Router>
-        <Footer />
-      </StoresContext.Provider>
+      <p style={{ color: "red" }}>
+        Something went wrong when loading Mellophone.
+      </p>
     );
-  }
+
+  return (
+    <StoresContext.Provider value={stores}>
+      <Header sessionStore={stores.sessionStore} />
+      <Router>
+        <Home path={new Route().build()} />
+        <SignIn path={new Route(Route.SIGN_IN).build()} />
+        <Account path={new Route(Route.ACCOUNT).build()} />
+        <CreateTeam path={new Route(Route.TEAMS, Route.NEW).build()} />
+        <Team path={new Route(Route.TEAMS, ":teamId").build()} />
+        <CreateMeeting
+          path={new Route(
+            Route.TEAMS,
+            ":teamId",
+            Route.MEETINGS,
+            Route.NEW
+          ).build()}
+        />
+        <Meeting path={new Route(Route.MEETINGS, ":meetingId").build()} />
+        <PageNotFound default />
+      </Router>
+      <Footer />
+    </StoresContext.Provider>
+  );
 }
