@@ -27,7 +27,7 @@ export default function SignIn(_: RouteComponentProps) {
   ) => {
     return signUp(email, password, firstName, lastName)
       .then(user => {
-        sessionStore.user = user;
+        sessionStore.user.set(user);
         new Route().navigate();
       })
       .catch(setError);
@@ -36,7 +36,7 @@ export default function SignIn(_: RouteComponentProps) {
   const onSignIn = (email: string, password: string) => {
     return signIn(email, password)
       .then(user => {
-        sessionStore.user = user;
+        sessionStore.user.set(user);
         new Route().navigate();
       })
       .catch(setError);

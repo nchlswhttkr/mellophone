@@ -1,13 +1,14 @@
 import React from "react";
 import { Link } from "@reach/router";
+import { IObservableValue } from "mobx";
 import { observer } from "mobx-react-lite";
 
 import classes from "./Header.module.css";
 import Route from "../utils/Route";
-import { ISessionStore } from "../stores/SessionStore";
+import { IUser } from "../types";
 
 interface Props {
-  sessionStore: ISessionStore;
+  user: IObservableValue<IUser | undefined>;
 }
 
 const Header = (props: Props) => (
@@ -16,7 +17,7 @@ const Header = (props: Props) => (
       <Link to={new Route().build()} className={classes.title}>
         <h2>Mellophone</h2>
       </Link>
-      {props.sessionStore.user ? (
+      {props.user.get() ? (
         <Link
           to={new Route(Route.ACCOUNT).build()}
           aria-label="View my account">

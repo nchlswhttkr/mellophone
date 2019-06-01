@@ -3,20 +3,23 @@ import { render, cleanup, fireEvent, wait } from "react-testing-library";
 
 import AccountBlock from "../AccountBlock";
 import mock from "../../utils/mock";
+import { observable } from "mobx";
 
 beforeEach(() => {
   cleanup();
 });
 
 it("Renders nothing when no user exists", () => {
-  const { container } = render(<AccountBlock signOut={Promise.resolve} />);
+  const { container } = render(
+    <AccountBlock user={observable.box(undefined)} signOut={Promise.resolve} />
+  );
   expect(container.childElementCount).toBe(0);
 });
 
 it("Shows a user's profile if they are authenticated", () => {
   const user = mock.user();
   const { queryByText } = render(
-    <AccountBlock user={user} signOut={Promise.resolve} />
+    <AccountBlock user={observable.box(user)} signOut={Promise.resolve} />
   );
 
   expect(queryByText(`${user.firstName} ${user.lastName}`)).not.toBe(null);
@@ -27,7 +30,9 @@ it("Shows a user's profile if they are authenticated", () => {
 it("Triggers signOut when a user clicks to sign out", () => {
   const user = mock.user();
   const signOut = jest.fn(async () => undefined);
-  const { getByText } = render(<AccountBlock user={user} signOut={signOut} />);
+  const { getByText } = render(
+    <AccountBlock user={observable.box(user)} signOut={signOut} />
+  );
 
   fireEvent.click(getByText("Sign out"));
 
@@ -41,7 +46,7 @@ it("Shows an error when signing out fails", async () => {
     throw new Error(message);
   });
   const { getByText, queryByText } = render(
-    <AccountBlock user={user} signOut={signOut} />
+    <AccountBlock user={observable.box(user)} signOut={signOut} />
   );
 
   fireEvent.click(getByText("Sign out"));

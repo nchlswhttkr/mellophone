@@ -39,14 +39,14 @@ export default function App() {
   React.useEffect(() => {
     getSessionUser()
       .then(user => {
-        stores.sessionStore.user = user;
+        stores.sessionStore.user.set(user);
         setStatus("ready");
       })
       .catch(() => setStatus("errored"));
 
     // If a user signs out, clear their teams
     return autorun(() => {
-      if (!stores.sessionStore.user) {
+      if (!stores.sessionStore.user.get()) {
         stores.teamStore.clearSessionUserTeamIds();
       }
     });
@@ -63,7 +63,7 @@ export default function App() {
 
   return (
     <StoresContext.Provider value={stores}>
-      <Header sessionStore={stores.sessionStore} />
+      <Header user={stores.sessionStore.user} />
       <Router>
         <Home path={new Route().build()} />
         <SignIn path={new Route(Route.SIGN_IN).build()} />

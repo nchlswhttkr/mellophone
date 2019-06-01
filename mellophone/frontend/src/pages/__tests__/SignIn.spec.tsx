@@ -1,11 +1,12 @@
 import React from "react";
 import { fireEvent, cleanup, wait } from "react-testing-library";
+import { navigate } from "@reach/router";
+import { observable } from "mobx";
 
 import SignIn from "../SignIn";
 import mock from "../../utils/mock";
 import TestRenderer from "../../utils/TestRenderer";
 import SessionStore from "../../stores/SessionStore";
-import { navigate } from "@reach/router";
 
 beforeEach(() => {
   cleanup();
@@ -55,7 +56,7 @@ it("Allows users to sign up, redirecting them to the home page", async () => {
     user.firstName,
     user.lastName
   );
-  expect(sessionStore.user).toEqual(user);
+  expect(sessionStore.user.get()).toEqual(user);
 });
 
 it("Displays an error when signing up fails", async () => {
@@ -94,7 +95,7 @@ it("Allows users to sign in, redirecting them to the home page", async () => {
   await wait(() => expect(window.location.pathname).toBe("/"));
   expect(signIn).toBeCalledTimes(1);
   expect(signIn).toBeCalledWith(user.email, "hunter2");
-  expect(sessionStore.user).toEqual(user);
+  expect(sessionStore.user.get()).toEqual(user);
 });
 
 it("Displays an error when signing in fails", async () => {

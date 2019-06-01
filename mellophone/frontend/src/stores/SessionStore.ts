@@ -1,8 +1,9 @@
-import { observable, computed } from "mobx";
+import { observable, IObservableValue } from "mobx";
+
 import { IUser } from "../types";
 
 export interface ISessionStore {
-  user: IUser | undefined;
+  user: IObservableValue<IUser | undefined>;
 }
 
 /**
@@ -12,13 +13,5 @@ export interface ISessionStore {
  * You can know whether a user is authenticated by null-checking.
  */
 export default class SessionStore implements ISessionStore {
-  @observable private _user = observable.box<IUser | undefined>();
-
-  @computed get user() {
-    return this._user.get();
-  }
-
-  set user(user: IUser | undefined) {
-    this._user.set(user);
-  }
+  user = observable.box<IUser | undefined>();
 }

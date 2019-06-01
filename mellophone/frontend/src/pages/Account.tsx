@@ -18,17 +18,16 @@ function Account(_: RouteComponentProps) {
   const onSignOut = () => {
     return signOut()
       .then(() => {
-        sessionStore.user = undefined;
+        sessionStore.user.set(undefined);
         new Route().navigate();
       })
       .catch(setError);
   };
 
-  const { user } = sessionStore;
   return (
     <Main>
       <ErrorMessage error={error} />
-      <AccountBlock user={user} signOut={onSignOut} />
+      <AccountBlock user={sessionStore.user} signOut={onSignOut} />
     </Main>
   );
 }

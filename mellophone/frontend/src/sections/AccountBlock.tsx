@@ -5,20 +5,22 @@ import { IUser } from "../types";
 import classes from "./AccountBlock.module.css";
 import Button from "../elements/Button";
 import ErrorMessage from "../elements/ErrorMessage";
+import { IObservableValue } from "mobx";
 
 interface Props {
-  user?: IUser;
+  user: IObservableValue<IUser | undefined>;
   signOut: () => Promise<void>;
 }
 
 /**
  * Show information about the session user, allowing them to sign out.
  */
-function AccountBlock({ user, signOut }: Props) {
+function AccountBlock(props: Props) {
   const [error, setError] = React.useState<Error>();
+  const user = props.user.get();
 
   const onSignOut = () => {
-    signOut().catch(setError);
+    props.signOut().catch(setError);
   };
 
   if (!user) return null;

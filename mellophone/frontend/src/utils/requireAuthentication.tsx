@@ -25,14 +25,14 @@ const requireAuthentication = (
     React.useEffect(
       () =>
         autorun(() => {
-          if (!sessionStore.user && !Fallback) {
+          if (!sessionStore.user.get() && !Fallback) {
             new Route(Route.SIGN_IN).navigate();
           }
         }),
       [sessionStore]
     );
 
-    if (sessionStore.user) {
+    if (sessionStore.user.get()) {
       return <Child {...props} />;
     }
 

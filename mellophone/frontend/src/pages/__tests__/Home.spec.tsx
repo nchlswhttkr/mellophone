@@ -20,7 +20,7 @@ it("Renders a landing page when no user is authenticated", () => {
 
 it("Renders a feed when a user is logged in", async () => {
   const sessionStore = new SessionStore();
-  sessionStore.user = mock.user();
+  sessionStore.user.set(mock.user());
   const teams = [mock.team(), mock.team()];
   const getTeamsOfSessionUser = jest.fn(async () => teams);
 
@@ -37,7 +37,7 @@ it("Renders a feed when a user is logged in", async () => {
 it("Displays an error message if the feed can not be loaded", async () => {
   const message = "Your teams could not be loaded";
   const sessionStore = new SessionStore();
-  sessionStore.user = mock.user();
+  sessionStore.user.set(mock.user());
   const getTeamsOfSessionUser = jest.fn(async () => {
     throw new Error(message);
   });
@@ -54,7 +54,7 @@ it("Displays an error message if the feed can not be loaded", async () => {
 it("Shows the feed immediately if some/all teams are loaded", () => {
   const sessionStore = new SessionStore();
   const teamStore = new TeamStore();
-  sessionStore.user = mock.user();
+  sessionStore.user.set(mock.user());
   const teams = [mock.team(), mock.team()];
   teams.forEach(team => {
     teamStore.addTeam(team);
@@ -74,7 +74,7 @@ it("Shows the feed immediately if some/all teams are loaded", () => {
 it("Updates the feed if additional teams are fetched for the session user", async () => {
   const sessionStore = new SessionStore();
   const teamStore = new TeamStore();
-  sessionStore.user = mock.user();
+  sessionStore.user.set(mock.user());
   const initialTeams = [mock.team(), mock.team()];
   initialTeams.forEach(team => {
     teamStore.addTeam(team);
@@ -98,7 +98,7 @@ it("Updates the feed if additional teams are fetched for the session user", asyn
 it("Promps a user to create a team if they are not a member of any teams", () => {
   const getTeamsOfSessionUser = jest.fn(async () => []);
   const sessionStore = new SessionStore();
-  sessionStore.user = mock.user();
+  sessionStore.user.set(mock.user());
   const { queryByText } = new TestRenderer()
     .withStores({ sessionStore })
     .withNetwork({ getTeamsOfSessionUser })

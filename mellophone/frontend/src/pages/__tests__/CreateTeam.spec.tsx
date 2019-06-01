@@ -1,6 +1,7 @@
 import React from "react";
-import { fireEvent, wait, cleanup } from "react-testing-library";
+import { render, fireEvent, wait, cleanup } from "react-testing-library";
 import { navigate } from "@reach/router";
+import { observable } from "mobx";
 
 import CreateTeam from "../CreateTeam";
 import TestRenderer from "../../utils/TestRenderer";
@@ -14,7 +15,7 @@ beforeEach(() => {
 });
 
 it("Renders nothing when no user is authenticated", () => {
-  const { container } = new TestRenderer().render(<CreateTeam />);
+  const { container } = render(<CreateTeam />);
   expect(container.childElementCount).toBe(0);
 });
 
@@ -22,7 +23,7 @@ it("Creates a team, stores it and redirects to their profile", async () => {
   const team = mock.team();
   const postTeam = jest.fn(async () => team);
   const sessionStore = new SessionStore();
-  sessionStore.user = mock.user();
+  sessionStore.user.set(mock.user());
   const teamStore = new TeamStore();
   const { getByLabelText, getByText } = new TestRenderer()
     .withNetwork({ postTeam })
