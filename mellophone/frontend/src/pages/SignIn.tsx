@@ -21,7 +21,11 @@ function SignIn(_: RouteComponentProps) {
   const { sessionStore } = React.useContext(StoresContext);
 
   React.useEffect(() => setError(undefined), [newAccount]);
-  React.useEffect(() => sessionStore.user.get() && new Route().navigate(), []);
+
+  const isAuthenticated = !!sessionStore.user.get();
+  React.useEffect(() => {
+    if (isAuthenticated) new Route().navigate();
+  }, [isAuthenticated]);
 
   const onSignUp = (
     email: string,
