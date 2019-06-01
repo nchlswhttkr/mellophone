@@ -1,29 +1,38 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import { observer } from "mobx-react-lite";
 
-import { sessionStore } from "../stores";
-import Header from "../elements/Header";
 import Main from "../elements/Main";
-import Footer from "../elements/Footer";
 import TeamList from "../sections/TeamList";
-import TeamService from "../network/TeamService";
+import { StoresContext } from "../stores";
+import requireAuthentication from "../utils/requireAuthentication";
+import { NetworkContext } from "../network";
+import ErrorMessage from "../elements/ErrorMessage";
 
-export default function Home(_: RouteComponentProps) {
+function Home(_: RouteComponentProps) {
+  const [error, setError] = React.useState<Error>();
+  const { teamStore } = React.useContext(StoresContext);
+  const { getTeamsOfSessionUser } = React.useContext(NetworkContext);
+
   React.useEffect(() => {
-    TeamService.fetchSessionUserTeams()
-      .then(teams => sessionStore.upsertTeams(teams))
-      .catch(
-        error => process.env.NODE_ENV !== "production" && console.error(error)
-      );
-  }, []);
+    getTeamsOfSessionUser()
+      .then(teams =>
+        teams.forEach(team => {
+          teamStore.addTeam(team);
+          teamStore.addToSessionUserTeams(team.id);
+        })
+      )
+      .catch(setError);
+  }, [teamStore, getTeamsOfSessionUser]);
 
   return (
-    <>
-      <Header sessionStore={sessionStore} />
-      <Main>
-        <TeamList sessionStore={sessionStore} />
-      </Main>
-      <Footer />
-    </>
+    <Main>
+      <ErrorMessage error={error} />
+      {!error && <TeamList teams={teamStore.sessionUserTeams} />}
+    </Main>
   );
 }
+
+export default requireAuthentication(observer(Home), () => (
+  <h1>Welcome to Mellophone</h1>
+));

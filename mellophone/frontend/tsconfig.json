@@ -17,5 +17,5 @@
     "experimentalDecorators": true
   },
   "include": ["src"],
-  "exclude": ["src/setupProxy.js"]
+  "exclude": ["src/setupProxy.js", "src/setupTests.js"]
 }

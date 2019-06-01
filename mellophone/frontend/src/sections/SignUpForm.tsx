@@ -1,83 +1,64 @@
 import React from "react";
 
-import { IUserToBeCreated } from "../types";
 import classes from "./SignUpForm.module.css";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
+import ErrorMessage from "../elements/ErrorMessage";
 
 interface Props {
-  signUp: (user: IUserToBeCreated, password: string) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => Promise<void>;
 }
 
-interface State {
-  errorMessage: string;
-}
+function SignUpForm(props: Props) {
+  const [error, setError] = React.useState<Error>();
+  const firstNameRef = React.useRef<HTMLInputElement>(null);
+  const lastNameRef = React.useRef<HTMLInputElement>(null);
+  const emailRef = React.useRef<HTMLInputElement>(null);
+  const passwordRef = React.useRef<HTMLInputElement>(null);
 
-class SignUpForm extends React.Component<Props, State> {
-  state = {
-    errorMessage: "",
+  const onSubmit = () => {
+    const email = emailRef.current;
+    const password = passwordRef.current;
+    const firstName = firstNameRef.current;
+    const lastName = lastNameRef.current;
+    if (!email || !password || !firstName || !lastName) return;
+    props
+      .signUp(email.value, password.value, firstName.value, lastName.value)
+      .catch(setError);
   };
 
-  firstNameRef = React.createRef<HTMLInputElement>();
-  lastNameRef = React.createRef<HTMLInputElement>();
-  emailRef = React.createRef<HTMLInputElement>();
-  passwordRef = React.createRef<HTMLInputElement>();
+  return (
+    <form
+      className={classes.form}
+      onKeyDown={e => e.key === "Enter" && onSubmit()}>
+      <Input ref={firstNameRef} label="First name" />
+      <Input ref={lastNameRef} label="Last name" />
+      <Input ref={emailRef} label="Email" />
+      <Input ref={passwordRef} label="Password" type="password" />
 
-  onSubmit = async () => {
-    const firstName = this.firstNameRef.current;
-    const lastName = this.lastNameRef.current;
-    const email = this.emailRef.current;
-    const password = this.passwordRef.current;
+      <p className={classes.center}>
+        Are you sure your{" "}
+        <a
+          href="https://haveibeenpwned.com/"
+          rel="noreferrer noopener"
+          target="_blank">
+          password is secure
+        </a>
+        ?
+      </p>
 
-    if (!email || !password || !firstName || !lastName) return undefined;
+      <ErrorMessage error={error} />
 
-    try {
-      await this.props.signUp(
-        {
-          email: email.value,
-          firstName: firstName.value,
-          lastName: lastName.value,
-        },
-        password.value
-      );
-    } catch (error) {
-      this.setState({
-        errorMessage: error.message,
-      });
-    }
-  };
-
-  render() {
-    const { errorMessage } = this.state;
-
-    return (
-      <form
-        className={classes.form}
-        onKeyDown={e => e.key === "Enter" && this.onSubmit()}>
-        <Input ref={this.firstNameRef} label="First name" />
-        <Input ref={this.lastNameRef} label="Last name" />
-        <Input ref={this.emailRef} label="Email" />
-        <Input ref={this.passwordRef} label="Password" type="password" />
-
-        <p className={classes.center}>
-          Are you sure your{" "}
-          <a
-            href="https://haveibeenpwned.com/"
-            rel="noreferrer noopener"
-            target="_blank">
-            password is secure
-          </a>
-          ?
-        </p>
-
-        {errorMessage && <p className={classes.error}>{errorMessage}</p>}
-
-        <Button className={classes.button} onClick={this.onSubmit}>
-          Sign up
-        </Button>
-      </form>
-    );
-  }
+      <Button className={classes.button} onClick={onSubmit}>
+        Sign up
+      </Button>
+    </form>
+  );
 }
 
 export default SignUpForm;

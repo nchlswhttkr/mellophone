@@ -1,73 +1,42 @@
 import SessionStore from "../SessionStore";
-import { ISessionStore, IUser, ITeam } from "../../types";
+import mock from "../../utils/mock";
 
-describe("Stores - SessionStore", () => {
-  it("Initialises to an anonymous user when called without arguments", () => {
-    const sessionStore = new SessionStore();
+it("Holds an anonymous user by default", () => {
+  const store = new SessionStore();
 
-    expect(sessionStore.user).toBe(undefined);
-  });
+  expect(store.user.get()).toEqual(undefined);
+});
 
-  it("Initialises with no teams when called without arguments", () => {
-    const sessionStore = new SessionStore();
+it("Clears the session user", () => {
+  const store = new SessionStore();
 
-    expect(sessionStore.teams.size).toBe(0);
-  });
+  store.signIn(mock.user());
+  expect(store.user.get()).not.toBe(undefined);
 
-  it("Reflects when a new user is added", () => {
-    const sessionStore = new SessionStore();
-    const user: IUser = {
-      id: 1,
-      firstName: "Nicholas",
-      lastName: "Whittaker",
-      email: "nicholas@email.com",
-    };
+  store.signOut();
+  expect(store.user.get()).toBe(undefined);
+});
 
-    sessionStore.setUser(user);
+it("Updates the session user when one is provided", () => {
+  const store = new SessionStore();
+  const user = mock.user();
 
-    expect(sessionStore.user!.email).toBe(user.email);
-  });
+  store.signIn(user);
+  expect(store.user.get()).toEqual(user);
+});
 
-  it("Reflects when a batch of teams is upserted", () => {
-    const sessionStore = new SessionStore();
-    const teams: ITeam[] = [
-      {
-        id: 10,
-        name: "Western Brass",
-        website: "https://facebook.com/WesternBrass",
-      },
-    ];
+it("Exposes an observable for the current session user", () => {
+  const user = mock.user();
+  const store = new SessionStore();
 
-    sessionStore.upsertTeams(teams);
+  expect(store.user.get()).toBe(undefined);
 
-    expect(sessionStore.teams.size).toBe(1);
-    expect(sessionStore.teams.get(10)!.name).toBe("Western Brass");
-  });
+  store.signIn(user);
+  expect(store.user.get()).toEqual(user);
 
-  it("Clears the teams and user when clearSession is called", () => {
-    const sessionStore = new SessionStore();
+  store.signIn({ ...user, firstName: "A new first name" });
+  expect(store.user.get()).not.toEqual(user);
 
-    sessionStore.setUser({
-      id: 1,
-      firstName: "Nicholas",
-      lastName: "Whittaker",
-      email: "nicholas@email.com",
-    });
-    sessionStore.upsertTeams([
-      {
-        id: 10,
-        name: "Western Brass",
-        website: "https://facebook.com/WesternBrass",
-      },
-      {
-        id: 3,
-        name: "Glen Eira Band",
-        website: "http://gleneiraband.com.au",
-      },
-    ]);
-    sessionStore.clearSession();
-
-    expect(sessionStore.user).toBe(undefined);
-    expect(sessionStore.teams.size).toBe(0);
-  });
+  store.signOut();
+  expect(store.user.get()).toBe(undefined);
 });

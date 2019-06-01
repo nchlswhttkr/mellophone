@@ -1,30 +1,78 @@
 import React from "react";
+import { Router } from "@reach/router";
+import { autorun } from "mobx";
 
-import Pages from "./pages";
-import IdentityService from "./network/IdentityService";
-import BaseRequest from "./utils/BaseRequest";
-import { sessionStore } from "./stores";
+import { NetworkContext } from "./network";
+import { StoresContext } from "./stores";
+import SessionStore from "./stores/SessionStore";
+import TeamStore from "./stores/TeamStore";
+import Route from "./utils/Route";
 
-type AppStatus = "pending" | "resolved" | "rejected";
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import Account from "./pages/Account";
+import Team from "./pages/Team";
+import CreateMeeting from "./pages/CreateMeeting";
+import Meeting from "./pages/Meeting";
+import PageNotFound from "./pages/PageNotFound";
+import CreateTeam from "./pages/CreateTeam";
+import Header from "./elements/Header";
+import Footer from "./elements/Footer";
 
-function App() {
-  const [status, setStatus] = React.useState<AppStatus>("pending");
+export default function App() {
+  const [status, setStatus] = React.useState<string>("pending");
+  const [stores] = React.useState({
+    sessionStore: new SessionStore(),
+    teamStore: new TeamStore(),
+  });
+  const { getSessionUser } = React.useContext(NetworkContext);
 
   React.useEffect(() => {
-    Promise.all([
-      BaseRequest.get("/"),
-      IdentityService.getIdentity().then(user => sessionStore.setUser(user)),
-    ])
-      .then(() => setStatus("resolved"))
-      .catch(() => setStatus("rejected"));
-  }, []);
+    getSessionUser()
+      .then(user => {
+        user && stores.sessionStore.signIn(user);
+        setStatus("ready");
+      })
+      .catch(() => setStatus("errored"));
 
-  if (status === "rejected")
-    return <p>Something went wrong while starting Mellophone</p>;
+    // If a user signs out, clear their teams
+    return autorun(() => {
+      if (!stores.sessionStore.user.get()) {
+        stores.teamStore.clearSessionUserTeamIds();
+      }
+    });
+  });
 
-  if (status !== "pending") return <Pages />;
+  if (status === "pending") return null;
 
-  return null;
+  if (status === "errored")
+    return (
+      <p style={{ color: "red" }}>
+        Something went wrong when loading Mellophone.
+      </p>
+    );
+
+  return (
+    <StoresContext.Provider value={stores}>
+      <Header user={stores.sessionStore.user} />
+      <Router>
+        <Home path={new Route().build()} />
+        <SignIn path={new Route(Route.SIGN_IN).build()} />
+        <Account path={new Route(Route.ACCOUNT).build()} />
+        <CreateTeam path={new Route(Route.TEAMS, Route.NEW).build()} />
+        <Team path={new Route(Route.TEAMS, ":teamId").build()} />
+        <CreateMeeting
+          path={new Route(
+            Route.TEAMS,
+            ":teamId",
+            Route.MEETINGS,
+            Route.NEW
+          ).build()}
+        />
+        <Meeting path={new Route(Route.MEETINGS, ":meetingId").build()} />
+        <PageNotFound default />
+      </Router>
+      <Footer />
+    </StoresContext.Provider>
+  );
 }
-
-export default App;

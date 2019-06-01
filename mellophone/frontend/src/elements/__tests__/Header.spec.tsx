@@ -1,58 +1,36 @@
 import React from "react";
-import { render, fireEvent, cleanup } from "react-testing-library";
+import { observable, runInAction } from "mobx";
+import { cleanup, render, wait } from "react-testing-library";
 
-import SessionStore from "../../stores/SessionStore";
-import { ISessionStore } from "../../types";
 import Header from "../Header";
-import {
-  createHistory,
-  createMemorySource,
-  LocationProvider,
-  History,
-} from "@reach/router";
+import mock from "../../utils/mock";
+import { IUser } from "../../types";
 
-function renderWithHistory(children: React.ReactNode, history: History) {
-  return render(
-    <LocationProvider history={history}>{children}</LocationProvider>
-  );
-}
+beforeEach(cleanup);
 
-describe("Components - Sections - Header", () => {
-  let history: History;
-  let sessionStore: ISessionStore;
+it("Directs unauthenticated users to sign in", () => {
+  const user = observable.box(undefined);
+  const { queryByText } = render(<Header user={user} />);
 
-  beforeEach(() => {
-    history = createHistory(createMemorySource("/"));
-    sessionStore = new SessionStore();
-    cleanup();
-  });
+  expect(queryByText("Sign in")).not.toBe(null);
+});
 
-  it("Direct unauthenticated users to sign in", () => {
-    sessionStore.setUser(undefined);
-    const { getByText } = renderWithHistory(
-      <Header sessionStore={sessionStore} />,
-      history
-    );
+it("Directs authenticated users to their account", () => {
+  const user = observable.box(mock.user());
+  const { queryByText } = render(<Header user={user} />);
 
-    fireEvent.click(getByText("Sign in"));
+  expect(queryByText("Account")).not.toBe(null);
+});
 
-    expect(history.location.pathname).toBe("/sign-in");
-  });
+it("Reacts when a user signs in or signs out", async () => {
+  const user = observable.box<IUser | undefined>(undefined);
+  const { queryByText } = render(<Header user={user} />);
 
-  it("Direct authenticated users to their account page", () => {
-    sessionStore.setUser({
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@email.com",
-      id: 1,
-    });
-    const { getByText } = renderWithHistory(
-      <Header sessionStore={sessionStore} />,
-      history
-    );
+  await wait(() => expect(queryByText("Sign in")).not.toBe(null));
 
-    fireEvent.click(getByText("Account"));
+  runInAction(() => user.set(mock.user()));
+  await wait(() => expect(queryByText("Account")).not.toBe(null));
 
-    expect(history.location.pathname).toBe("/account");
-  });
+  runInAction(() => user.set(undefined));
+  await wait(() => expect(queryByText("Sign in")).not.toBe(null));
 });

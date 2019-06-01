@@ -1,5 +1,12 @@
-import { observable, computed, action } from "mobx";
-import { IUser, ISessionStore, ITeam } from "../types";
+import { observable, IObservableValue, action } from "mobx";
+
+import { IUser } from "../types";
+
+export interface ISessionStore {
+  user: IObservableValue<IUser | undefined>;
+  signIn(user: IUser): void;
+  signOut(): void;
+}
 
 /**
  * All information related to the currently authenticated user is held here.
@@ -8,29 +15,13 @@ import { IUser, ISessionStore, ITeam } from "../types";
  * You can know whether a user is authenticated by null-checking.
  */
 export default class SessionStore implements ISessionStore {
-  @observable private _user: IUser | undefined = undefined;
-  @observable private _teams = new Map<number, ITeam>();
+  readonly user = observable.box<IUser | undefined>();
 
-  @computed get user() {
-    return this._user;
+  @action signIn(user: IUser): void {
+    this.user.set(user);
   }
 
-  @computed get teams() {
-    return this._teams;
-  }
-
-  @action setUser(user?: IUser) {
-    this._user = user;
-  }
-
-  @action upsertTeams(teams: ITeam[]) {
-    for (let team of teams) {
-      this.teams.set(team.id, team);
-    }
-  }
-
-  @action clearSession() {
-    this._user = undefined;
-    this._teams.clear();
+  @action signOut(): void {
+    this.user.set(undefined);
   }
 }

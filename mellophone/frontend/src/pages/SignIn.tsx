@@ -1,53 +1,66 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { IUserToBeCreated } from "../types";
-import { sessionStore } from "../stores";
-import Header from "../elements/Header";
-import Footer from "../elements/Footer";
+import Main from "../elements/Main";
 import SignInForm from "../sections/SignInForm";
 import SignUpForm from "../sections/SignUpForm";
 import classes from "./SignIn.module.css";
-import IdentityService from "../network/IdentityService";
 import Button from "../elements/Button";
 import Route from "../utils/Route";
+import { StoresContext } from "../stores";
+import { NetworkContext } from "../network";
+import ErrorMessage from "../elements/ErrorMessage";
 
 export default function SignIn(_: RouteComponentProps) {
-  const [newAccount, setNewAccount] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<Error>();
+  const [newAccount, setNewAccount] = React.useState<boolean>(true);
+  const { signIn, signUp } = React.useContext(NetworkContext);
+  const { sessionStore } = React.useContext(StoresContext);
 
-  const signUp = async (user: IUserToBeCreated, password: string) => {
-    await IdentityService.createUser(user, password);
-    const identity = await IdentityService.getIdentity();
-    sessionStore.setUser(identity);
-    new Route().navigate();
+  React.useEffect(() => setError(undefined), [newAccount]);
+
+  const onSignUp = (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => {
+    return signUp(email, password, firstName, lastName)
+      .then(user => {
+        sessionStore.signIn(user);
+        new Route().navigate();
+      })
+      .catch(setError);
   };
 
-  const signIn = async (email: string, password: string) => {
-    await IdentityService.authenticateUser(email, password);
-    const identity = await IdentityService.getIdentity();
-    sessionStore.setUser(identity);
-    new Route().navigate();
+  const onSignIn = (email: string, password: string) => {
+    return signIn(email, password)
+      .then(user => {
+        sessionStore.signIn(user);
+        new Route().navigate();
+      })
+      .catch(setError);
   };
 
   return (
-    <>
-      <Header sessionStore={sessionStore} />
-      <div className={classes.formContainer}>
-        <h2 className={classes.title}>{newAccount ? "Sign up" : "Sign in"}</h2>
+    <Main className={classes.formContainer}>
+      <h2 className={classes.title}>
+        {newAccount ? "Sign up to Mellophone" : "Sign in to Mellophone"}
+      </h2>
 
-        {newAccount ? (
-          <SignUpForm signUp={signUp} />
-        ) : (
-          <SignInForm signIn={signIn} />
-        )}
+      {newAccount ? (
+        <SignUpForm signUp={onSignUp} />
+      ) : (
+        <SignInForm signIn={onSignIn} />
+      )}
 
-        <hr className={classes.divider} />
+      <ErrorMessage error={error} />
 
-        <Button onClick={() => setNewAccount(!newAccount)}>
-          {newAccount ? "Sign in to an existing account" : "Create an account"}
-        </Button>
-      </div>
-      <Footer />
-    </>
+      <hr className={classes.divider} />
+
+      <Button onClick={() => setNewAccount(!newAccount)}>
+        {newAccount ? "Sign in to an existing account" : "Create an account"}
+      </Button>
+    </Main>
   );
 }

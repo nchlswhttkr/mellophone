@@ -1,112 +1,46 @@
 import React from "react";
-import { render, cleanup, fireEvent, queryByText } from "react-testing-library";
-
-import TeamList from "../TeamList";
-import { ISessionStore } from "../../types";
-import SessionStore from "../../stores/SessionStore";
+import { render, cleanup, fireEvent } from "react-testing-library";
 import { navigate } from "@reach/router";
 
-describe("Components - Sections - TeamList", () => {
-  let sessionStore: ISessionStore;
+import TeamList from "../TeamList";
+import mock from "../../utils/mock";
 
-  beforeEach(() => {
-    cleanup();
-    sessionStore = new SessionStore();
-  });
+beforeEach(() => {
+  cleanup();
+  navigate("/");
+});
 
-  it("Does not render if a user is not authenticated", () => {
-    sessionStore.setUser(undefined);
-    const { container } = render(<TeamList sessionStore={sessionStore} />);
+it("Directs users to create a new team if they are in no teams", () => {
+  const { queryByText } = render(<TeamList teams={[]} />);
 
-    expect(container.childElementCount).toBe(0);
-  });
+  expect(
+    queryByText("You are not a member of any teams", { exact: false })
+  ).not.toBe(null);
+  expect(queryByText("create a new team")).not.toBe(null);
+});
 
-  it("Directs users to create a new team if they are in no teams", () => {
-    sessionStore.setUser({
-      id: 1,
-      firstName: "Nicholas",
-      lastName: "Whittaker",
-      email: "nicholas@email.com",
-    });
-    const { getByText, queryByText } = render(
-      <TeamList sessionStore={sessionStore} />
-    );
+it("Shows a list of teams", () => {
+  const teams = [mock.team(), mock.team()];
+  const { queryByText } = render(<TeamList teams={teams} />);
 
-    const prompt = queryByText("You are not a member of any teams", {
-      exact: false,
-    });
-    fireEvent.click(getByText("create a new team"));
+  expect(queryByText(teams[0].name)).not.toBe(null);
+  expect(queryByText(teams[1].name)).not.toBe(null);
+});
 
-    expect(prompt).not.toBeNull();
-    expect(window.location.pathname).toBe("/teams/new");
-  });
+it("Directs a user to a team's profile when they select its name", () => {
+  const team = mock.team();
+  const { getByText } = render(<TeamList teams={[team]} />);
 
-  it("Shows a list of teams for an authenticated user", () => {
-    sessionStore.setUser({
-      id: 1,
-      firstName: "Nicholas",
-      lastName: "Whittaker",
-      email: "nicholas@email.com",
-    });
-    sessionStore.upsertTeams([
-      {
-        id: 1,
-        name: "Western Brass",
-        website: "https://facebook.com/WesternBrass",
-      },
-      {
-        id: 2,
-        name: "Glen Eira Band",
-        website: "http://gleneiraband.com.au",
-      },
-    ]);
-    const { queryByText } = render(<TeamList sessionStore={sessionStore} />);
+  fireEvent.click(getByText(team.name));
 
-    expect(queryByText("Western Brass")).not.toBeNull();
-    expect(queryByText("Glen Eira Band")).not.toBeNull();
-  });
+  expect(window.location.pathname).toBe(`/teams/${team.id}`);
+});
 
-  it("Directs a user to a team's profile when they select its name", () => {
-    navigate("/");
-    sessionStore.setUser({
-      id: 1,
-      firstName: "Nicholas",
-      lastName: "Whittaker",
-      email: "nicholas@email.com",
-    });
-    sessionStore.upsertTeams([
-      {
-        id: 33,
-        name: "Western Brass",
-        website: "https://facebook.com/WesternBrass",
-      },
-    ]);
-    const { getByText } = render(<TeamList sessionStore={sessionStore} />);
+it("Directs a user to create a meeting for a team", () => {
+  const team = mock.team();
+  const { getByText } = render(<TeamList teams={[team]} />);
 
-    fireEvent.click(getByText("Western Brass"));
+  fireEvent.click(getByText("Create meeting"));
 
-    expect(window.location.pathname).toBe("/teams/33");
-  });
-
-  it("Allows a user to create a new meeting for their team", () => {
-    navigate("/");
-    sessionStore.setUser({
-      id: 3,
-      firstName: "Nicholas",
-      lastName: "Whittaker",
-      email: "nicholas@email.com",
-    });
-    sessionStore.upsertTeams([
-      {
-        id: 33,
-        name: "Western Brass",
-        website: "https://facebook.com/WesternBrass",
-      },
-    ]);
-    const { getByText } = render(<TeamList sessionStore={sessionStore} />);
-
-    fireEvent.click(getByText("Create meeting"));
-
-    expect(window.location.pathname).toBe("/teams/33/meetings/new");
-  });
+  expect(window.location.pathname).toBe(`/teams/${team.id}/meetings/new`);
 });

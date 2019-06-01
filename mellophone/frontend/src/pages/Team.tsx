@@ -1,56 +1,49 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import { observer } from "mobx-react-lite";
 
-import { sessionStore } from "../stores";
-import Header from "../elements/Header";
 import Main from "../elements/Main";
-import Footer from "../elements/Footer";
-import TeamService from "../network/TeamService";
 import TeamProfile from "../sections/TeamProfile";
 import MeetingList from "../sections/MeetingList";
-import MeetingService from "../network/MeetingService";
+import meetingService from "../network/meetingService";
 import { IMeeting } from "../types";
 import Button from "../elements/Button";
 import Route from "../utils/Route";
+import { StoresContext } from "../stores";
+import { NetworkContext } from "../network";
+import requireAuthentication from "../utils/requireAuthentication";
 
-interface Props {
-  teamId: string;
-}
-
-function Team(props: RouteComponentProps<Props>) {
+function Team(props: RouteComponentProps<{ teamId: string }>) {
   const [meetings, setMeetings] = React.useState<IMeeting[]>();
+  const { teamStore } = React.useContext(StoresContext);
+  const { getTeamById } = React.useContext(NetworkContext);
 
   const teamId = Number(props.teamId).valueOf();
 
   React.useEffect(() => {
     if (!Number.isNaN(teamId)) {
-      TeamService.fetchTeam(teamId)
-        .then(team => sessionStore.upsertTeams([team]))
-        .catch(
-          error => process.env.NODE_ENV !== "production" && console.error(error)
-        );
-      MeetingService.fetchMeetingsOfTeam(teamId)
-        .then(setMeetings)
-        .catch();
+      getTeamById(teamId).then(team => {
+        teamStore.addTeam(team);
+        teamStore.addToSessionUserTeams(team.id);
+      });
+      meetingService.getMeetingsOfTeam(teamId).then(setMeetings);
     }
-  }, [teamId]);
+  }, [teamId, teamStore, getTeamById]);
 
+  const team = teamStore.teams.get(teamId);
   return (
-    <>
-      <Header sessionStore={sessionStore} />
-      <Main>
-        <TeamProfile sessionStore={sessionStore} teamId={teamId} />
-        <Button
-          onClick={() =>
-            new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()
-          }>
-          Create meeting
-        </Button>
-        <hr style={{ margin: "1rem 0" }} />
-        <MeetingList meetings={meetings} />
-      </Main>
-      <Footer />
-    </>
+    <Main>
+      <TeamProfile team={team} />
+      <Button
+        onClick={() =>
+          new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()
+        }>
+        Create meeting
+      </Button>
+      <hr style={{ margin: "1rem 0" }} />
+      <MeetingList meetings={meetings} />
+    </Main>
   );
 }
-export default Team;
+
+export default requireAuthentication(observer(Team));

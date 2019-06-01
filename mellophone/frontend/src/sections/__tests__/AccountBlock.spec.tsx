@@ -1,79 +1,55 @@
 import React from "react";
 import { render, cleanup, fireEvent, wait } from "react-testing-library";
-import {
-  createHistory,
-  createMemorySource,
-  LocationProvider,
-  History,
-} from "@reach/router";
 
-import SessionStore from "../../stores/SessionStore";
-import { ISessionStore } from "../../types";
 import AccountBlock from "../AccountBlock";
+import mock from "../../utils/mock";
+import { observable } from "mobx";
 
-function renderWithHistory(children: React.ReactNode, history: History) {
-  return render(
-    <LocationProvider history={history}>{children}</LocationProvider>
+beforeEach(() => {
+  cleanup();
+});
+
+it("Renders nothing when no user exists", () => {
+  const { container } = render(
+    <AccountBlock user={observable.box(undefined)} signOut={Promise.resolve} />
   );
-}
+  expect(container.childElementCount).toBe(0);
+});
 
-describe("Components - Sections - AccountBlock", () => {
-  let history: History;
-  let signOut = jest.fn();
-  let sessionStore: ISessionStore;
+it("Shows a user's profile if they are authenticated", () => {
+  const user = mock.user();
+  const { queryByText } = render(
+    <AccountBlock user={observable.box(user)} signOut={Promise.resolve} />
+  );
 
-  beforeEach(() => {
-    cleanup();
-    history = createHistory(createMemorySource("/account"));
-    signOut.mockReset();
-    sessionStore = new SessionStore();
+  expect(queryByText(`${user.firstName} ${user.lastName}`)).not.toBe(null);
+  expect(queryByText(user.email)).not.toBe(null);
+  expect(queryByText(`User #${user.id} of Mellophone!`)).not.toBe(null);
+});
+
+it("Triggers signOut when a user clicks to sign out", () => {
+  const user = mock.user();
+  const signOut = jest.fn(async () => undefined);
+  const { getByText } = render(
+    <AccountBlock user={observable.box(user)} signOut={signOut} />
+  );
+
+  fireEvent.click(getByText("Sign out"));
+
+  expect(signOut).toBeCalledTimes(1);
+});
+
+it("Shows an error when signing out fails", async () => {
+  const message = "An error occured while signing out";
+  const user = mock.user();
+  const signOut = jest.fn(async () => {
+    throw new Error(message);
   });
+  const { getByText, queryByText } = render(
+    <AccountBlock user={observable.box(user)} signOut={signOut} />
+  );
 
-  it("Shows nothing if no user is authenticated", () => {
-    sessionStore.setUser(undefined);
-    const { container } = render(
-      <AccountBlock sessionStore={sessionStore} signOut={signOut} />
-    );
+  fireEvent.click(getByText("Sign out"));
 
-    expect(container.childElementCount).toBe(0);
-  });
-
-  it("Shows a user's profile if they are authenticated", () => {
-    sessionStore.setUser({
-      firstName: "John",
-      lastName: "Doe",
-      id: 16,
-      email: "john@email.com",
-    });
-    const { queryByText } = render(
-      <AccountBlock sessionStore={sessionStore} signOut={signOut} />
-    );
-
-    const name = queryByText("John Doe");
-    const email = queryByText("john@email.com");
-    const id = queryByText("User #16 of Mellophone!");
-
-    expect(name).not.toBeNull();
-    expect(email).not.toBeNull();
-    expect(id).not.toBeNull();
-  });
-
-  it("Triggers signOut when a user clicks to sign out", async () => {
-    history.navigate("/account");
-    sessionStore.setUser({
-      firstName: "John",
-      lastName: "Doe",
-      id: 16,
-      email: "john@email.com",
-    });
-    const { getByText } = renderWithHistory(
-      <AccountBlock sessionStore={sessionStore} signOut={signOut} />,
-      history
-    );
-
-    fireEvent.click(getByText("Sign out"));
-
-    expect(signOut).toBeCalledTimes(1);
-    expect(window.location.pathname).toBe("/");
-  });
+  await wait(() => expect(queryByText(message)).not.toBe(null));
 });

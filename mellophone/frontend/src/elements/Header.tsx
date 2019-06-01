@@ -1,24 +1,24 @@
 import React from "react";
-import { observer } from "mobx-react";
 import { Link } from "@reach/router";
+import { IObservableValue } from "mobx";
+import { observer } from "mobx-react-lite";
 
-import { ISessionStore } from "../types";
 import classes from "./Header.module.css";
 import Route from "../utils/Route";
+import { IUser } from "../types";
 
 interface Props {
-  sessionStore: ISessionStore;
+  user: IObservableValue<IUser | undefined>;
 }
 
-const Header = observer((props: Props) => {
-  const { user } = props.sessionStore;
+function Header(props: Props) {
   return (
     <header className={classes.header}>
       <nav>
         <Link to={new Route().build()} className={classes.title}>
           <h2>Mellophone</h2>
         </Link>
-        {user ? (
+        {props.user.get() ? (
           <Link
             to={new Route(Route.ACCOUNT).build()}
             aria-label="View my account">
@@ -34,6 +34,6 @@ const Header = observer((props: Props) => {
       </nav>
     </header>
   );
-});
+}
 
-export default Header;
+export default observer(Header);

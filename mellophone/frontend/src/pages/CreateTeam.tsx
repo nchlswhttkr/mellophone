@@ -1,29 +1,30 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { sessionStore } from "../stores";
-import Header from "../elements/Header";
 import Main from "../elements/Main";
-import Footer from "../elements/Footer";
-import TeamService from "../network/TeamService";
 import CreateTeamForm from "../sections/CreateTeamForm";
 import Route from "../utils/Route";
+import requireAuthentication from "../utils/requireAuthentication";
+import { StoresContext } from "../stores";
+import { NetworkContext } from "../network";
 
-export default function CreateTeam(_: RouteComponentProps) {
+function CreateTeam(_: RouteComponentProps) {
+  const { teamStore } = React.useContext(StoresContext);
+  const { postTeam } = React.useContext(NetworkContext);
+
   const createTeam = async (name: string, website: string) => {
-    const team = await TeamService.createTeam(name, website);
-    sessionStore.upsertTeams([team]);
+    const team = await postTeam(name, website);
+    teamStore.addTeam(team);
+    teamStore.addToSessionUserTeams(team.id);
     new Route(Route.TEAMS, team.id).navigate();
   };
 
   return (
-    <>
-      <Header sessionStore={sessionStore} />
-      <Main>
-        <h2>Create a new team</h2>
-        <CreateTeamForm sessionStore={sessionStore} createTeam={createTeam} />
-      </Main>
-      <Footer />
-    </>
+    <Main>
+      <h2>Create a new team</h2>
+      <CreateTeamForm createTeam={createTeam} />
+    </Main>
   );
 }
+
+export default requireAuthentication(CreateTeam);

@@ -1,27 +1,21 @@
 import React from "react";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react-lite";
 
-import { ISessionStore } from "../types";
+import { ITeam } from "../types";
 
 interface Props {
-  sessionStore: ISessionStore;
-  teamId: number;
+  team: ITeam | undefined;
 }
 
-@observer
-class TeamProfile extends React.Component<Props> {
-  render() {
-    const team = this.props.sessionStore.teams.get(this.props.teamId);
+function TeamProfile({ team }: Props) {
+  if (!team) return null;
 
-    if (!team) return null;
-
-    return (
-      <>
-        <h2>{team.name}</h2>
-        <p>{team.website}</p>
-      </>
-    );
-  }
+  return (
+    <>
+      <h2>{team.name}</h2>
+      <p>{team.website}</p>
+    </>
+  );
 }
 
-export default TeamProfile;
+export default observer(TeamProfile);

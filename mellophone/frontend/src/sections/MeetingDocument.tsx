@@ -1,16 +1,16 @@
 import React from "react";
+import { observer } from "mobx-react-lite";
 
 import { IMeeting } from "../types";
 import { Link } from "@reach/router";
 import Route from "../utils/Route";
 
 interface Props {
-  meeting?: IMeeting;
+  meeting: IMeeting;
 }
 
-export default function MeetingDocument(props: Props) {
+function MeetingDocument(props: Props) {
   const { meeting } = props;
-  if (!meeting) return null;
 
   return (
     <div>
@@ -27,3 +27,5 @@ export default function MeetingDocument(props: Props) {
     </div>
   );
 }
+
+export default observer(MeetingDocument);

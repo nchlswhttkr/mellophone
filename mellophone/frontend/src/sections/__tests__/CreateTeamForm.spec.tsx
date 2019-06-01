@@ -1,65 +1,44 @@
 import React from "react";
-import { render, cleanup, fireEvent } from "react-testing-library";
+import { render, cleanup, fireEvent, wait } from "react-testing-library";
 
 import CreateTeamForm from "../CreateTeamForm";
-import SessionStore from "../../stores/SessionStore";
-import { ISessionStore } from "../../types";
 
-describe("Components -  Sections - CreateTeamForm", () => {
-  let createTeam = jest.fn();
-  let sessionStore: ISessionStore = new SessionStore();
+beforeEach(() => {
+  cleanup();
+});
 
-  beforeEach(() => {
-    createTeam.mockReset();
-    sessionStore.setUser({
-      id: 1,
-      firstName: "Nicholas",
-      lastName: "Whittaker",
-      email: "nicholas@email.com",
-    });
-    cleanup();
+it("Creates a team when the form is submitted", () => {
+  const createTeam = jest.fn(async () => undefined);
+  const { getByLabelText, getByText } = render(
+    <CreateTeamForm createTeam={createTeam} />
+  );
+
+  fireEvent.input(getByLabelText("Team name"), {
+    target: { value: "Western Brass" },
   });
-
-  it("Does not render if a user is not authenticated", () => {
-    sessionStore.setUser();
-    const { container } = render(
-      <CreateTeamForm sessionStore={sessionStore} createTeam={createTeam} />
-    );
-
-    expect(container.childElementCount).toBe(0);
+  fireEvent.input(getByLabelText("Website"), {
+    target: { value: "https://facebook.com/WesternBrass" },
   });
+  fireEvent.click(getByText("Create team"));
 
-  it("Creates a team when the form is submitted", () => {
-    const { getByLabelText, getByText } = render(
-      <CreateTeamForm sessionStore={sessionStore} createTeam={createTeam} />
-    );
+  expect(createTeam).toBeCalledTimes(1);
+  expect(createTeam).toBeCalledWith(
+    "Western Brass",
+    "https://facebook.com/WesternBrass"
+  );
+});
 
-    fireEvent.input(getByLabelText("Team name"), {
-      target: { value: "Western Brass" },
-    });
-    fireEvent.input(getByLabelText("Website"), {
-      target: { value: "https://facebook.com/WesternBrass" },
-    });
-    fireEvent.click(getByText("Create team"));
-
-    expect(createTeam).toBeCalledTimes(1);
-    expect(createTeam).toBeCalledWith(
-      "Western Brass",
-      "https://facebook.com/WesternBrass"
-    );
+it("Displays the error message of createTeam if it throws an error", async () => {
+  const message = "Unable to create a team at this time.";
+  const createTeam = jest.fn(async () => {
+    throw new Error(message);
   });
+  const { getByText, queryByText } = render(
+    <CreateTeamForm createTeam={createTeam} />
+  );
 
-  it("Displays the error message of createTeam if it throws an error", () => {
-    createTeam = jest.fn(() => {
-      throw new Error("Unable to create a team at this time.");
-    });
-    const { getByLabelText, getByText, queryByText } = render(
-      <CreateTeamForm sessionStore={sessionStore} createTeam={createTeam} />
-    );
+  fireEvent.click(getByText("Create team"));
 
-    fireEvent.click(getByText("Create team"));
-
-    expect(createTeam).toBeCalledTimes(1);
-    expect(queryByText("Unable to create a team at this time.")).not.toBeNull();
-  });
+  await wait(() => expect(queryByText(message)).not.toBe(null));
+  expect(createTeam).toBeCalledTimes(1);
 });

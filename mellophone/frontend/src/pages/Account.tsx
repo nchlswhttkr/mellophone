@@ -1,26 +1,35 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
+import { observer } from "mobx-react-lite";
 
-import { sessionStore } from "../stores";
-import Header from "../elements/Header";
-import Footer from "../elements/Footer";
-import AccountBlock from "../sections/AccountBlock";
-import IdentityService from "../network/IdentityService";
 import Main from "../elements/Main";
+import AccountBlock from "../sections/AccountBlock";
+import ErrorMessage from "../elements/ErrorMessage";
+import requireAuthentication from "../utils/requireAuthentication";
+import { StoresContext } from "../stores";
+import Route from "../utils/Route";
+import { NetworkContext } from "../network";
 
-export default function Account(_: RouteComponentProps) {
-  const signOut = async () => {
-    await IdentityService.clearIdentity();
-    sessionStore.clearSession();
+function Account(_: RouteComponentProps) {
+  const [error, setError] = React.useState<Error>();
+  const { sessionStore } = React.useContext(StoresContext);
+  const { signOut } = React.useContext(NetworkContext);
+
+  const onSignOut = () => {
+    return signOut()
+      .then(() => {
+        sessionStore.signOut();
+        new Route().navigate();
+      })
+      .catch(setError);
   };
 
   return (
-    <>
-      <Header sessionStore={sessionStore} />
-      <Main>
-        <AccountBlock sessionStore={sessionStore} signOut={signOut} />
-      </Main>
-      <Footer />
-    </>
+    <Main>
+      <ErrorMessage error={error} />
+      <AccountBlock user={sessionStore.user} signOut={onSignOut} />
+    </Main>
   );
 }
+
+export default requireAuthentication(observer(Account));

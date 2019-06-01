@@ -44,7 +44,8 @@ Below are some common commands you might run. Remember you will need to be in th
 | yarn start        | Run a development server                                                           |
 | yarn build        | Create a production build (if you want to run the backend with a static frontend)  |
 | yarn test         | Run tests against the frontend code                                                |
-| yarn lint --write | Check for and fix any linting issues                                               |
+| yarn lint         | Run code style and type checks                                                     |
+| yarn lint --write | Run code style and type checks, fixing where possible                              |
 
 ### Backend
 

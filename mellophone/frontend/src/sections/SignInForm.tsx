@@ -1,67 +1,49 @@
 import React from "react";
+import { observer } from "mobx-react-lite";
 
 import classes from "./SignInForm.module.css";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
+import ErrorMessage from "../elements/ErrorMessage";
 
 interface Props {
   signIn: (email: string, password: string) => Promise<void>;
 }
 
-interface State {
-  errorMessage: string;
-}
+function SignInForm(props: Props) {
+  const [error, setError] = React.useState<Error>();
+  const usernameRef = React.useRef<HTMLInputElement>(null);
+  const passwordRef = React.useRef<HTMLInputElement>(null);
 
-class SignInForm extends React.Component<Props, State> {
-  state = {
-    errorMessage: "",
+  const onSubmit = () => {
+    const username = usernameRef.current;
+    const password = passwordRef.current;
+    if (!username || !password) return;
+    props.signIn(username.value, password.value).catch(setError);
   };
 
-  usernameRef = React.createRef<HTMLInputElement>();
-  passwordRef = React.createRef<HTMLInputElement>();
-
-  onSubmit = async () => {
-    const username = this.usernameRef.current;
-    const password = this.passwordRef.current;
-
-    if (!username || !password) return undefined;
-
-    try {
-      await this.props.signIn(username.value, password.value);
-    } catch (error) {
-      this.setState({ errorMessage: error.message });
-    }
-  };
-
-  render() {
-    const { errorMessage } = this.state;
-
-    return (
-      <form
-        className={classes.form}
-        onKeyDown={e => e.key === "Enter" && this.onSubmit()}>
-        <Input ref={this.usernameRef} label="Email" />
-        <Input ref={this.passwordRef} label="Password" type="password" />
-
-        <p className={classes.center}>
-          Are you sure your{" "}
-          <a
-            href="https://haveibeenpwned.com/"
-            rel="noreferrer noopener"
-            target="_blank">
-            password is secure
-          </a>
-          ?
-        </p>
-
-        {errorMessage && <p className={classes.error}>{errorMessage}</p>}
-
-        <Button className={classes.button} onClick={this.onSubmit}>
-          Sign in
-        </Button>
-      </form>
-    );
-  }
+  return (
+    <form
+      className={classes.form}
+      onKeyDown={e => e.key === "Enter" && onSubmit()}>
+      <Input ref={usernameRef} label="Email" />
+      <Input ref={passwordRef} label="Password" type="password" />
+      <p className={classes.center}>
+        Are you sure your{" "}
+        <a
+          href="https://haveibeenpwned.com/"
+          rel="noreferrer noopener"
+          target="_blank">
+          password is secure
+        </a>
+        ?
+      </p>
+      <ErrorMessage error={error} />
+      <Button className={classes.button} onClick={onSubmit}>
+        Sign in
+      </Button>
+    </form>
+  );
 }
 
-export default SignInForm;
+export default observer(SignInForm);

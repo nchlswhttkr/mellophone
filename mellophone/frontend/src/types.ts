@@ -5,12 +5,6 @@ export interface IUser {
   email: string;
 }
 
-export interface IUserToBeCreated {
-  firstName: string;
-  lastName: string;
-  email: string;
-}
-
 export interface ITeam {
   id: number;
   name: string;
@@ -33,12 +27,4 @@ export interface IMeeting {
 export interface IMeetingToBeCreated {
   name: string;
   venue?: string;
-}
-
-export interface ISessionStore {
-  readonly user: IUser | undefined;
-  readonly teams: Map<number, ITeam>;
-  setUser: (user?: IUser) => void;
-  upsertTeams: (teams: ITeam[]) => void;
-  clearSession: () => void;
 }
