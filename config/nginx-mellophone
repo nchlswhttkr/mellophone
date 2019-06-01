@@ -1,12 +1,16 @@
 server {
     listen 443 ssl;
     server_name mellophone.pink;
+
     ssl_certificate /etc/letsencrypt/live/mellophone.pink/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/mellophone.pink/privkey.pem;
     ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
     ssl_prefer_server_ciphers on;
     ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+
     gzip on;
+    gzip_types text/css text/javascript application/javascript application/json
+    gzip_min_length 1k;
 
     location /static/ {
         root /home/conductor/production/mellophone;
