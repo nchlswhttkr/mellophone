@@ -1,11 +1,9 @@
 .footer {
   margin-top: 1rem;
-  color: #ffffff;
-  background-color: #222222;
 }
 
 .footer > * {
   margin: 0 auto;
   padding: 1rem;
-  max-width: 50rem;
+  max-width: 40rem;
 }

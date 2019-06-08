@@ -1,6 +1,5 @@
 import React from "react";
 import { wait, fireEvent, cleanup } from "@testing-library/react";
-import { observable } from "mobx";
 
 import Account from "../Account";
 import TestRenderer from "../../utils/TestRenderer";

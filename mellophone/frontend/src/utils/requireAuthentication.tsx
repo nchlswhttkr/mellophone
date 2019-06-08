@@ -1,9 +1,10 @@
-import React from "react";
+import React, { ElementType, useContext, useEffect } from "react";
 import { autorun } from "mobx";
-import Route from "./Route";
-import { StoresContext } from "../stores";
 import { RouteComponentProps } from "@reach/router";
 import { observer } from "mobx-react-lite";
+
+import Route from "./Route";
+import { StoresContext } from "../stores";
 
 /**
  * A HOC (https://reactjs.org/docs/higher-order-components.html) that enforces
@@ -14,23 +15,18 @@ import { observer } from "mobx-react-lite";
  *
  * If a user is authenticated, the <Child/> will be rendered.
  */
-const requireAuthentication = (
-  Child: React.ElementType,
-  Fallback?: React.ElementType
-) =>
-  observer((props: RouteComponentProps) => {
-    const { sessionStore } = React.useContext(StoresContext);
+function requireAuthentication(Child: ElementType, Fallback?: ElementType) {
+  return observer((props: RouteComponentProps) => {
+    const { sessionStore } = useContext(StoresContext);
 
-    // If a user is/becomes anonymous, redirect them to sign in
-    React.useEffect(
-      () =>
-        autorun(() => {
-          if (!sessionStore.user.get() && !Fallback) {
-            new Route(Route.SIGN_IN).navigate();
-          }
-        }),
-      [sessionStore]
-    );
+    useEffect(() => {
+      // If a user is/becomes anonymous, redirect them to sign in
+      return autorun(() => {
+        if (!sessionStore.user.get() && !Fallback) {
+          new Route(Route.SIGN_IN).navigate();
+        }
+      });
+    }, [sessionStore]);
 
     if (sessionStore.user.get()) {
       return <Child {...props} />;
@@ -38,5 +34,6 @@ const requireAuthentication = (
 
     return Fallback ? <Fallback {...props} /> : null;
   });
+}
 
 export default requireAuthentication;

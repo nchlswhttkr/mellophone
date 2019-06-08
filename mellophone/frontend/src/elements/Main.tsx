@@ -5,7 +5,7 @@ import classes from "./Main.module.css";
 
 interface Props {
   className?: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 /**

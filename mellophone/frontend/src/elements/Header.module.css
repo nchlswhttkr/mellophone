@@ -1,12 +1,11 @@
 .header {
-  background-color: #cd2d79;
-  color: #ffffff;
+  color: #cd2d79;
   padding: 0 1rem;
 }
 
 .header > nav {
   margin: 0 auto;
-  max-width: 50rem;
+  max-width: 40rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

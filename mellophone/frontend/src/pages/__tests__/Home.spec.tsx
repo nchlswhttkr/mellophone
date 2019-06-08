@@ -15,7 +15,7 @@ it("Renders a landing page when no user is authenticated", () => {
     .withStores({ sessionStore })
     .render(<Home />);
 
-  expect(queryByText("Welcome to Mellophone")).not.toBe(null);
+  expect(queryByText("Mellophone is an app for teams")).not.toBe(null);
 });
 
 it("Renders a feed when a user is logged in", async () => {

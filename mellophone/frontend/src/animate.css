@@ -1,0 +1,27 @@
+@keyframes mergeCard1 {
+  from {
+  }
+  to {
+    top: 16vh;
+    left: -4vw;
+    transform: rotate(0);
+  }
+}
+@keyframes mergeCard2 {
+  from {
+  }
+  to {
+    top: 0;
+    left: 0;
+    transform: rotate(0);
+  }
+}
+@keyframes mergeCard3 {
+  from {
+  }
+  to {
+    top: -16vh;
+    left: 4vw;
+    transform: rotate(0);
+  }
+}
