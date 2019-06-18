@@ -20,7 +20,7 @@ interface Props {
  */
 function Main(props: Props) {
   return (
-    <main className={classnames(classes.main, props.className)}>
+    <main role="main" className={classnames(classes.main, props.className)}>
       {props.children}
     </main>
   );

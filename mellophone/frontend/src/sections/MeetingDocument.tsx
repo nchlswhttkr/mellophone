@@ -14,13 +14,13 @@ function MeetingDocument(props: Props) {
 
   return (
     <div>
-      <h2>{meeting.name}</h2>
-      <h3>
+      <h1>{meeting.name}</h1>
+      <h2>
         Meeting held {meeting.dateHeld.toString()} by{" "}
         <Link to={new Route(Route.TEAMS, meeting.team.id).build()}>
           {meeting.team.name}
         </Link>
-      </h3>
+      </h2>
       <p>
         <em>Yesterday, all my problems seemed so far away...</em>
       </p>

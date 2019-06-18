@@ -38,7 +38,7 @@ function Home(_: RouteComponentProps) {
 
 function SplashPage() {
   return (
-    <div className={classes.splash}>
+    <Main className={classes.splash}>
       <div className={classes.cards}>
         <div
           style={{
@@ -77,7 +77,7 @@ function SplashPage() {
           <Link to={new Route(Route.SIGN_IN).build()}>Sign up!</Link>
         </h2>
       </div>
-    </div>
+    </Main>
   );
 }
 

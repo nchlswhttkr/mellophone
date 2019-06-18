@@ -54,9 +54,9 @@ function SignIn(_: RouteComponentProps) {
 
   return (
     <Main className={classes.formContainer}>
-      <h2 className={classes.title}>
+      <h1 className={classes.title}>
         {newAccount ? "Sign up to Mellophone" : "Sign in to Mellophone"}
-      </h2>
+      </h1>
 
       {newAccount ? (
         <SignUpForm signUp={onSignUp} />

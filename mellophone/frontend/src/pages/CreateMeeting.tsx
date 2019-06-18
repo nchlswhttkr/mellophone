@@ -20,7 +20,7 @@ function CreateMeeting(props: RouteComponentProps<{ teamId: string }>) {
 
   return (
     <Main>
-      <h2>Create meeting</h2>
+      <h1>Create a meeting</h1>
       <CreateMeetingForm createMeeting={createMeeting} />
     </Main>
   );
