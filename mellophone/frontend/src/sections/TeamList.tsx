@@ -14,7 +14,7 @@ interface Props {
 function TeamList({ teams }: Props) {
   return (
     <div className={classes.container}>
-      <h2>My teams</h2>
+      <h1>My teams</h1>
 
       {teams.map(team => (
         <div key={team.id} className={classes.team}>

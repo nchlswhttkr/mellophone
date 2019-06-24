@@ -13,12 +13,14 @@ import { StoresContext } from "../stores";
 import { NetworkContext } from "../network";
 import requireAuthentication from "../utils/requireAuthentication";
 
-function Team(props: RouteComponentProps<{ teamId: string }>) {
+type Props = RouteComponentProps<{ teamId: string }>;
+
+function Team(props: Props) {
   const [meetings, setMeetings] = React.useState<IMeeting[]>();
   const { teamStore } = React.useContext(StoresContext);
   const { getTeamById } = React.useContext(NetworkContext);
 
-  const teamId = Number(props.teamId).valueOf();
+  const teamId = Number(props.teamId);
 
   React.useEffect(() => {
     if (!Number.isNaN(teamId)) {
@@ -33,7 +35,7 @@ function Team(props: RouteComponentProps<{ teamId: string }>) {
   const team = teamStore.teams.get(teamId);
   return (
     <Main>
-      <TeamProfile team={team} />
+      {team && <TeamProfile team={team} />}
       <Button
         onClick={() =>
           new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()
@@ -41,9 +43,9 @@ function Team(props: RouteComponentProps<{ teamId: string }>) {
         Create meeting
       </Button>
       <hr style={{ margin: "1rem 0" }} />
-      <MeetingList meetings={meetings} />
+      {meetings && <MeetingList meetings={meetings} />}
     </Main>
   );
 }
 
-export default requireAuthentication(observer(Team));
+export default requireAuthentication<Props>(observer(Team));

@@ -1,14 +1,13 @@
 import React from "react";
 import { observer } from "mobx-react-lite";
 
-import { IMeetingToBeCreated } from "../types";
 import classes from "./CreateMeetingForm.module.css";
 import Input from "../elements/Input";
 import Button from "../elements/Button";
 import ErrorMessage from "../elements/ErrorMessage";
 
 interface Props {
-  createMeeting: (meeting: IMeetingToBeCreated) => Promise<void>;
+  createMeeting: (name: string, venue?: string) => Promise<void>;
 }
 
 function CreateTeamForm(props: Props) {
@@ -20,12 +19,7 @@ function CreateTeamForm(props: Props) {
     const name = nameRef.current;
     const venue = venueRef.current;
     if (name && venue) {
-      props
-        .createMeeting({
-          name: name.value,
-          venue: venue.value,
-        })
-        .catch(setError);
+      props.createMeeting(name.value, venue.value).catch(setError);
     }
   };
 

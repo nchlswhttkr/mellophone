@@ -4,10 +4,13 @@ import SessionStore from "../stores/SessionStore";
 import TeamStore from "../stores/TeamStore";
 import { INetworkLayer, NetworkLayer, NetworkContext } from "../network";
 import { render, RenderResult } from "@testing-library/react";
+import { IUser } from "../types";
+import mock from "./mock";
 
 export default class TestRenderer {
   stores: ApplicationStores;
   network: INetworkLayer;
+  user?: IUser;
 
   constructor() {
     this.stores = {
@@ -27,18 +30,14 @@ export default class TestRenderer {
     return this;
   }
 
-  render(component: React.ReactNode): RenderResult {
-    const stores = {
-      ...this.stores,
-    };
-    const network = {
-      ...NetworkLayer,
-      ...this.network,
-    };
+  asAuthenticatedUser(user?: IUser) {
+    this.stores.sessionStore.signIn(user || mock.user());
+  }
 
+  render(component: React.ReactNode): RenderResult {
     return render(
-      <NetworkContext.Provider value={network}>
-        <StoresContext.Provider value={stores}>
+      <NetworkContext.Provider value={this.network}>
+        <StoresContext.Provider value={this.stores}>
           {component}
         </StoresContext.Provider>
       </NetworkContext.Provider>

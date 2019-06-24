@@ -1,4 +1,4 @@
-import { IUser, ITeam } from "../types";
+import { IUser, ITeam, IMeeting } from "../types";
 
 /**
  * Generates mock domain objects, attempting to populate fields with unique
@@ -7,6 +7,7 @@ import { IUser, ITeam } from "../types";
 class Mock {
   private userCount = 0;
   private teamCount = 0;
+  private meetingCount = 0;
 
   user(user: Partial<IUser> = {}): IUser {
     this.userCount++;
@@ -26,6 +27,18 @@ class Mock {
       name: `Team #${this.teamCount}`,
       website: btoa(this.teamCount.toString()),
       ...team,
+    };
+  }
+
+  meeting(meeting: Partial<ITeam> = {}): IMeeting {
+    this.meetingCount++;
+    return {
+      id: this.meetingCount,
+      name: btoa(this.meetingCount.toString()),
+      venue: btoa(this.meetingCount.toString()),
+      dateHeld: new Date(),
+      team: this.team(),
+      ...meeting,
     };
   }
 }

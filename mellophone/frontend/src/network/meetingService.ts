@@ -1,10 +1,11 @@
-import { IMeeting, IMeetingToBeCreated } from "../types";
+import { IMeeting } from "../types";
 import BaseRequest from "../utils/BaseRequest";
 
 export interface IMeetingService {
   createMeeting(
-    meeting: IMeetingToBeCreated,
-    teamId: number
+    teamId: number,
+    name: string,
+    venue?: string
   ): Promise<IMeeting>;
   getMeetingById(meetingId: number): Promise<IMeeting>;
   getMeetingsOfTeam(teamId: number): Promise<IMeeting[]>;
@@ -12,15 +13,16 @@ export interface IMeetingService {
 
 export default {
   async createMeeting(
-    meeting: IMeetingToBeCreated,
-    teamId: number
+    teamId: number,
+    name: string,
+    venue?: string
   ): Promise<IMeeting> {
-    if (!meeting.name) {
+    if (!name) {
       throw new Error("Meetings must have a name");
     }
     const response = await BaseRequest.post<{ meeting: IMeeting }>(
       `/teams/${teamId}/meetings`,
-      meeting
+      { name, venue }
     );
     return response.meeting;
   },
