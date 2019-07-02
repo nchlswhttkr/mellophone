@@ -30,12 +30,12 @@ class Mock {
     };
   }
 
-  meeting(meeting: Partial<ITeam> = {}): IMeeting {
+  meeting(meeting: Partial<IMeeting> = {}): IMeeting {
     this.meetingCount++;
     return {
       id: this.meetingCount,
-      name: btoa(this.meetingCount.toString()),
-      venue: btoa(this.meetingCount.toString()),
+      name: "Meeting " + btoa(this.meetingCount.toString()),
+      venue: "Meeting venue " + btoa(this.meetingCount.toString()),
       dateHeld: new Date(),
       team: this.team(),
       ...meeting,
