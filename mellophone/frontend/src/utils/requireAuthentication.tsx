@@ -1,4 +1,4 @@
-import React, { ElementType, useContext, useEffect } from "react";
+import React from "react";
 import { autorun } from "mobx";
 import { RouteComponentProps } from "@reach/router";
 import { observer } from "mobx-react-lite";
@@ -17,11 +17,11 @@ import { StoresContext } from "../stores";
  */
 function requireAuthentication<
   RouteProps extends RouteComponentProps = RouteComponentProps
->(Child: ElementType, Fallback?: ElementType) {
+>(Child: React.ElementType, Fallback?: React.ElementType) {
   return observer((props: RouteProps) => {
-    const { sessionStore } = useContext(StoresContext);
+    const { sessionStore } = React.useContext(StoresContext);
 
-    useEffect(() => {
+    React.useEffect(() => {
       // If a user is/becomes anonymous, redirect them to sign in
       return autorun(() => {
         if (!sessionStore.user.get() && !Fallback) {

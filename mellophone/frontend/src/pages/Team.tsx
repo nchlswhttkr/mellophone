@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React from "react";
 import { RouteComponentProps } from "@reach/router";
 import { observer } from "mobx-react-lite";
 
@@ -16,14 +16,14 @@ import ErrorMessage from "../elements/ErrorMessage";
 type Props = RouteComponentProps<{ teamId: string }>;
 
 function Team(props: Props) {
-  const [error, setError] = useState<Error>();
-  const [meetings, setMeetings] = useState<IMeeting[]>();
-  const { teamStore } = useContext(StoresContext);
-  const { getTeamById, getMeetingsOfTeam } = useContext(NetworkContext);
+  const [error, setError] = React.useState<Error>();
+  const [meetings, setMeetings] = React.useState<IMeeting[]>();
+  const { teamStore } = React.useContext(StoresContext);
+  const { getTeamById, getMeetingsOfTeam } = React.useContext(NetworkContext);
 
   const teamId = Number(props.teamId);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!Number.isNaN(teamId)) {
       getTeamById(teamId)
         .then(team => {

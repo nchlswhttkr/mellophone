@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
 import Main from "../elements/Main";
@@ -8,7 +8,7 @@ import requireAuthentication from "../utils/requireAuthentication";
 import { NetworkContext } from "../network";
 
 function CreateMeeting(props: RouteComponentProps<{ teamId: string }>) {
-  const { createMeeting } = useContext(NetworkContext);
+  const { createMeeting } = React.useContext(NetworkContext);
   const teamId = Number(props.teamId);
 
   const onCreateMeeting = async (name: string, venue?: string) => {

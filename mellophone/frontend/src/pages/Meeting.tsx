@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
 import { IMeeting } from "../types";
@@ -11,9 +11,9 @@ import ErrorMessage from "../elements/ErrorMessage";
 type Props = RouteComponentProps<{ meetingId: string }>;
 
 function Meeting(props: Props) {
-  const [meeting, setMeeting] = useState<IMeeting>();
-  const [error, setError] = useState<Error>();
-  const { getMeetingById } = useContext(NetworkContext);
+  const [meeting, setMeeting] = React.useState<IMeeting>();
+  const [error, setError] = React.useState<Error>();
+  const { getMeetingById } = React.useContext(NetworkContext);
 
   const meetingId = Number(props.meetingId);
 
