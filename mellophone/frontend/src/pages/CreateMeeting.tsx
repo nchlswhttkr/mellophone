@@ -3,27 +3,27 @@ import { RouteComponentProps } from "@reach/router";
 
 import Main from "../elements/Main";
 import Route from "../utils/Route";
-import { IMeetingToBeCreated } from "../types";
-import meetingService from "../network/meetingService";
 import CreateMeetingForm from "../sections/CreateMeetingForm";
 import requireAuthentication from "../utils/requireAuthentication";
+import { NetworkContext } from "../network";
 
 function CreateMeeting(props: RouteComponentProps<{ teamId: string }>) {
-  const teamId = Number(props.teamId).valueOf();
+  const { createMeeting } = React.useContext(NetworkContext);
+  const teamId = Number(props.teamId);
 
-  if (Number.isNaN(teamId)) return null;
-
-  const createMeeting = async (meeting: IMeetingToBeCreated) => {
-    const meetingId = (await meetingService.createMeeting(meeting, teamId)).id;
+  const onCreateMeeting = async (name: string, venue?: string) => {
+    const meetingId = (await createMeeting(teamId, name, venue)).id;
     new Route(Route.MEETINGS, meetingId).navigate();
   };
 
   return (
     <Main>
-      <h2>Create meeting</h2>
-      <CreateMeetingForm createMeeting={createMeeting} />
+      <h1>Create a meeting</h1>
+      <CreateMeetingForm createMeeting={onCreateMeeting} />
     </Main>
   );
 }
 
-export default requireAuthentication(CreateMeeting);
+export default requireAuthentication<RouteComponentProps<{ teamId: string }>>(
+  CreateMeeting
+);

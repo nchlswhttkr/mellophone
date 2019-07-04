@@ -34,9 +34,9 @@ function AccountBlock(props: Props) {
       </div>
 
       <div className={classes.textContainer}>
-        <h2>
+        <h1>
           {user.firstName} {user.lastName}
-        </h2>
+        </h1>
         <p>{user.email}</p>
         <p>User #{user.id} of Mellophone!</p>
         <Button className={classes.button} onClick={onSignOut}>

@@ -21,7 +21,7 @@ function CreateTeam(_: RouteComponentProps) {
 
   return (
     <Main>
-      <h2>Create a new team</h2>
+      <h1>Create a new team</h1>
       <CreateTeamForm createTeam={createTeam} />
     </Main>
   );

@@ -1,7 +1,6 @@
 import React from "react";
 import { render, fireEvent, wait, cleanup } from "@testing-library/react";
 import { navigate } from "@reach/router";
-import { observable } from "mobx";
 
 import CreateTeam from "../CreateTeam";
 import TestRenderer from "../../utils/TestRenderer";

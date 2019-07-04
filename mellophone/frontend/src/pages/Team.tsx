@@ -5,35 +5,43 @@ import { observer } from "mobx-react-lite";
 import Main from "../elements/Main";
 import TeamProfile from "../sections/TeamProfile";
 import MeetingList from "../sections/MeetingList";
-import meetingService from "../network/meetingService";
 import { IMeeting } from "../types";
 import Button from "../elements/Button";
 import Route from "../utils/Route";
 import { StoresContext } from "../stores";
 import { NetworkContext } from "../network";
 import requireAuthentication from "../utils/requireAuthentication";
+import ErrorMessage from "../elements/ErrorMessage";
 
-function Team(props: RouteComponentProps<{ teamId: string }>) {
+type Props = RouteComponentProps<{ teamId: string }>;
+
+function Team(props: Props) {
+  const [error, setError] = React.useState<Error>();
   const [meetings, setMeetings] = React.useState<IMeeting[]>();
   const { teamStore } = React.useContext(StoresContext);
-  const { getTeamById } = React.useContext(NetworkContext);
+  const { getTeamById, getMeetingsOfTeam } = React.useContext(NetworkContext);
 
-  const teamId = Number(props.teamId).valueOf();
+  const teamId = Number(props.teamId);
 
   React.useEffect(() => {
     if (!Number.isNaN(teamId)) {
-      getTeamById(teamId).then(team => {
-        teamStore.addTeam(team);
-        teamStore.addToSessionUserTeams(team.id);
-      });
-      meetingService.getMeetingsOfTeam(teamId).then(setMeetings);
+      getTeamById(teamId)
+        .then(team => {
+          teamStore.addTeam(team);
+          teamStore.addToSessionUserTeams(team.id);
+        })
+        .catch(setError);
+      getMeetingsOfTeam(teamId)
+        .then(setMeetings)
+        .catch(setError);
     }
-  }, [teamId, teamStore, getTeamById]);
+  }, [teamId, teamStore, getTeamById, getMeetingsOfTeam]);
 
   const team = teamStore.teams.get(teamId);
   return (
     <Main>
-      <TeamProfile team={team} />
+      <ErrorMessage error={error} />
+      {team && <TeamProfile team={team} />}
       <Button
         onClick={() =>
           new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()
@@ -41,9 +49,9 @@ function Team(props: RouteComponentProps<{ teamId: string }>) {
         Create meeting
       </Button>
       <hr style={{ margin: "1rem 0" }} />
-      <MeetingList meetings={meetings} />
+      {meetings && <MeetingList meetings={meetings} />}
     </Main>
   );
 }
 
-export default requireAuthentication(observer(Team));
+export default requireAuthentication<Props>(observer(Team));

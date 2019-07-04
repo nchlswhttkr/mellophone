@@ -28,17 +28,9 @@ export default class TestRenderer {
   }
 
   render(component: React.ReactNode): RenderResult {
-    const stores = {
-      ...this.stores,
-    };
-    const network = {
-      ...NetworkLayer,
-      ...this.network,
-    };
-
     return render(
-      <NetworkContext.Provider value={network}>
-        <StoresContext.Provider value={stores}>
+      <NetworkContext.Provider value={this.network}>
+        <StoresContext.Provider value={this.stores}>
           {component}
         </StoresContext.Provider>
       </NetworkContext.Provider>

@@ -6,12 +6,10 @@ import Route from "../utils/Route";
 import { observer } from "mobx-react-lite";
 
 interface Props {
-  meetings?: IMeeting[];
+  meetings: IMeeting[];
 }
 
 function MeetingList(props: Props) {
-  if (!props.meetings) return null;
-
   return (
     <>
       <h3>Meetings</h3>

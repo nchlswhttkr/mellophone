@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React from "react";
 import { Router } from "@reach/router";
 import { autorun } from "mobx";
 import { observer } from "mobx-react-lite";
@@ -22,21 +22,21 @@ import PageNotFound from "./pages/PageNotFound";
 import CreateTeam from "./pages/CreateTeam";
 
 function App() {
-  const [userPending, setUserPending] = useState(true);
-  const [stores] = useState({
+  const [userPending, setUserPending] = React.useState(true);
+  const [stores] = React.useState({
     sessionStore: new SessionStore(),
     teamStore: new TeamStore(),
   });
-  const { getSessionUser } = useContext(NetworkContext);
+  const { getSessionUser } = React.useContext(NetworkContext);
 
-  useEffect(() => {
+  React.useEffect(() => {
     getSessionUser()
       .then(user => user && stores.sessionStore.signIn(user))
       .catch(console.error)
       .finally(() => setUserPending(false));
   }, [stores, getSessionUser]);
 
-  useEffect(
+  React.useEffect(
     () =>
       // If a user signs out, clear their teams
       autorun(() => {
