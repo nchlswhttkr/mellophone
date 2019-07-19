@@ -79,6 +79,7 @@ Now you can start the backend server in development mode, and interact with it a
 
 ```sh
 # docker-compose run -p 8000:8000 dev
+pipenv sync --dev
 pipenv run migrate
 pipenv run server
 ```
