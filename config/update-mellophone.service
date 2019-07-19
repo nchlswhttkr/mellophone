@@ -1,5 +1,6 @@
 [Unit]
 Description=Restarts Mellophone, performing any necessary work (dependency updates, database migrations)
+ConditionPathExists=/home/conductor/latest-deployment
 
 [Service]
 User=conductor
