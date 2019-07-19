@@ -15,12 +15,9 @@ it("Does not render when a user is not authenticated", () => {
 });
 
 it("Displays information about the session user", () => {
-  const sessionStore = new SessionStore();
   const user = mock.user();
-  sessionStore.signIn(user);
-
   const { queryByText } = new TestRenderer()
-    .withStores({ sessionStore })
+    .asAuthenticatedUser(user)
     .render(<Account />);
 
   expect(queryByText(user.email)).not.toBe(null);
@@ -28,12 +25,9 @@ it("Displays information about the session user", () => {
 });
 
 it("Allows a user to sign out", async () => {
-  const sessionStore = new SessionStore();
-  const user = mock.user();
-  sessionStore.signIn(user);
   const signOut = jest.fn(async () => undefined);
   const { getByText, container } = new TestRenderer()
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .withNetwork({ signOut })
     .render(<Account />);
 
@@ -45,14 +39,11 @@ it("Allows a user to sign out", async () => {
 
 it("Displays an error message when signing out fails", async () => {
   const message = "Something went wrong and you could not be signed out";
-  const sessionStore = new SessionStore();
-  const user = mock.user();
-  sessionStore.signIn(user);
   const signOut = jest.fn(async () => {
     throw new Error(message);
   });
   const { getByText, queryByText } = new TestRenderer()
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .withNetwork({ signOut })
     .render(<Account />);
 

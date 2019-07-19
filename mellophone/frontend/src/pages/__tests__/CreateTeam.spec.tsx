@@ -21,12 +21,11 @@ it("Renders nothing when no user is authenticated", () => {
 it("Creates a team, stores it and redirects to their profile", async () => {
   const team = mock.team();
   const postTeam = jest.fn(async () => team);
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
   const teamStore = new TeamStore();
   const { getByLabelText, getByText } = new TestRenderer()
     .withNetwork({ postTeam })
-    .withStores({ sessionStore, teamStore })
+    .withStores({ teamStore })
+    .asAuthenticatedUser()
     .render(<CreateTeam />);
 
   fireEvent.input(getByLabelText("Team name"), {

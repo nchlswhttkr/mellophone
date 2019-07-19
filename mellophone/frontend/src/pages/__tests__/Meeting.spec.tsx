@@ -15,13 +15,11 @@ it("Does not render when a user is not authenticated", () => {
 });
 
 it("Shows an error message when a meeting cannot be loaded", async () => {
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
   const getMeetingById = jest.fn(async () => {
     throw new Error("An error message goes here.");
   });
   const { queryByText } = new TestRenderer()
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .withNetwork({ getMeetingById })
     .render(<Meeting meetingId="1" />);
 
@@ -32,12 +30,10 @@ it("Shows an error message when a meeting cannot be loaded", async () => {
 });
 
 it("Shows a meeting when it is loaded", async () => {
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
   const meeting = mock.meeting();
   const getMeetingById = jest.fn(async () => meeting);
   const { queryByText } = new TestRenderer()
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .withNetwork({ getMeetingById })
     .render(<Meeting meetingId={meeting.id.toString()} />);
 

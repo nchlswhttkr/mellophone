@@ -19,14 +19,12 @@ it("Does not render when a user is not authenticated", () => {
 });
 
 it("Allows teams to create a meeting", async () => {
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
   const meeting = mock.meeting();
   const teamId = 20;
   const createMeeting = jest.fn(async () => meeting);
   const { getByLabelText, getByText } = new TestRenderer()
     .withNetwork({ createMeeting })
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .render(<CreateMeeting teamId={teamId.toString()} />);
 
   fireEvent.input(getByLabelText("Meeting name"), {
@@ -45,14 +43,12 @@ it("Allows teams to create a meeting", async () => {
 });
 
 it("Allows teams to create a meeting without specifying a venue", async () => {
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
   const meeting = mock.meeting();
   const teamId = 21;
   const createMeeting = jest.fn(async () => meeting);
   const { getByLabelText, getByText } = new TestRenderer()
     .withNetwork({ createMeeting })
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .render(<CreateMeeting teamId={teamId.toString()} />);
 
   fireEvent.input(getByLabelText("Meeting name"), {
@@ -68,13 +64,11 @@ it("Allows teams to create a meeting without specifying a venue", async () => {
 });
 
 it("Shows a error message when creating a team fails", async () => {
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
   const createMeeting = jest.fn(async () => {
     throw new Error("This is an error message");
   });
   const { getByText, queryByText } = new TestRenderer()
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .withNetwork({ createMeeting })
     .render(<CreateMeeting teamId="1" />);
 

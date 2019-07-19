@@ -10,7 +10,7 @@ interface Props {
   createMeeting: (name: string, venue?: string) => Promise<void>;
 }
 
-function CreateTeamForm(props: Props) {
+function CreateMeetingForm(props: Props) {
   const [error, setError] = React.useState<Error>();
   const nameRef = React.useRef<HTMLInputElement>(null);
   const venueRef = React.useRef<HTMLInputElement>(null);
@@ -39,4 +39,4 @@ function CreateTeamForm(props: Props) {
   );
 }
 
-export default observer(CreateTeamForm);
+export default observer(CreateMeetingForm);

@@ -13,15 +13,13 @@ it("Renders nothing when no user is authenticated", () => {
 });
 
 it("Renders the team with the specified ID and its meetings", async () => {
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
   const team = mock.team();
   const getTeamById = jest.fn(async () => team);
   const meeting = mock.meeting({ team });
   const getMeetingsOfTeam = jest.fn(async () => [meeting]);
   const { queryByText } = new TestRenderer()
     .withNetwork({ getTeamById, getMeetingsOfTeam })
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .render(<Team teamId={team.id.toString()} />);
 
   await wait(() => expect(queryByText(team.name)).not.toBe(null));
@@ -33,8 +31,6 @@ it("Renders the team with the specified ID and its meetings", async () => {
 });
 
 it("Displays an error message when fetching some page content fails", async () => {
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
   const team = mock.team();
   const getTeamById = jest.fn(async () => team);
   const message = "Something went wrong while fetching the meetings";
@@ -43,7 +39,7 @@ it("Displays an error message when fetching some page content fails", async () =
   });
   const { queryByText } = new TestRenderer()
     .withNetwork({ getTeamById, getMeetingsOfTeam })
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .render(<Team teamId={team.id.toString()} />);
 
   await wait(() => expect(queryByText(message)).not.toBe(null));

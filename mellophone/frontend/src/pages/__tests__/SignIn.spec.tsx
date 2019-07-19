@@ -115,9 +115,7 @@ it("Displays an error when signing in fails", async () => {
 });
 
 it("Redirects users who have already authenticated to home page", () => {
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
-  new TestRenderer().withStores({ sessionStore }).render(<SignIn />);
+  new TestRenderer().asAuthenticatedUser().render(<SignIn />);
 
   expect(window.location.pathname).toBe("/");
 });

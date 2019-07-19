@@ -26,11 +26,9 @@ it("Redirects when the loaded user is anonymous", async () => {
 });
 
 it("Renders the child component when an authenticated user is loaded", () => {
-  const sessionStore = new SessionStore();
-  sessionStore.signIn(mock.user());
   const Component = requireAuthentication(ChildComponent);
   const { queryByText } = new TestRenderer()
-    .withStores({ sessionStore })
+    .asAuthenticatedUser()
     .render(<Component />);
 
   expect(queryByText("This is a child component")).not.toBe(null);
