@@ -2,7 +2,7 @@
 Description=Triggers mellophone-restart.service every day
 
 [Timer]
-OnCalendar=daily
+OnCalendar=hourly
 
 [Install]
 WantedBy=timers.target
