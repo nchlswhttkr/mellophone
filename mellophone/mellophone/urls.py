@@ -22,9 +22,9 @@ urlpatterns = [
 
     # Serving the favicon like this is unecessary, but prevents a warning when
     # loading an HTTP route like /api/
-    path('favicon.ico', serve, kwargs={
+    path('favicon.png', serve, kwargs={
         'document_root': settings.STATIC_ROOT,
-        'path': 'favicon.ico'
+        'path': 'favicon.png'
     }),
 
     # Simple method to serve the default frontend from anywhere if no previous
