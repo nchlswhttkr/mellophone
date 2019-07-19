@@ -18,7 +18,7 @@ gunicorn = "~=19.0"
 python_version = "3.6"
 
 [scripts]
-migrate  = "python mellophone/manage.py migrate"
+migrate     = "python mellophone/manage.py migrate"
 server      = "python mellophone/manage.py runserver 0.0.0.0:8000"
 lint        = "pylint mellophone/backend"
 test-unit   = "python mellophone/manage.py test backend"

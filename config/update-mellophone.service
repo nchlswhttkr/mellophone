@@ -1,0 +1,13 @@
+[Unit]
+Description=Restarts Mellophone, performing any necessary work (dependency updates, database migrations)
+ConditionPathExists=/home/conductor/latest-deployment
+
+[Service]
+User=conductor
+WorkingDirectory=/home/conductor
+ExecStartPre=+/bin/systemctl stop nginx gunicorn
+ExecStart=/bin/sh update-mellophone.sh
+ExecStartPost=+/bin/systemctl start nginx gunicorn
+
+[Install]
+WantedBy=multi-user.target
