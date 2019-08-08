@@ -2,8 +2,10 @@ import re
 import json
 import base64
 from django.http.response import JsonResponse
-from backend.views.generic import GenericViews
+from backend.views import GenericViews
 from backend.serializers import serialize_user
+from backend.services.identity import IdentityService
+from backend.services.user import UserService
 
 
 class IdentityController:
@@ -11,10 +13,6 @@ class IdentityController:
     All requests matching /api/identity/... should be routed through here, and
     connect a request with its appropriate action, usually the IdentityService.
     """
-
-    def __init__(self, identity_service, user_service):
-        self._identity_service = identity_service
-        self._user_service = user_service
 
     def sign_in(self, request):
         """
@@ -25,10 +23,10 @@ class IdentityController:
         email, password = base64.b64decode(
             credentials.encode()).decode().split(':')
 
-        self._identity_service.sign_in(request, email=email, password=password)
+        IdentityService.sign_in(request, email=email, password=password)
 
         # It is not certain that authenticating will succeed
-        user = self._identity_service.get_session_user(request)
+        user = IdentityService.get_session_user(request)
         if user is None:
             return GenericViews.authentication_required_response(request)
 
@@ -36,7 +34,7 @@ class IdentityController:
 
     def sign_up(self, request):
         """
-        Create a new user and started an authenticated session with them
+        Create a new user and start an authenticated session with them
         """
         credentials = re.fullmatch(
             r"Basic (.*)", request.META['HTTP_AUTHORIZATION'])[1]
@@ -46,17 +44,16 @@ class IdentityController:
         first_name = body["firstName"]
         last_name = body["lastName"]
 
-        self._user_service.create_user(email, password, first_name, last_name)
-        self._identity_service.sign_in(request, email, password)
-        user = self._identity_service.get_session_user(request)
+        UserService.create_user(email, password, first_name, last_name)
+        IdentityService.sign_in(request, email, password)
+        user = IdentityService.get_session_user(request)
         return JsonResponse({"user": serialize_user(user)}, status=201)
 
     def sign_out(self, request):
         """
-        End the current session, if one exists
+        End the current session, succeeding even if one does not exist
         """
-        self._identity_service.sign_out(
-            request)  # succeeds even if no session exists
+        IdentityService.sign_out(request)
         return JsonResponse({}, status=200)
 
     def whoami(self, request):
@@ -64,7 +61,7 @@ class IdentityController:
         Return information about the session user, or an empty object if there
         is no user
         """
-        user = self._identity_service.get_session_user(request)
+        user = IdentityService.get_session_user(request)
         if user is None:
             return JsonResponse({}, status=200)
 

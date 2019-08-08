@@ -1,4 +1,3 @@
-from django.db import transaction
 from backend.models import Meeting
 
 
@@ -7,15 +6,11 @@ class MeetingService:
     Handles logic around the creation, retrieval and updating of meetings.
     """
     @staticmethod
-    @transaction.atomic
-    def create_meeting(team_id, name, venue=None):
+    def create_meeting_for_team_with_id(team_id, name, venue=None):
         """
-        Creates a meeting
+        Creates a meeting for the given team.
         """
-        with transaction.atomic():
-            meeting = Meeting.objects.create(
-                team_id=team_id, name=name, venue=venue)
-        return meeting
+        return Meeting.objects.create(team_id=team_id, name=name, venue=venue)
 
     @staticmethod
     def get_meeting_with_id(meeting_id):
@@ -25,5 +20,5 @@ class MeetingService:
         return Meeting.objects.get(pk=meeting_id)
 
     @staticmethod
-    def get_meetings_of_team(team_id):
+    def get_meetings_of_team_with_id(team_id):
         return Meeting.objects.filter(team__id=team_id)

@@ -31,5 +31,4 @@ class IdentityService:
         """
         if request.user.is_authenticated:
             return request.user
-
         return None

@@ -51,40 +51,26 @@ Below are some common commands you might run. Remember you will need to be in th
 
 To set up the backend you will need [Docker Compose](https://docs.docker.com/install/) installed.
 
-```sh
-pipenv sync --dev
-```
-
-From here, you can start and stop the PostgreSQL server as needed.
+Before starting the development server, you will need to install dependencies and run database migrations.
 
 ```sh
-docker-compose up -d db
-docker-compose stop db
+docker-compose run dev pipenv sync --dev
+docker-compose run dev pipenv run migrate
 ```
 
-To start working on the backend, it's recommended you work from inside the development container.
+You can install the latest build of the frontend with `scripts/get-frontend-build.sh` if you don't want to build it yourself.
 
 ```sh
-docker-compose run -p 8000:8000 dev
+docker-compose run dev sh scripts/get-frontend-build.sh
 ```
 
-If you want to interact with the backend through the frontend but don't want to install and build the frontend, you can install the latest build on the `master` branch. You can use the `get-frontend-build.sh` script to accomplish this.
+Now you can now start the development server, which can be accessed on port 8000.
 
 ```sh
-# docker-compose run -p 8000:8000 dev
-sh scripts/get-frontend-build.sh
+docker-compose up
 ```
 
-Now you can start the backend server in development mode, and interact with it at [localhost:8000](http://localhost:8000). Before running the server, it is a good idea to apply any new database migrations.
-
-```sh
-# docker-compose run -p 8000:8000 dev
-pipenv sync --dev
-pipenv run migrate
-pipenv run server
-```
-
-Below are some common commands you might run. You might also wish to consult the [pipenv docs](https://pipenv.readthedocs.io/en/latest#pipenv-usage) and the [Pipefile itself](/Pipfile).
+Below are some common commands you might run. You might also wish to consult the [pipenv docs](https://pipenv.readthedocs.io/en/latest#pipenv-usage) and the [Pipfile itself](/Pipfile).
 
 | Command              | Action                                                                                |
 | -------------------- | ------------------------------------------------------------------------------------- |

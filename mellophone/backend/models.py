@@ -48,14 +48,6 @@ class Item(models.Model):
     Items are individual points of discussion on a meeting. They can include
     motions/votes and outcomes/actions.
     """
-    topic = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     description = models.TextField()
-
-
-class MeetingAttendee(models.Model):
-    """
-    This records the status of a member and whether or not they attended a
-    meeting.
-    """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)

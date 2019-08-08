@@ -12,8 +12,8 @@ class UserService:
         Creates a new user, with a username matching their email.
         """
         return User.objects.create_user(
-            email,
-            email,
+            email,  # username is same as email
+            email,  # email
             password,
             first_name=first_name,
             last_name=last_name
