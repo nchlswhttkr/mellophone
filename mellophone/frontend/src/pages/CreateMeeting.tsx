@@ -1,9 +1,9 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import Main from "../elements/Main";
+import Main from "../components/Main";
 import Route from "../utils/Route";
-import CreateMeetingForm from "../sections/CreateMeetingForm";
+import CreateMeetingForm from "../components/CreateMeetingForm";
 import requireAuthentication from "../utils/requireAuthentication";
 import { NetworkContext } from "../network";
 

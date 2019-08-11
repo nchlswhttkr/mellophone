@@ -2,16 +2,16 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 import { observer } from "mobx-react-lite";
 
-import Main from "../elements/Main";
-import TeamProfile from "../sections/TeamProfile";
-import MeetingList from "../sections/MeetingList";
+import Main from "../components/Main";
+import TeamProfile from "../components/TeamProfile";
+import MeetingList from "../components/MeetingList";
 import { IMeeting } from "../types";
-import Button from "../elements/Button";
+import Button from "../components/Button";
 import Route from "../utils/Route";
 import { StoresContext } from "../stores";
 import { NetworkContext } from "../network";
 import requireAuthentication from "../utils/requireAuthentication";
-import ErrorMessage from "../elements/ErrorMessage";
+import ErrorMessage from "../components/ErrorMessage";
 
 type Props = RouteComponentProps<{ teamId: string }>;
 

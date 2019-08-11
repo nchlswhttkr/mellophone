@@ -5,7 +5,7 @@ import { Link } from "@reach/router";
 import { ITeam } from "../types";
 import classes from "./TeamList.module.css";
 import Route from "../utils/Route";
-import Button from "../elements/Button";
+import Button from "./Button";
 
 interface Props {
   teams: ITeam[];

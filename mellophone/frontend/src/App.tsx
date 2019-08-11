@@ -8,9 +8,9 @@ import { StoresContext } from "./stores";
 import SessionStore from "./stores/SessionStore";
 import TeamStore from "./stores/TeamStore";
 import Route from "./utils/Route";
-import Header from "./elements/Header";
-import Main from "./elements/Main";
-import Footer from "./elements/Footer";
+import Header from "./components/Header";
+import Main from "./components/Main";
+import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";

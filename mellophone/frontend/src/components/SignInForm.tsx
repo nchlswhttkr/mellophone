@@ -2,9 +2,9 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 
 import classes from "./SignInForm.module.css";
-import Input from "../elements/Input";
-import Button from "../elements/Button";
-import ErrorMessage from "../elements/ErrorMessage";
+import Input from "./Input";
+import Button from "./Button";
+import ErrorMessage from "./ErrorMessage";
 
 interface Props {
   signIn: (email: string, password: string) => Promise<void>;

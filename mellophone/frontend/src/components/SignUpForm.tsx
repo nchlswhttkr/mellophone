@@ -1,9 +1,9 @@
 import React from "react";
 
 import classes from "./SignUpForm.module.css";
-import Input from "../elements/Input";
-import Button from "../elements/Button";
-import ErrorMessage from "../elements/ErrorMessage";
+import Input from "./Input";
+import Button from "./Button";
+import ErrorMessage from "./ErrorMessage";
 
 interface Props {
   signUp: (

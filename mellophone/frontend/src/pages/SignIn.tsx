@@ -2,15 +2,15 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 import { observer } from "mobx-react-lite";
 
-import Main from "../elements/Main";
-import SignInForm from "../sections/SignInForm";
-import SignUpForm from "../sections/SignUpForm";
+import Main from "../components/Main";
+import SignInForm from "../components/SignInForm";
+import SignUpForm from "../components/SignUpForm";
 import classes from "./SignIn.module.css";
-import Button from "../elements/Button";
+import Button from "../components/Button";
 import Route from "../utils/Route";
 import { StoresContext } from "../stores";
 import { NetworkContext } from "../network";
-import ErrorMessage from "../elements/ErrorMessage";
+import ErrorMessage from "../components/ErrorMessage";
 
 function SignIn(_: RouteComponentProps) {
   const [error, setError] = React.useState<Error>();

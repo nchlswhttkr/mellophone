@@ -1,8 +1,8 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import Main from "../elements/Main";
-import CreateTeamForm from "../sections/CreateTeamForm";
+import Main from "../components/Main";
+import CreateTeamForm from "../components/CreateTeamForm";
 import Route from "../utils/Route";
 import requireAuthentication from "../utils/requireAuthentication";
 import { StoresContext } from "../stores";

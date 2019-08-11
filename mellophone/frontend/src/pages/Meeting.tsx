@@ -2,11 +2,11 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
 import { IMeeting } from "../types";
-import Main from "../elements/Main";
-import MeetingDocument from "../sections/MeetingDocument";
+import Main from "../components/Main";
+import MeetingDocument from "../components/MeetingDocument";
 import requireAuthentication from "../utils/requireAuthentication";
 import { NetworkContext } from "../network";
-import ErrorMessage from "../elements/ErrorMessage";
+import ErrorMessage from "../components/ErrorMessage";
 
 type Props = RouteComponentProps<{ meetingId: string }>;
 

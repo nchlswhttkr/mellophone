@@ -2,9 +2,9 @@ import React from "react";
 import { observer } from "mobx-react-lite";
 
 import classes from "./CreateMeetingForm.module.css";
-import Input from "../elements/Input";
-import Button from "../elements/Button";
-import ErrorMessage from "../elements/ErrorMessage";
+import Input from "./Input";
+import Button from "./Button";
+import ErrorMessage from "./ErrorMessage";
 
 interface Props {
   createMeeting: (name: string, venue?: string) => Promise<void>;

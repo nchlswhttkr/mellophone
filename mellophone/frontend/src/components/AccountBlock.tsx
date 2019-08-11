@@ -3,8 +3,8 @@ import { observer } from "mobx-react-lite";
 
 import { IUser } from "../types";
 import classes from "./AccountBlock.module.css";
-import Button from "../elements/Button";
-import ErrorMessage from "../elements/ErrorMessage";
+import Button from "./Button";
+import ErrorMessage from "./ErrorMessage";
 import { IObservableValue } from "mobx";
 
 interface Props {

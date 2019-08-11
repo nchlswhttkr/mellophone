@@ -2,12 +2,12 @@ import React from "react";
 import { RouteComponentProps, Link } from "@reach/router";
 import { observer } from "mobx-react-lite";
 
-import Main from "../elements/Main";
-import TeamList from "../sections/TeamList";
+import Main from "../components/Main";
+import TeamList from "../components/TeamList";
 import { StoresContext } from "../stores";
 import requireAuthentication from "../utils/requireAuthentication";
 import { NetworkContext } from "../network";
-import ErrorMessage from "../elements/ErrorMessage";
+import ErrorMessage from "../components/ErrorMessage";
 import Route from "../utils/Route";
 import classes from "./Home.module.css";
 import "../animate.css";

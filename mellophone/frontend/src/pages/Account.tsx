@@ -2,8 +2,8 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 import { observer } from "mobx-react-lite";
 
-import Main from "../elements/Main";
-import AccountBlock from "../sections/AccountBlock";
+import Main from "../components/Main";
+import AccountBlock from "../components/AccountBlock";
 import requireAuthentication from "../utils/requireAuthentication";
 import { StoresContext } from "../stores";
 import Route from "../utils/Route";
