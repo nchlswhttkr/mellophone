@@ -46,7 +46,7 @@ export function setTeamsRejected(error: Error): SetTeamsRejectedAction {
 export function loadTeamsThunk(teamsPromise: Promise<ITeam[]>) {
   return (dispatch: Dispatch) => {
     dispatch(setTeamsPending());
-    teamsPromise
+    return teamsPromise
       .then(teams => dispatch(setTeamsFulfilled(teams)))
       .catch(error => dispatch(setTeamsRejected(error)));
   };

@@ -6,7 +6,6 @@ import reducer, {
   loadTeamsThunk,
 } from "../teams";
 import mock from "../../utils/mock";
-import { create } from "istanbul-reports";
 import { clearSession } from "../session";
 
 it("Is in a pending state by default", () => {
@@ -73,26 +72,26 @@ it("Reacts to the session being cleared", () => {
   expect(store.getState().teams).toHaveLength(0);
 });
 
-it("loadTeamsThunk() - Dispatches a pending and fulfilled action on green path", () => {
+it("loadTeamsThunk() - Dispatches a pending and fulfilled action on green path", async () => {
   const dispatch = jest.fn();
   const teams = [mock.team()];
   const expectedPendingAction = setTeamsPending();
   const expectedFulfilledAction = setTeamsFulfilled(teams);
 
-  loadTeamsThunk(Promise.resolve(teams))(dispatch);
+  await loadTeamsThunk(Promise.resolve(teams))(dispatch);
 
   expect(dispatch).toBeCalledTimes(2);
   expect(dispatch.mock.calls[0]).toEqual([expectedPendingAction]);
   expect(dispatch.mock.calls[1]).toEqual([expectedFulfilledAction]);
 });
 
-it("loadTeamsThunk() - Dispatches a pending and rejected action on red path", () => {
+it("loadTeamsThunk() - Dispatches a pending and rejected action on red path", async () => {
   const dispatch = jest.fn();
   const error = new Error("Something went wrong");
   const expectedPendingAction = setTeamsPending();
   const expectedRejectedAction = setTeamsRejected(error);
 
-  loadTeamsThunk(Promise.reject(error))(dispatch);
+  await loadTeamsThunk(Promise.reject(error))(dispatch);
 
   expect(dispatch).toBeCalledTimes(2);
   expect(dispatch.mock.calls[0]).toEqual([expectedPendingAction]);
