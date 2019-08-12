@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
-import { observer } from "mobx-react-lite";
+import { connect } from "react-redux";
 
 import Main from "../components/Main";
 import SignInForm from "../components/SignInForm";
@@ -8,24 +8,27 @@ import SignUpForm from "../components/SignUpForm";
 import classes from "./SignIn.module.css";
 import Button from "../components/Button";
 import Route from "../utils/Route";
-import { StoresContext } from "../stores";
 import { NetworkContext } from "../network";
 import ErrorMessage from "../components/ErrorMessage";
+import { AppState } from "../ducks";
+import { setSessionUser } from "../ducks/session";
+import { IUser } from "../types";
 
-function SignIn(_: RouteComponentProps) {
+interface Props extends RouteComponentProps {
+  isAuthenticated: boolean;
+  setSessionUser(user: IUser): void;
+}
+
+function SignIn(props: Props) {
   const [error, setError] = React.useState<Error>();
   const [newAccount, setNewAccount] = React.useState<boolean>(
     !localStorage.getItem("hasAccount")
   );
   const { signIn, signUp } = React.useContext(NetworkContext);
-  const { sessionStore } = React.useContext(StoresContext);
 
-  React.useEffect(() => setError(undefined), [newAccount]);
-
-  const isAuthenticated = !!sessionStore.user.get();
   React.useEffect(() => {
-    if (isAuthenticated) new Route().navigate();
-  }, [isAuthenticated]);
+    if (props.isAuthenticated) new Route().navigate();
+  }, [props.isAuthenticated]);
 
   const onSignUp = (
     email: string,
@@ -35,7 +38,7 @@ function SignIn(_: RouteComponentProps) {
   ) => {
     return signUp(email, password, firstName, lastName)
       .then(user => {
-        sessionStore.signIn(user);
+        props.setSessionUser(user);
         localStorage.setItem("hasAccount", "yes");
         new Route().navigate();
       })
@@ -45,7 +48,7 @@ function SignIn(_: RouteComponentProps) {
   const onSignIn = (email: string, password: string) => {
     return signIn(email, password)
       .then(user => {
-        sessionStore.signIn(user);
+        props.setSessionUser(user);
         localStorage.setItem("hasAccount", "yes");
         new Route().navigate();
       })
@@ -75,4 +78,13 @@ function SignIn(_: RouteComponentProps) {
   );
 }
 
-export default observer(SignIn);
+const mapStateToProps = (state: AppState) => ({
+  isAuthenticated: !!state.session.user,
+});
+
+const mapDispatchToProps = { setSessionUser };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignIn);

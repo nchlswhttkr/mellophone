@@ -1,11 +1,10 @@
 import React from "react";
+import { fireEvent, wait, cleanup } from "@testing-library/react";
+import { navigate } from "@reach/router";
 
 import CreateMeeting from "../CreateMeeting";
 import TestRenderer from "../../utils/TestRenderer";
 import mock from "../../utils/mock";
-import { fireEvent, wait, cleanup } from "@testing-library/react";
-import SessionStore from "../../stores/SessionStore";
-import { navigate } from "@reach/router";
 
 beforeEach(() => {
   cleanup();

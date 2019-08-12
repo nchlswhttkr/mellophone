@@ -1,5 +1,4 @@
 import React from "react";
-import { observer } from "mobx-react-lite";
 
 import classes from "./CreateTeamForm.module.css";
 import Input from "./Input";
@@ -35,4 +34,4 @@ function CreateTeamForm(props: Props) {
   );
 }
 
-export default observer(CreateTeamForm);
+export default CreateTeamForm;

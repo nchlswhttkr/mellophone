@@ -1,14 +1,12 @@
 import React from "react";
-import { observer } from "mobx-react-lite";
 
 import { IUser } from "../types";
 import classes from "./AccountBlock.module.css";
 import Button from "./Button";
 import ErrorMessage from "./ErrorMessage";
-import { IObservableValue } from "mobx";
 
 interface Props {
-  user: IObservableValue<IUser | undefined>;
+  user: IUser | undefined;
   signOut: () => Promise<void>;
 }
 
@@ -17,7 +15,7 @@ interface Props {
  */
 function AccountBlock(props: Props) {
   const [error, setError] = React.useState<Error>();
-  const user = props.user.get();
+  const { user } = props;
 
   const onSignOut = () => {
     props.signOut().catch(setError);
@@ -48,4 +46,4 @@ function AccountBlock(props: Props) {
   );
 }
 
-export default observer(AccountBlock);
+export default AccountBlock;

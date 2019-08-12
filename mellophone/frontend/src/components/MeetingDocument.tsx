@@ -1,5 +1,4 @@
 import React from "react";
-import { observer } from "mobx-react-lite";
 
 import { IMeeting } from "../types";
 import { Link } from "@reach/router";
@@ -28,4 +27,4 @@ function MeetingDocument(props: Props) {
   );
 }
 
-export default observer(MeetingDocument);
+export default MeetingDocument;

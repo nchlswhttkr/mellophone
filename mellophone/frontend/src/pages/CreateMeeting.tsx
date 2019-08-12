@@ -7,7 +7,9 @@ import CreateMeetingForm from "../components/CreateMeetingForm";
 import requireAuthentication from "../utils/requireAuthentication";
 import { NetworkContext } from "../network";
 
-function CreateMeeting(props: RouteComponentProps<{ teamId: string }>) {
+type Props = RouteComponentProps<{ teamId: string }>;
+
+function CreateMeeting(props: Props) {
   const { createMeeting } = React.useContext(NetworkContext);
   const teamId = Number(props.teamId);
 
@@ -24,6 +26,4 @@ function CreateMeeting(props: RouteComponentProps<{ teamId: string }>) {
   );
 }
 
-export default requireAuthentication<RouteComponentProps<{ teamId: string }>>(
-  CreateMeeting
-);
+export default requireAuthentication<{ teamId: string }>(CreateMeeting);

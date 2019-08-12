@@ -3,7 +3,6 @@ import { wait } from "@testing-library/react";
 
 import Team from "../Team";
 import TestRenderer from "../../utils/TestRenderer";
-import SessionStore from "../../stores/SessionStore";
 import mock from "../../utils/mock";
 
 it("Renders nothing when no user is authenticated", () => {

@@ -5,8 +5,6 @@ import { navigate } from "@reach/router";
 import CreateTeam from "../CreateTeam";
 import TestRenderer from "../../utils/TestRenderer";
 import mock from "../../utils/mock";
-import SessionStore from "../../stores/SessionStore";
-import TeamStore from "../../stores/TeamStore";
 
 beforeEach(() => {
   cleanup();
@@ -21,10 +19,8 @@ it("Renders nothing when no user is authenticated", () => {
 it("Creates a team, stores it and redirects to their profile", async () => {
   const team = mock.team();
   const postTeam = jest.fn(async () => team);
-  const teamStore = new TeamStore();
-  const { getByLabelText, getByText } = new TestRenderer()
+  const { getByLabelText, getByText, store } = new TestRenderer()
     .withNetwork({ postTeam })
-    .withStores({ teamStore })
     .asAuthenticatedUser()
     .render(<CreateTeam />);
 
@@ -39,6 +35,5 @@ it("Creates a team, stores it and redirects to their profile", async () => {
   await wait(() => expect(window.location.pathname).toBe(`/teams/${team.id}`));
   expect(postTeam).toBeCalledTimes(1);
   expect(postTeam).toBeCalledWith(team.name, team.website);
-  expect(teamStore.teams.get(team.id)).not.toBe(undefined);
-  expect(teamStore.sessionUserTeams).toContainEqual(team);
+  expect(store.getState().teams.teams).toContainEqual(team);
 });

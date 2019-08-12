@@ -1,5 +1,4 @@
 import React from "react";
-import { observer } from "mobx-react-lite";
 
 import classes from "./CreateMeetingForm.module.css";
 import Input from "./Input";
@@ -39,4 +38,4 @@ function CreateMeetingForm(props: Props) {
   );
 }
 
-export default observer(CreateMeetingForm);
+export default CreateMeetingForm;

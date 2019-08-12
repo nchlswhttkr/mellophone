@@ -1,5 +1,4 @@
 import React from "react";
-import { observer } from "mobx-react-lite";
 
 import { ITeam } from "../types";
 
@@ -16,4 +15,4 @@ function TeamProfile({ team }: Props) {
   );
 }
 
-export default observer(TeamProfile);
+export default TeamProfile;

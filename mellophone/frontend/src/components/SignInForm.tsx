@@ -1,5 +1,4 @@
 import React from "react";
-import { observer } from "mobx-react-lite";
 
 import classes from "./SignInForm.module.css";
 import Input from "./Input";
@@ -46,4 +45,4 @@ function SignInForm(props: Props) {
   );
 }
 
-export default observer(SignInForm);
+export default SignInForm;

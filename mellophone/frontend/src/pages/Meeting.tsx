@@ -33,4 +33,4 @@ function Meeting(props: Props) {
   );
 }
 
-export default requireAuthentication<Props>(Meeting);
+export default requireAuthentication<{ meetingId: string }>(Meeting);

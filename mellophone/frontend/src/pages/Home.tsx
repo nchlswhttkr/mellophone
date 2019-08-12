@@ -1,39 +1,35 @@
 import React from "react";
 import { RouteComponentProps, Link } from "@reach/router";
-import { observer } from "mobx-react-lite";
+import { connect, useSelector } from "react-redux";
 
 import Main from "../components/Main";
 import TeamList from "../components/TeamList";
-import { StoresContext } from "../stores";
 import requireAuthentication from "../utils/requireAuthentication";
 import { NetworkContext } from "../network";
-import ErrorMessage from "../components/ErrorMessage";
 import Route from "../utils/Route";
 import classes from "./Home.module.css";
 import "../animate.css";
+import { loadTeamsThunk } from "../ducks/teams";
+import { ITeam } from "../types";
+import { AppState } from "../ducks";
 
-function Home(_: RouteComponentProps) {
-  const [error, setError] = React.useState<Error>();
-  const { teamStore } = React.useContext(StoresContext);
+interface Props extends RouteComponentProps {
+  loadTeamsThunk(promise: Promise<ITeam[]>): void;
+  teams: ITeam[];
+  teamsLoaded: boolean;
+}
+
+function Home(props: Props) {
+  const { loadTeamsThunk, teamsLoaded, teams } = props;
   const { getTeamsOfSessionUser } = React.useContext(NetworkContext);
 
   React.useEffect(() => {
-    getTeamsOfSessionUser()
-      .then(teams =>
-        teams.forEach(team => {
-          teamStore.addTeam(team);
-          teamStore.addToSessionUserTeams(team.id);
-        })
-      )
-      .catch(setError);
-  }, [teamStore, getTeamsOfSessionUser]);
+    if (!teamsLoaded) {
+      loadTeamsThunk(getTeamsOfSessionUser());
+    }
+  }, [loadTeamsThunk, getTeamsOfSessionUser, teamsLoaded]);
 
-  return (
-    <Main>
-      <ErrorMessage error={error} />
-      {!error && <TeamList teams={teamStore.sessionUserTeams} />}
-    </Main>
-  );
+  return <Main>{teamsLoaded && <TeamList teams={teams} />}</Main>;
 }
 
 function SplashPage() {
@@ -81,4 +77,19 @@ function SplashPage() {
   );
 }
 
-export default requireAuthentication(observer(Home), SplashPage);
+const mapStateToProps = (state: AppState) => ({
+  teamsLoaded: state.teams.status === "fulfilled",
+  teams: state.teams.teams,
+});
+
+const mapDispatchToProps = {
+  loadTeamsThunk,
+};
+
+export default requireAuthentication(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Home),
+  SplashPage
+);

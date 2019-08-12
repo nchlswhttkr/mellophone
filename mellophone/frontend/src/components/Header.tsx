@@ -1,14 +1,12 @@
 import React from "react";
 import { Link } from "@reach/router";
-import { IObservableValue } from "mobx";
-import { observer } from "mobx-react-lite";
 
 import classes from "./Header.module.css";
 import Route from "../utils/Route";
 import { IUser } from "../types";
 
 interface Props {
-  user: IObservableValue<IUser | undefined>;
+  user: IUser | undefined;
 }
 
 function Header(props: Props) {
@@ -18,7 +16,7 @@ function Header(props: Props) {
         <Link to={new Route().build()} className={classes.title}>
           <h2>Mellophone</h2>
         </Link>
-        {props.user.get() ? (
+        {props.user ? (
           <Link
             to={new Route(Route.ACCOUNT).build()}
             aria-label="View my account">
@@ -36,4 +34,4 @@ function Header(props: Props) {
   );
 }
 
-export default observer(Header);
+export default Header;

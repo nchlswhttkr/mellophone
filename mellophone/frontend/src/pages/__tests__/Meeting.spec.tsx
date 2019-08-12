@@ -3,7 +3,6 @@ import { wait, cleanup } from "@testing-library/react";
 
 import Meeting from "../Meeting";
 import TestRenderer from "../../utils/TestRenderer";
-import SessionStore from "../../stores/SessionStore";
 import mock from "../../utils/mock";
 
 beforeEach(cleanup);

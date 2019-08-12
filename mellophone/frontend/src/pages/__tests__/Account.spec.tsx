@@ -3,7 +3,6 @@ import { wait, fireEvent, cleanup } from "@testing-library/react";
 
 import Account from "../Account";
 import TestRenderer from "../../utils/TestRenderer";
-import SessionStore from "../../stores/SessionStore";
 import mock from "../../utils/mock";
 
 beforeEach(cleanup);
