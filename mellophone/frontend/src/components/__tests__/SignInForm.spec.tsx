@@ -1,9 +1,7 @@
 import React from "react";
-import { render, cleanup, fireEvent, wait } from "@testing-library/react";
+import { render, fireEvent, wait } from "@testing-library/react";
 
 import SignInForm from "../SignInForm";
-
-beforeEach(cleanup);
 
 it("Signs in a user who enters a username and password", () => {
   const signIn = jest.fn(async () => undefined);

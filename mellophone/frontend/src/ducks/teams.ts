@@ -86,7 +86,7 @@ export default function reducer(
 ): TeamsState {
   switch (action.type) {
     case SET_TEAMS_PENDING:
-      return { ...state, status: "pending" };
+      return { ...state, status: "pending", error: undefined, teams: [] };
     case SET_TEAMS_FULFILLED:
       return { ...state, status: "fulfilled", teams: action.teams };
     case SET_TEAMS_REJECTED:

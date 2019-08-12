@@ -1,11 +1,7 @@
 import React from "react";
-import { render, cleanup, fireEvent, wait } from "@testing-library/react";
+import { render, fireEvent, wait } from "@testing-library/react";
 
 import CreateTeamForm from "../CreateTeamForm";
-
-beforeEach(() => {
-  cleanup();
-});
 
 it("Creates a team when the form is submitted", () => {
   const createTeam = jest.fn(async () => undefined);

@@ -1,16 +1,9 @@
 import React from "react";
-import { fireEvent, cleanup, wait } from "@testing-library/react";
-import { navigate } from "@reach/router";
+import { fireEvent, wait } from "@testing-library/react";
 
 import SignIn from "../SignIn";
 import mock from "../../utils/mock";
 import TestRenderer from "../../utils/TestRenderer";
-
-beforeEach(() => {
-  cleanup();
-  navigate("/sign-in");
-  localStorage.clear();
-});
 
 it("Can toggle back and forth between signing in and signing up", () => {
   const { getByText, queryByText } = new TestRenderer().render(<SignIn />);

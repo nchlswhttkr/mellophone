@@ -47,7 +47,7 @@ export default class TestRenderer {
   }
 
   render(component: React.ReactNode) {
-    const store = createStore(rootReducer, applyMiddleware(thunk));
+    const store = createStore(rootReducer, this.stores, applyMiddleware(thunk));
     if (this.user) {
       store.dispatch(setSessionUser(this.user));
     }

@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteComponentProps, Link } from "@reach/router";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
 
 import Main from "../components/Main";
 import TeamList from "../components/TeamList";

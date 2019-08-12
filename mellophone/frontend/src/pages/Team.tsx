@@ -29,7 +29,7 @@ function Team(props: Props) {
   const teamId = Number(props.teamId);
 
   React.useEffect(() => {
-    if (!Number.isNaN(teamId) && teamsLoaded) {
+    if (!Number.isNaN(teamId) && !teamsLoaded) {
       const foundTeam = userTeams.find(team => team.id === teamId);
       if (!foundTeam) {
         getTeamById(teamId)
@@ -67,7 +67,6 @@ function Team(props: Props) {
 
 const mapStateToProps = (state: AppState) => ({
   teamsLoaded: state.teams.status === "fulfilled",
-  teams: state.teams.teams,
   userTeams: state.teams.teams,
 });
 

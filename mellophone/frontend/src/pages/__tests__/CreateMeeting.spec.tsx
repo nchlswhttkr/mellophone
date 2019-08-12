@@ -1,15 +1,10 @@
 import React from "react";
-import { fireEvent, wait, cleanup } from "@testing-library/react";
-import { navigate } from "@reach/router";
+import { fireEvent, wait } from "@testing-library/react";
 
 import CreateMeeting from "../CreateMeeting";
 import TestRenderer from "../../utils/TestRenderer";
 import mock from "../../utils/mock";
 
-beforeEach(() => {
-  cleanup();
-  navigate("/");
-});
 
 it("Does not render when a user is not authenticated", () => {
   const { container } = new TestRenderer().render(<CreateMeeting />);

@@ -1,5 +1,11 @@
-import configureMobx from "./utils/configureMobx";
-configureMobx();
+import { cleanup } from "@testing-library/react";
+import { navigate } from "@reach/router";
+
+afterEach(() => {
+  cleanup();
+  navigate("/");
+  localStorage.clear();
+});
 
 // https://github.com/testing-library/react-testing-library/issues/281#issuecomment-480349256
 

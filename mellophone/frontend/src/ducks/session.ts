@@ -8,7 +8,7 @@ export interface SetSessionUserAction {
   user?: IUser;
 }
 
-export function setSessionUser(user?: IUser): SetSessionUserAction {
+export function setSessionUser(user: IUser): SetSessionUserAction {
   return {
     type: SET_SESSION_USER,
     user,

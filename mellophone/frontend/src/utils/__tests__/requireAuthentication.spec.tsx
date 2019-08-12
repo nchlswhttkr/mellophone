@@ -1,17 +1,11 @@
 import React from "react";
-import { cleanup, wait } from "@testing-library/react";
+import { wait } from "@testing-library/react";
 
 import requireAuthentication from "../requireAuthentication";
 import TestRenderer from "../TestRenderer";
-import { navigate } from "@reach/router";
-import mock from "../mock";
+import { clearSession } from "../../ducks/session";
 
 const ChildComponent = () => <h1>This is a child component</h1>;
-
-beforeEach(() => {
-  cleanup();
-  navigate("/");
-});
 
 it("Redirects when the loaded user is anonymous", async () => {
   const Component = requireAuthentication(ChildComponent);
@@ -31,15 +25,20 @@ it("Renders the child component when an authenticated user is loaded", () => {
   expect(window.location.pathname).not.toBe("/sign-in");
 });
 
-it("Redirects when a user goes becomes anonymous after the initial mount", async () => {
+it("Redirects when a user signs outs after the initial mount and stops rendering the child component", async () => {
   const Component = requireAuthentication(ChildComponent);
-  const { container, queryByText } = new TestRenderer().render(<Component />);
+  const {
+    queryByText,
+    store,
+  } = new TestRenderer().asAuthenticatedUser().render(<Component />);
 
   expect(queryByText("This is a child component")).not.toBe(null);
 
+  store.dispatch(clearSession());
+
   // If the session user disappears, they should be redirected to sign in
   await wait(() => expect(window.location.pathname).toBe("/sign-in"));
-  expect(container.childElementCount).toBe(0);
+  expect(queryByText("This is a child component")).toBe(null);
 });
 
 it("Renders a fallback if one is provided for anonymous users instead of redirecting", () => {

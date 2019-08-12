@@ -1,10 +1,8 @@
 import React from "react";
-import { cleanup, render } from "@testing-library/react";
+import { render } from "@testing-library/react";
 
 import Header from "../Header";
 import mock from "../../utils/mock";
-
-beforeEach(cleanup);
 
 it("Directs unauthenticated users to sign in", () => {
   const user = undefined;

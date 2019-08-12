@@ -1,14 +1,8 @@
 import React from "react";
-import { render, cleanup, fireEvent } from "@testing-library/react";
-import { navigate } from "@reach/router";
+import { render, fireEvent } from "@testing-library/react";
 
 import TeamList from "../TeamList";
 import mock from "../../utils/mock";
-
-beforeEach(() => {
-  cleanup();
-  navigate("/");
-});
 
 it("Directs users to create a new team if they are in no teams", () => {
   const { queryByText } = render(<TeamList teams={[]} />);

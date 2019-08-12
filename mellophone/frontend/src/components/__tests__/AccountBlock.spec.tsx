@@ -1,12 +1,8 @@
 import React from "react";
-import { render, cleanup, fireEvent, wait } from "@testing-library/react";
+import { render, fireEvent, wait } from "@testing-library/react";
 
 import AccountBlock from "../AccountBlock";
 import mock from "../../utils/mock";
-
-beforeEach(() => {
-  cleanup();
-});
 
 it("Renders nothing when no user exists", () => {
   const { container } = render(

@@ -1,18 +1,12 @@
 import React from "react";
-import { render, fireEvent, wait, cleanup } from "@testing-library/react";
-import { navigate } from "@reach/router";
+import { fireEvent, wait } from "@testing-library/react";
 
 import CreateTeam from "../CreateTeam";
 import TestRenderer from "../../utils/TestRenderer";
 import mock from "../../utils/mock";
 
-beforeEach(() => {
-  cleanup();
-  navigate("/");
-});
-
 it("Renders nothing when no user is authenticated", () => {
-  const { container } = render(<CreateTeam />);
+  const { container } = new TestRenderer().render(<CreateTeam />);
   expect(container.childElementCount).toBe(0);
 });
 
@@ -21,6 +15,7 @@ it("Creates a team, stores it and redirects to their profile", async () => {
   const postTeam = jest.fn(async () => team);
   const { getByLabelText, getByText, store } = new TestRenderer()
     .withNetwork({ postTeam })
+    .withStores({ teams: { teams: [], status: "fulfilled", error: undefined } })
     .asAuthenticatedUser()
     .render(<CreateTeam />);
 
