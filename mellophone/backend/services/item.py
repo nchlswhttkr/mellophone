@@ -10,7 +10,7 @@ class ItemService:
         """
         Retrieves items associated with a given meeting.
         """
-        return Item.objects.filter(meeting__id=meeting_id)
+        return Item.objects.filter(meeting__id=meeting_id).order_by('date_created')
 
     @staticmethod
     def create_item_for_meeting(meeting, name, description):

@@ -1,3 +1,4 @@
+from time import sleep
 from django.test import TestCase
 from backend.services.item import ItemService, InvalidItemException
 from backend.services.team import TeamService
@@ -23,8 +24,6 @@ class ItemServiceTestCase(TestCase):
         ItemService.create_item_for_meeting(
             meeting, item_name, item_description)
 
-        # items are ordered by most recently created/updated, which should be
-        # the reversed order of insertion
         retrieved_item = ItemService.get_items_of_meeting_with_id(
             meeting.id)[0]
 
@@ -54,3 +53,26 @@ class ItemServiceTestCase(TestCase):
 
         with self.assertRaises(InvalidItemException):
             ItemService.create_item_for_meeting(meeting, "A name", "")
+
+    def test_ordered_by_creation_date(self):
+        """
+        Items of a meeting are ordered by the date on which they are created.
+        """
+        user = UserService.create_user(
+            "john@email.com", "hunter2", "John", "Doe")
+        team = TeamService.create_team_with_user_as_owner(
+            user, "Me and the boys", "")
+        meeting = MeetingService.create_meeting_for_team_with_id(
+            team.id, "A meeting")
+
+        first_item = ItemService.create_item_for_meeting(
+            meeting, "First item", "-")
+        sleep(1)  # not necessary, but just for clarity's sake
+        second_item = ItemService.create_item_for_meeting(
+            meeting, "Second item", "-")
+        meeting_items = ItemService.get_items_of_meeting_with_id(meeting.id)
+
+        self.assertTrue(first_item.date_created < second_item.date_created)
+        self.assertEqual(len(meeting_items), 2)
+        self.assertEqual(meeting_items[0].name, first_item.name)
+        self.assertEqual(meeting_items[1].name, second_item.name)

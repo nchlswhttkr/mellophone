@@ -65,8 +65,11 @@ urlpatterns = [
         post=meeting_controller.create_meeting_for_team
     ),
     route(r"^meetings/[0-9]*$", get=meeting_controller.get_meeting_by_id),
-    route(r"^meetings/[0-9]*/items$", get=meeting_controller.get_items_of_meeting,
-          post=meeting_controller.post_item_to_meeting),
+    route(
+        r"^meetings/[0-9]*/items$",
+        get=meeting_controller.get_items_of_meeting,
+        post=meeting_controller.post_item_to_meeting
+    ),
 
     # MISC
     route(r"^$", get=index_controller.hello_world),

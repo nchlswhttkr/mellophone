@@ -45,3 +45,5 @@ def serialize_item(item):
         "name": item.name,
         "description": item.description
     }
+    # dateCreated
+    # dateUpdated
