@@ -49,6 +49,7 @@ class Mock {
       id: this.itemCount,
       name: "Item " + btoa(this.itemCount.toString()),
       description: "Description " + btoa(this.itemCount.toString()),
+      ...item,
     };
   }
 }

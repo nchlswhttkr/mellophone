@@ -6,6 +6,7 @@ import Route from "../utils/Route";
 import Button from "./Button";
 import Input from "./Input";
 import ErrorMessage from "./ErrorMessage";
+import TextArea from "./TextArea";
 
 interface Props {
   meeting: IMeeting;
@@ -18,7 +19,7 @@ function MeetingDocument(props: Props) {
   const { meeting, items, createItemForMeeting } = props;
 
   const itemNameRef = useRef<HTMLInputElement>(null);
-  const itemDescriptionRef = useRef<HTMLInputElement>(null);
+  const itemDescriptionRef = useRef<HTMLTextAreaElement>(null);
 
   function onCreateMeetingItem() {
     const nameInput = itemNameRef.current;
@@ -45,12 +46,20 @@ function MeetingDocument(props: Props) {
       {items.map(item => (
         <div key={item.id}>
           <h3>{item.name}</h3>
-          <p>{item.description}</p>
+          <p>
+            {item.description.split("\n").map((line, i) => (
+              // Avoids React warning about keys for reconciliation
+              <React.Fragment key={i}>
+                {i > 0 && <br />}
+                {line}
+              </React.Fragment>
+            ))}
+          </p>
         </div>
       ))}
       <form>
         <Input ref={itemNameRef} label="Item name" />
-        <Input ref={itemDescriptionRef} label="Item description" />
+        <TextArea ref={itemDescriptionRef} label="Item description" rows={5} />
         <Button onClick={onCreateMeetingItem}>Create item</Button>
         <ErrorMessage error={error} />
       </form>

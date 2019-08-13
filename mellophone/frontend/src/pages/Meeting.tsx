@@ -34,15 +34,11 @@ function Meeting(props: Props) {
   }, [meetingId, getMeetingById, getItemsOfMeeting]);
 
   const onCreateItem = async (meetingId: number, item: Partial<IItem>) => {
-    try {
-      if (!meeting || !items) {
-        throw new Error("Cannot create item while meeting has not loaded");
-      }
-      const createdItem = await postItemInMeeting(meetingId, item);
-      setItems(items.concat([createdItem]));
-    } catch (error) {
-      setError(error);
+    if (!meeting || !items) {
+      throw new Error("Cannot create item while meeting has not loaded");
     }
+    const createdItem = await postItemInMeeting(meetingId, item);
+    setItems(items.concat([createdItem]));
   };
 
   return (
