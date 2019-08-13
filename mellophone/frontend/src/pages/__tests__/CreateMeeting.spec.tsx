@@ -5,7 +5,6 @@ import CreateMeeting from "../CreateMeeting";
 import TestRenderer from "../../utils/TestRenderer";
 import mock from "../../utils/mock";
 
-
 it("Does not render when a user is not authenticated", () => {
   const { container } = new TestRenderer().render(<CreateMeeting />);
 

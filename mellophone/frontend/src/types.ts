@@ -18,3 +18,9 @@ export interface IMeeting {
   dateHeld: Date;
   team: ITeam;
 }
+
+export interface IItem {
+  id: number;
+  name: string;
+  description: string;
+}

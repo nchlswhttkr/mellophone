@@ -1,4 +1,4 @@
-import { IMeeting } from "../types";
+import { IMeeting, IItem } from "../types";
 import BaseRequest from "../utils/BaseRequest";
 
 export interface IMeetingService {
@@ -9,6 +9,8 @@ export interface IMeetingService {
   ): Promise<IMeeting>;
   getMeetingById(meetingId: number): Promise<IMeeting>;
   getMeetingsOfTeam(teamId: number): Promise<IMeeting[]>;
+  getItemsOfMeeting(meetingId: number): Promise<IItem[]>;
+  postItemInMeeting(meetingId: number, item: Partial<IItem>): Promise<IItem>;
 }
 
 export default {
@@ -39,5 +41,20 @@ export default {
       `/teams/${teamId}/meetings`
     );
     return response.meetings;
+  },
+
+  async getItemsOfMeeting(meetingId: number) {
+    const response = await BaseRequest.get<{ items: IItem[] }>(
+      `/meetings/${meetingId}/items`
+    );
+    return response.items;
+  },
+
+  async postItemInMeeting(meetingId: number, item: Partial<IItem>) {
+    const response = await BaseRequest.post<{ item: IItem }>(
+      `/meetings/${meetingId}/items`,
+      item
+    );
+    return response.item;
   },
 } as IMeetingService;

@@ -39,3 +39,13 @@ class GenericViews:
         response, this view can be used.
         """
         return JsonResponse({}, status=403)
+
+    @staticmethod
+    def invalid_request_response(request, error=None):
+        """
+        If a request is invalid (say a required field is missing), this can be
+        used to created a response displaying the error message.
+        """
+        if error is None:
+            error = "Invalid request"
+        return JsonResponse({"error": str(error)}, status=400)

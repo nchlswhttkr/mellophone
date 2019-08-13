@@ -2,10 +2,11 @@ import re
 import json
 from django.http.response import JsonResponse
 from backend.views import GenericViews
-from backend.serializers import serialize_meeting
+from backend.serializers import serialize_meeting, serialize_item
 from backend.services.identity import IdentityService
 from backend.services.team import TeamService
 from backend.services.meeting import MeetingService
+from backend.services.item import ItemService, InvalidItemException
 
 
 class MeetingController:
@@ -81,3 +82,50 @@ class MeetingController:
             team_id, name, venue)
 
         return JsonResponse({"meeting": serialize_meeting(meeting)}, status=201)
+
+    def get_items_of_meeting(self, request):
+        """
+        Obtains the items of a meeting
+        """
+        user = IdentityService.get_session_user(request)
+        if user is None:
+            return GenericViews.authentication_required_response(request)
+
+        meeting_id = int(
+            re.match(r"/api/meetings/([0-9]*)/items", request.path)[1])
+        meeting = MeetingService.get_meeting_with_id(meeting_id)
+
+        if not TeamService.is_user_in_team_with_id(user, meeting.team.id):
+            return GenericViews.forbidden_response(request)
+
+        items = ItemService.get_items_of_meeting_with_id(meeting_id)
+
+        return JsonResponse({
+            "items": [serialize_item(item) for item in items]}, status=200)
+
+    def post_item_to_meeting(self, request):
+        """
+        Creates an item within a meeting.
+        """
+        user = IdentityService.get_session_user(request)
+        if user is None:
+            return GenericViews.authentication_required_response(request)
+
+        meeting_id = int(
+            re.match(r"/api/meetings/([0-9]*)/items", request.path)[1])
+        meeting = MeetingService.get_meeting_with_id(meeting_id)
+
+        if not TeamService.is_user_in_team_with_id(user, meeting.team.id):
+            return GenericViews.forbidden_response(request)
+
+        body = json.loads(request.body.decode("utf-8"))
+        name = body["name"]
+        description = body["description"]
+
+        try:
+            item = ItemService.create_item_for_meeting(
+                meeting, name, description)
+        except InvalidItemException as error:
+            return GenericViews.invalid_request_response(request, error)
+
+        return JsonResponse({"item": serialize_item(item)}, status=201)

@@ -5,7 +5,6 @@ import Home from "../Home";
 import TestRenderer from "../../utils/TestRenderer";
 import mock from "../../utils/mock";
 
-
 it("Renders a landing page when no user is authenticated", () => {
   const { queryByText } = new TestRenderer().render(<Home />);
 
