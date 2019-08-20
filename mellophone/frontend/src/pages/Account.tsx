@@ -1,35 +1,42 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
-import { observer } from "mobx-react-lite";
+import { connect } from "react-redux";
 
-import Main from "../elements/Main";
-import AccountBlock from "../sections/AccountBlock";
-import ErrorMessage from "../elements/ErrorMessage";
+import Main from "../components/Main";
+import AccountBlock from "../components/AccountBlock";
 import requireAuthentication from "../utils/requireAuthentication";
-import { StoresContext } from "../stores";
 import Route from "../utils/Route";
-import { NetworkContext } from "../network";
+import { clearSession } from "../ducks/session";
+import { IUser } from "../types";
+import { AppState } from "../ducks";
+import { useNetwork } from "../network";
 
-function Account(_: RouteComponentProps) {
-  const [error, setError] = React.useState<Error>();
-  const { sessionStore } = React.useContext(StoresContext);
-  const { signOut } = React.useContext(NetworkContext);
+interface Props extends RouteComponentProps {
+  clearSession(): void;
+  user?: IUser;
+}
 
-  const onSignOut = () => {
-    return signOut()
-      .then(() => {
-        sessionStore.signOut();
-        new Route().navigate();
-      })
-      .catch(setError);
-  };
+function Account(props: Props) {
+  const { signOut } = useNetwork();
+
+  const onSignOut = () =>
+    signOut().then(() => {
+      props.clearSession();
+      new Route().navigate();
+    });
 
   return (
     <Main>
-      <ErrorMessage error={error} />
-      <AccountBlock user={sessionStore.user} signOut={onSignOut} />
+      <AccountBlock user={props.user} signOut={onSignOut} />
     </Main>
   );
 }
 
-export default requireAuthentication(observer(Account));
+const mapStateToProps = (state: AppState) => ({ user: state.session.user });
+
+const mapDispatchToProps = { clearSession };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(requireAuthentication<Props>(Account));

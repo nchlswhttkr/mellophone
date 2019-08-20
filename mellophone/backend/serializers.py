@@ -34,8 +34,16 @@ def serialize_meeting(meeting):
         "dateHeld": meeting.date_held,
         "team": serialize_team(meeting.team),
     }
-
     if meeting.venue is not None:
         dto["venue"] = meeting.venue
-
     return dto
+
+
+def serialize_item(item):
+    return {
+        "id": item.id,
+        "name": item.name,
+        "description": item.description
+    }
+    # dateCreated
+    # dateUpdated

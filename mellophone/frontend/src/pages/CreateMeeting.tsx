@@ -1,19 +1,21 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import Main from "../elements/Main";
+import Main from "../components/Main";
 import Route from "../utils/Route";
-import CreateMeetingForm from "../sections/CreateMeetingForm";
+import CreateMeetingForm from "../components/CreateMeetingForm";
 import requireAuthentication from "../utils/requireAuthentication";
-import { NetworkContext } from "../network";
+import { useNetwork } from "../network";
 
-function CreateMeeting(props: RouteComponentProps<{ teamId: string }>) {
-  const { createMeeting } = React.useContext(NetworkContext);
+interface Props extends RouteComponentProps<{ teamId: string }> {}
+
+function CreateMeeting(props: Props) {
+  const { postMeeting } = useNetwork();
   const teamId = Number(props.teamId);
 
   const onCreateMeeting = async (name: string, venue?: string) => {
-    const meetingId = (await createMeeting(teamId, name, venue)).id;
-    new Route(Route.MEETINGS, meetingId).navigate();
+    const meeting = await postMeeting(teamId, name, venue);
+    new Route(Route.MEETINGS, meeting.id).navigate();
   };
 
   return (
@@ -24,6 +26,4 @@ function CreateMeeting(props: RouteComponentProps<{ teamId: string }>) {
   );
 }
 
-export default requireAuthentication<RouteComponentProps<{ teamId: string }>>(
-  CreateMeeting
-);
+export default requireAuthentication<Props>(CreateMeeting);

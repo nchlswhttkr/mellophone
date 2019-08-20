@@ -1,10 +1,8 @@
 import React from "react";
-import { autorun } from "mobx";
-import { RouteComponentProps } from "@reach/router";
-import { observer } from "mobx-react-lite";
+import { useSelector } from "react-redux";
 
 import Route from "./Route";
-import { StoresContext } from "../stores";
+import { AppState } from "../ducks";
 
 /**
  * A HOC (https://reactjs.org/docs/higher-order-components.html) that enforces
@@ -14,28 +12,29 @@ import { StoresContext } from "../stores";
  * the <Fallback/> if it is provided.
  *
  * If a user is authenticated, the <Child/> will be rendered.
+ *
+ * If you need to provide path parameters (eg "/teams/:teamId"), you can pass
+ * an object into the WrappedComponentProps generic.
  */
-function requireAuthentication<
-  RouteProps extends RouteComponentProps = RouteComponentProps
->(Child: React.ElementType, Fallback?: React.ElementType) {
-  return observer((props: RouteProps) => {
-    const { sessionStore } = React.useContext(StoresContext);
+function requireAuthentication<WrappedComponentProps = {}>(
+  Child: React.ComponentType<WrappedComponentProps>,
+  Fallback?: React.ComponentType<WrappedComponentProps>
+) {
+  return (props: WrappedComponentProps) => {
+    const user = useSelector((state: AppState) => state.session.user);
 
     React.useEffect(() => {
-      // If a user is/becomes anonymous, redirect them to sign in
-      return autorun(() => {
-        if (!sessionStore.user.get() && !Fallback) {
-          new Route(Route.SIGN_IN).navigate();
-        }
-      });
-    }, [sessionStore]);
+      if (!user && !Fallback) {
+        new Route(Route.SIGN_IN).navigate();
+      }
+    }, [user]);
 
-    if (sessionStore.user.get()) {
+    if (user) {
       return <Child {...props} />;
     }
 
     return Fallback ? <Fallback {...props} /> : null;
-  });
+  };
 }
 
 export default requireAuthentication;

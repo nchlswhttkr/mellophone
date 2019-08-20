@@ -1,16 +1,15 @@
 import React from "react";
 import { Router } from "@reach/router";
-import { autorun } from "mobx";
-import { observer } from "mobx-react-lite";
+import { connect } from "react-redux";
 
-import { NetworkContext } from "./network";
-import { StoresContext } from "./stores";
-import SessionStore from "./stores/SessionStore";
-import TeamStore from "./stores/TeamStore";
+import { useNetwork } from "./network";
 import Route from "./utils/Route";
-import Header from "./elements/Header";
-import Main from "./elements/Main";
-import Footer from "./elements/Footer";
+import Header from "./components/Header";
+import Main from "./components/Main";
+import Footer from "./components/Footer";
+import { AppState } from "./ducks";
+import { setSessionUser } from "./ducks/session";
+import { IUser } from "./types";
 
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
@@ -21,35 +20,25 @@ import Meeting from "./pages/Meeting";
 import PageNotFound from "./pages/PageNotFound";
 import CreateTeam from "./pages/CreateTeam";
 
-function App() {
+interface Props {
+  user: IUser | undefined;
+  setSessionUser(user?: IUser): void;
+}
+
+function App(props: Props) {
   const [userPending, setUserPending] = React.useState(true);
-  const [stores] = React.useState({
-    sessionStore: new SessionStore(),
-    teamStore: new TeamStore(),
-  });
-  const { getSessionUser } = React.useContext(NetworkContext);
+  const { getSessionUser } = useNetwork();
 
   React.useEffect(() => {
     getSessionUser()
-      .then(user => user && stores.sessionStore.signIn(user))
+      .then(props.setSessionUser)
       .catch(console.error)
       .finally(() => setUserPending(false));
-  }, [stores, getSessionUser]);
-
-  React.useEffect(
-    () =>
-      // If a user signs out, clear their teams
-      autorun(() => {
-        if (!stores.sessionStore.user.get()) {
-          stores.teamStore.clearSessionUserTeamIds();
-        }
-      }),
-    [stores]
-  );
+  }, [getSessionUser, props.setSessionUser]);
 
   return (
-    <StoresContext.Provider value={stores}>
-      <Header user={stores.sessionStore.user} />
+    <>
+      <Header user={props.user} />
       {userPending ? (
         <Main />
       ) : (
@@ -72,8 +61,15 @@ function App() {
         </Router>
       )}
       <Footer />
-    </StoresContext.Provider>
+    </>
   );
 }
 
-export default observer(App);
+const mapStateToProps = (state: AppState) => ({ user: state.session.user });
+
+const mapDispatchToProps = { setSessionUser };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

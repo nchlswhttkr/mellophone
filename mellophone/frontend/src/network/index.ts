@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 
-import identityService, { IIdentityService } from "./identityService";
-import meetingService, { IMeetingService } from "./meetingService";
-import teamService, { ITeamService } from "./teamService";
+import * as identityService from "./identityService";
+import * as meetingService from "./meetingService";
+import * as teamService from "./teamService";
 
-export interface INetworkLayer
-  extends IIdentityService,
-    ITeamService,
-    IMeetingService {}
-
-export const NetworkLayer: INetworkLayer = {
+export const NetworkLayer = {
   ...identityService,
   ...meetingService,
   ...teamService,
 };
 
-export const NetworkContext = React.createContext<INetworkLayer>(NetworkLayer);
+export const NetworkContext = React.createContext<typeof NetworkLayer>(
+  NetworkLayer
+);
+
+// Convenience wrapper for accessing network-calling functions
+export function useNetwork() {
+  return useContext(NetworkContext);
+}

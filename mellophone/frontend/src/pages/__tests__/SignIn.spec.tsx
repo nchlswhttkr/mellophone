@@ -1,17 +1,9 @@
 import React from "react";
-import { fireEvent, cleanup, wait } from "@testing-library/react";
-import { navigate } from "@reach/router";
+import { fireEvent, wait } from "@testing-library/react";
 
 import SignIn from "../SignIn";
 import mock from "../../utils/mock";
 import TestRenderer from "../../utils/TestRenderer";
-import SessionStore from "../../stores/SessionStore";
-
-beforeEach(() => {
-  cleanup();
-  navigate("/sign-in");
-  localStorage.clear();
-});
 
 it("Can toggle back and forth between signing in and signing up", () => {
   const { getByText, queryByText } = new TestRenderer().render(<SignIn />);
@@ -26,12 +18,10 @@ it("Can toggle back and forth between signing in and signing up", () => {
 });
 
 it("Allows users to sign up, redirecting them to the home page", async () => {
-  const sessionStore = new SessionStore();
   const user = mock.user();
   const signUp = jest.fn(async () => user);
-  const { getByLabelText, getByText } = new TestRenderer()
+  const { getByLabelText, getByText, store } = new TestRenderer()
     .withNetwork({ signUp })
-    .withStores({ sessionStore })
     .render(<SignIn />);
 
   fireEvent.input(getByLabelText("First name"), {
@@ -56,7 +46,7 @@ it("Allows users to sign up, redirecting them to the home page", async () => {
     user.firstName,
     user.lastName
   );
-  expect(sessionStore.user.get()).toEqual(user);
+  expect(store.getState().session.user).toEqual(user);
 });
 
 it("Displays an error when signing up fails", async () => {
@@ -75,12 +65,10 @@ it("Displays an error when signing up fails", async () => {
 });
 
 it("Allows users to sign in, redirecting them to the home page", async () => {
-  const sessionStore = new SessionStore();
   const user = mock.user();
   const signIn = jest.fn(async () => user);
-  const { getByLabelText, getByText } = new TestRenderer()
+  const { getByLabelText, getByText, store } = new TestRenderer()
     .withNetwork({ signIn })
-    .withStores({ sessionStore })
     .render(<SignIn />);
 
   fireEvent.click(getByText("Sign in to an existing account"));
@@ -95,7 +83,7 @@ it("Allows users to sign in, redirecting them to the home page", async () => {
   await wait(() => expect(window.location.pathname).toBe("/"));
   expect(signIn).toBeCalledTimes(1);
   expect(signIn).toBeCalledWith(user.email, "hunter2");
-  expect(sessionStore.user.get()).toEqual(user);
+  expect(store.getState().session.user).toEqual(user);
 });
 
 it("Displays an error when signing in fails", async () => {
@@ -120,7 +108,7 @@ it("Redirects users who have already authenticated to home page", () => {
   expect(window.location.pathname).toBe("/");
 });
 
-it("Shows return users the sign in form", () => {
+it("Shows returning users the sign in form", () => {
   localStorage.setItem("hasAccount", "yes");
   const { queryByText } = new TestRenderer().render(<SignIn />);
 

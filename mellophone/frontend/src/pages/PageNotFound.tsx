@@ -2,7 +2,7 @@ import React from "react";
 import { RouteComponentProps, Link } from "@reach/router";
 
 import Route from "../utils/Route";
-import Main from "../elements/Main";
+import Main from "../components/Main";
 
 function PageNotFound(_: RouteComponentProps) {
   return (

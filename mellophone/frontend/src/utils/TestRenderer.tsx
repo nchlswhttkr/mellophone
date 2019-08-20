@@ -1,12 +1,14 @@
 import React from "react";
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import { render } from "@testing-library/react";
+import thunk from "redux-thunk";
 
-import { ApplicationStores, StoresContext } from "../stores";
-import SessionStore from "../stores/SessionStore";
-import TeamStore from "../stores/TeamStore";
-import { INetworkLayer, NetworkLayer, NetworkContext } from "../network";
-import { render, RenderResult } from "@testing-library/react";
+import { NetworkLayer, NetworkContext } from "../network";
 import { IUser } from "../types";
 import mock from "./mock";
+import rootReducer, { AppState } from "../ducks";
+import { setSessionUser } from "../ducks/session";
 
 /**
  * When testing larger and more complex components, mocking dependencies like
@@ -16,24 +18,21 @@ import mock from "./mock";
  * TestRenderer provides this with builder syntax.
  */
 export default class TestRenderer {
-  stores: ApplicationStores;
-  network: INetworkLayer;
+  stores: Partial<AppState>;
+  network: typeof NetworkLayer;
   user?: IUser;
 
   constructor() {
-    this.stores = {
-      sessionStore: new SessionStore(),
-      teamStore: new TeamStore(),
-    };
+    this.stores = {};
     this.network = Object.assign({}, NetworkLayer);
   }
 
-  withStores(stores: Partial<ApplicationStores>): TestRenderer {
+  withStores(stores: Partial<AppState>): TestRenderer {
     Object.assign(this.stores, stores);
     return this;
   }
 
-  withNetwork(network: Partial<INetworkLayer>): TestRenderer {
+  withNetwork(network: Partial<typeof NetworkLayer>): TestRenderer {
     Object.assign(this.network, network);
     return this;
   }
@@ -47,14 +46,18 @@ export default class TestRenderer {
     return this;
   }
 
-  render(component: React.ReactNode): RenderResult {
-    if (this.user) this.stores.sessionStore.signIn(this.user);
-    return render(
-      <NetworkContext.Provider value={this.network}>
-        <StoresContext.Provider value={this.stores}>
-          {component}
-        </StoresContext.Provider>
-      </NetworkContext.Provider>
-    );
+  render(component: React.ReactNode) {
+    const store = createStore(rootReducer, this.stores, applyMiddleware(thunk));
+    if (this.user) {
+      store.dispatch(setSessionUser(this.user));
+    }
+    return {
+      ...render(
+        <NetworkContext.Provider value={this.network}>
+          <Provider store={store}>{component}</Provider>
+        </NetworkContext.Provider>
+      ),
+      store,
+    };
   }
 }

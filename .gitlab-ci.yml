@@ -26,6 +26,7 @@ cache:
 "FE Linting":
   image: node:10-alpine
   stage: test
+  allow_failure: true
   script:
     - cd mellophone/frontend
     - yarn
@@ -59,6 +60,7 @@ cache:
 "BE Linting":
   image: nchlswhttkr/mellophone
   stage: test
+  allow_failure: true
   script:
     - pipenv sync --dev --keep-outdated
     - pipenv run lint

@@ -1,19 +1,12 @@
 import React from "react";
-import { wait, cleanup } from "@testing-library/react";
+import { wait } from "@testing-library/react";
 
 import Home from "../Home";
-import SessionStore from "../../stores/SessionStore";
-import TeamStore from "../../stores/TeamStore";
 import TestRenderer from "../../utils/TestRenderer";
 import mock from "../../utils/mock";
 
-beforeEach(cleanup);
-
 it("Renders a landing page when no user is authenticated", () => {
-  const sessionStore = new SessionStore();
-  const { queryByText } = new TestRenderer()
-    .withStores({ sessionStore })
-    .render(<Home />);
+  const { queryByText } = new TestRenderer().render(<Home />);
 
   expect(queryByText("Mellophone is an app for teams")).not.toBe(null);
 });
@@ -32,33 +25,10 @@ it("Renders a feed when a user is logged in", async () => {
   expect(getTeamsOfSessionUser).toBeCalledTimes(1);
 });
 
-it("Displays an error message if the feed can not be loaded", async () => {
-  const message = "Your teams could not be loaded";
-  const getTeamsOfSessionUser = jest.fn(async () => {
-    throw new Error(message);
-  });
-
-  const { queryByText } = new TestRenderer()
-    .asAuthenticatedUser()
-    .withNetwork({ getTeamsOfSessionUser })
-    .render(<Home />);
-
-  await wait(() => expect(queryByText(message)).not.toBe(null));
-  expect(getTeamsOfSessionUser).toBeCalledTimes(1);
-});
-
 it("Shows the feed immediately if some/all teams are loaded", () => {
-  const teamStore = new TeamStore();
   const teams = [mock.team(), mock.team()];
-  teams.forEach(team => {
-    teamStore.addTeam(team);
-    teamStore.addToSessionUserTeams(team.id);
-  });
-  const getTeamsOfSessionUser = jest.fn(async () => []);
-
   const { queryByText } = new TestRenderer()
-    .withNetwork({ getTeamsOfSessionUser })
-    .withStores({ teamStore })
+    .withStores({ teams: { teams, status: "fulfilled", error: undefined } })
     .asAuthenticatedUser()
     .render(<Home />);
 
@@ -66,33 +36,11 @@ it("Shows the feed immediately if some/all teams are loaded", () => {
   expect(queryByText(teams[1].name)).not.toBe(null);
 });
 
-it("Updates the feed if additional teams are fetched for the session user", async () => {
-  const teamStore = new TeamStore();
-  const initialTeams = [mock.team(), mock.team()];
-  initialTeams.forEach(team => {
-    teamStore.addTeam(team);
-    teamStore.addToSessionUserTeams(team.id);
-  });
-  const newTeam = mock.team();
-  const getTeamsOfSessionUser = jest.fn(async () => [newTeam]);
-
-  const { queryByText } = new TestRenderer()
-    .withStores({ teamStore })
-    .withNetwork({ getTeamsOfSessionUser })
-    .asAuthenticatedUser()
-    .render(<Home />);
-
-  expect(queryByText(initialTeams[0].name)).not.toBe(null);
-  expect(queryByText(initialTeams[1].name)).not.toBe(null);
-
-  // renders after the request fulfills
-  await wait(() => expect(queryByText(newTeam.name)).not.toBe(null));
-});
-
-it("Promps a user to create a team if they are not a member of any teams", () => {
+it("Prompts a user to create a team if they are not a member of any teams", () => {
   const getTeamsOfSessionUser = jest.fn(async () => []);
   const { queryByText } = new TestRenderer()
     .asAuthenticatedUser()
+    .withStores({ teams: { teams: [], status: "fulfilled", error: undefined } })
     .withNetwork({ getTeamsOfSessionUser })
     .render(<Home />);
 

@@ -1,43 +1,54 @@
 import React from "react";
 import { RouteComponentProps } from "@reach/router";
-import { observer } from "mobx-react-lite";
+import { connect } from "react-redux";
 
-import Main from "../elements/Main";
-import TeamProfile from "../sections/TeamProfile";
-import MeetingList from "../sections/MeetingList";
+import Main from "../components/Main";
+import TeamProfile from "../components/TeamProfile";
+import MeetingList from "../components/MeetingList";
 import { IMeeting } from "../types";
-import Button from "../elements/Button";
+import Button from "../components/Button";
 import Route from "../utils/Route";
-import { StoresContext } from "../stores";
-import { NetworkContext } from "../network";
+import { useNetwork } from "../network";
 import requireAuthentication from "../utils/requireAuthentication";
-import ErrorMessage from "../elements/ErrorMessage";
+import ErrorMessage from "../components/ErrorMessage";
+import { ITeam } from "../types";
+import { AppState } from "../ducks";
 
-type Props = RouteComponentProps<{ teamId: string }>;
+interface Props extends RouteComponentProps<{ teamId: string }> {
+  teamsLoaded: boolean;
+  userTeams: ITeam[];
+}
 
 function Team(props: Props) {
+  const [team, setTeam] = React.useState<ITeam>();
   const [error, setError] = React.useState<Error>();
   const [meetings, setMeetings] = React.useState<IMeeting[]>();
-  const { teamStore } = React.useContext(StoresContext);
-  const { getTeamById, getMeetingsOfTeam } = React.useContext(NetworkContext);
+  const { getTeamById, getMeetingsOfTeam } = useNetwork();
+  const { userTeams, teamsLoaded } = props;
 
   const teamId = Number(props.teamId);
 
   React.useEffect(() => {
+    if (!Number.isNaN(teamId) && !teamsLoaded) {
+      const foundTeam = userTeams.find(team => team.id === teamId);
+      if (!foundTeam) {
+        getTeamById(teamId)
+          .then(setTeam)
+          .catch(setError);
+      } else {
+        setTeam(foundTeam);
+      }
+    }
+  }, [teamId, getTeamById, userTeams, teamsLoaded]);
+
+  React.useEffect(() => {
     if (!Number.isNaN(teamId)) {
-      getTeamById(teamId)
-        .then(team => {
-          teamStore.addTeam(team);
-          teamStore.addToSessionUserTeams(team.id);
-        })
-        .catch(setError);
       getMeetingsOfTeam(teamId)
         .then(setMeetings)
         .catch(setError);
     }
-  }, [teamId, teamStore, getTeamById, getMeetingsOfTeam]);
+  }, [teamId, getMeetingsOfTeam]);
 
-  const team = teamStore.teams.get(teamId);
   return (
     <Main>
       <ErrorMessage error={error} />
@@ -54,4 +65,9 @@ function Team(props: Props) {
   );
 }
 
-export default requireAuthentication<Props>(observer(Team));
+const mapStateToProps = (state: AppState) => ({
+  teamsLoaded: state.teams.status === "fulfilled",
+  userTeams: state.teams.teams,
+});
+
+export default connect(mapStateToProps)(requireAuthentication<Props>(Team));

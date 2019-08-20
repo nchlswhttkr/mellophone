@@ -1,12 +1,9 @@
 import React from "react";
-import { wait, fireEvent, cleanup } from "@testing-library/react";
+import { wait, fireEvent } from "@testing-library/react";
 
 import Account from "../Account";
 import TestRenderer from "../../utils/TestRenderer";
-import SessionStore from "../../stores/SessionStore";
 import mock from "../../utils/mock";
-
-beforeEach(cleanup);
 
 it("Does not render when a user is not authenticated", () => {
   const { container } = new TestRenderer().render(<Account />);

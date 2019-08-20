@@ -12,7 +12,7 @@ class TeamService:
         """
         Lists all teams of which the given user is a member.
         """
-        return Team.objects.filter(membership__user__id=user.id)
+        return Team.objects.filter(membership__user=user)
 
     @staticmethod
     @transaction.atomic

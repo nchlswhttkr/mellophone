@@ -11,17 +11,12 @@ from backend.controllers.index import IndexController
 from backend.controllers.identity import IdentityController
 from backend.controllers.team import TeamController
 from backend.controllers.meeting import MeetingController
-from backend.services.user import UserService
-from backend.services.identity import IdentityService
-from backend.services.team import TeamService
-from backend.services.meeting import MeetingService
-from backend.views.generic import GenericViews
+from backend.views import GenericViews
 
 index_controller = IndexController()
-identity_controller = IdentityController(IdentityService, UserService)
-team_controller = TeamController(IdentityService, TeamService, MeetingService)
-meeting_controller = MeetingController(
-    IdentityService, MeetingService, TeamService)
+identity_controller = IdentityController()
+team_controller = TeamController()
+meeting_controller = MeetingController()
 
 
 def route(path, get=None, post=None, put=None, delete=None):
@@ -70,6 +65,11 @@ urlpatterns = [
         post=meeting_controller.create_meeting_for_team
     ),
     route(r"^meetings/[0-9]*$", get=meeting_controller.get_meeting_by_id),
+    route(
+        r"^meetings/[0-9]*/items$",
+        get=meeting_controller.get_items_of_meeting,
+        post=meeting_controller.post_item_to_meeting
+    ),
 
     # MISC
     route(r"^$", get=index_controller.hello_world),

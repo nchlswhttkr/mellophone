@@ -1,34 +1,53 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from "@reach/router";
 
-import { IMeeting } from "../types";
-import Main from "../elements/Main";
-import MeetingDocument from "../sections/MeetingDocument";
+import { IMeeting, IItem } from "../types";
+import Main from "../components/Main";
+import MeetingDocument from "../components/MeetingDocument";
 import requireAuthentication from "../utils/requireAuthentication";
-import { NetworkContext } from "../network";
-import ErrorMessage from "../elements/ErrorMessage";
+import { useNetwork } from "../network";
+import ErrorMessage from "../components/ErrorMessage";
 
-type Props = RouteComponentProps<{ meetingId: string }>;
+interface Props extends RouteComponentProps<{ meetingId: string }> {}
 
 function Meeting(props: Props) {
-  const [meeting, setMeeting] = React.useState<IMeeting>();
-  const [error, setError] = React.useState<Error>();
-  const { getMeetingById } = React.useContext(NetworkContext);
+  const [meeting, setMeeting] = useState<IMeeting>();
+  const [items, setItems] = useState<IItem[]>();
+  const [error, setError] = useState<Error>();
+  const { getMeetingById, getItemsOfMeeting, postItemInMeeting } = useNetwork();
 
   const meetingId = Number(props.meetingId);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!Number.isNaN(meetingId)) {
       getMeetingById(meetingId)
-        .then(meeting => setMeeting(meeting))
+        .then(setMeeting)
         .catch(setError);
     }
   }, [meetingId, getMeetingById]);
 
+  useEffect(() => {
+    getItemsOfMeeting(meetingId)
+      .then(setItems)
+      .catch(setError);
+  }, [meetingId, getItemsOfMeeting]);
+
+  async function onCreateItem(meetingId: number, item: Partial<IItem>) {
+    if (!items) return; // redundant but necessary because of TS
+    const createdItem = await postItemInMeeting(meetingId, item);
+    setItems(items.concat([createdItem]));
+  }
+
   return (
     <Main>
       <ErrorMessage error={error} />
-      {meeting && <MeetingDocument meeting={meeting} />}
+      {meeting && items && (
+        <MeetingDocument
+          meeting={meeting}
+          items={items}
+          createItemForMeeting={onCreateItem}
+        />
+      )}
     </Main>
   );
 }
