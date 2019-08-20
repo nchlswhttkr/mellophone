@@ -6,18 +6,18 @@ import Main from "../components/Main";
 import AccountBlock from "../components/AccountBlock";
 import requireAuthentication from "../utils/requireAuthentication";
 import Route from "../utils/Route";
-import { NetworkContext } from "../network";
 import { clearSession } from "../ducks/session";
 import { IUser } from "../types";
 import { AppState } from "../ducks";
+import { useNetwork } from "../network";
 
-interface Props {
+interface Props extends RouteComponentProps {
   clearSession(): void;
   user?: IUser;
 }
 
-function Account(props: RouteComponentProps & Props) {
-  const { signOut } = React.useContext(NetworkContext);
+function Account(props: Props) {
+  const { signOut } = useNetwork();
 
   const onSignOut = () =>
     signOut().then(() => {
@@ -36,9 +36,7 @@ const mapStateToProps = (state: AppState) => ({ user: state.session.user });
 
 const mapDispatchToProps = { clearSession };
 
-export default requireAuthentication(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Account)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(requireAuthentication<Props>(Account));

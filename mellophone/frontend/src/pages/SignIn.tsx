@@ -8,7 +8,7 @@ import SignUpForm from "../components/SignUpForm";
 import classes from "./SignIn.module.css";
 import Button from "../components/Button";
 import Route from "../utils/Route";
-import { NetworkContext } from "../network";
+import { useNetwork } from "../network";
 import ErrorMessage from "../components/ErrorMessage";
 import { AppState } from "../ducks";
 import { setSessionUser } from "../ducks/session";
@@ -24,8 +24,9 @@ function SignIn(props: Props) {
   const [newAccount, setNewAccount] = React.useState<boolean>(
     !localStorage.getItem("hasAccount")
   );
-  const { signIn, signUp } = React.useContext(NetworkContext);
+  const { signIn, signUp } = useNetwork();
 
+  // Skip signing in a user is already authenticated
   React.useEffect(() => {
     if (props.isAuthenticated) new Route().navigate();
   }, [props.isAuthenticated]);

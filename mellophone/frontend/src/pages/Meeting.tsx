@@ -1,45 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { RouteComponentProps } from "@reach/router";
 
 import { IMeeting, IItem } from "../types";
 import Main from "../components/Main";
 import MeetingDocument from "../components/MeetingDocument";
 import requireAuthentication from "../utils/requireAuthentication";
-import { NetworkContext } from "../network";
+import { useNetwork } from "../network";
 import ErrorMessage from "../components/ErrorMessage";
 
-type Props = RouteComponentProps<{ meetingId: string }>;
+interface Props extends RouteComponentProps<{ meetingId: string }> {}
 
 function Meeting(props: Props) {
-  const [meeting, setMeeting] = React.useState<IMeeting>();
-  const [items, setItems] = React.useState<IItem[]>();
-  const [error, setError] = React.useState<Error>();
-  const {
-    getMeetingById,
-    getItemsOfMeeting,
-    postItemInMeeting,
-  } = React.useContext(NetworkContext);
+  const [meeting, setMeeting] = useState<IMeeting>();
+  const [items, setItems] = useState<IItem[]>();
+  const [error, setError] = useState<Error>();
+  const { getMeetingById, getItemsOfMeeting, postItemInMeeting } = useNetwork();
 
   const meetingId = Number(props.meetingId);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!Number.isNaN(meetingId)) {
       getMeetingById(meetingId)
         .then(setMeeting)
         .catch(setError);
-      getItemsOfMeeting(meetingId)
-        .then(setItems)
-        .catch(setError);
     }
-  }, [meetingId, getMeetingById, getItemsOfMeeting]);
+  }, [meetingId, getMeetingById]);
 
-  const onCreateItem = async (meetingId: number, item: Partial<IItem>) => {
-    if (!meeting || !items) {
-      throw new Error("Cannot create item while meeting has not loaded");
-    }
+  useEffect(() => {
+    getItemsOfMeeting(meetingId)
+      .then(setItems)
+      .catch(setError);
+  }, [meetingId, getItemsOfMeeting]);
+
+  async function onCreateItem(meetingId: number, item: Partial<IItem>) {
+    if (!items) return; // redundant but necessary because of TS
     const createdItem = await postItemInMeeting(meetingId, item);
     setItems(items.concat([createdItem]));
-  };
+  }
 
   return (
     <Main>
@@ -55,4 +52,4 @@ function Meeting(props: Props) {
   );
 }
 
-export default requireAuthentication<{ meetingId: string }>(Meeting);
+export default requireAuthentication<Props>(Meeting);

@@ -6,7 +6,7 @@
 
 An app for teams, allowing them to write and share meeting minutes.
 
-I started this project to implement what I've learned over the past few years, and to explore new technologies and libraries that interest me. Striving for good, readable code is nice, but there's nothing wrong with [having a little fun](/mellophone/frontend/src/utils/Route.ts#L7) from time to time.
+I started this project to implement what I've learned over the past few years, and to explore new technologies and libraries that interest me.
 
 https://mellophone.pink
 
@@ -30,10 +30,19 @@ yarn
 yarn start
 ```
 
-Chances are you'll need to run the backend as well. If you're not interested in [developing on the backend](#backend), you can use the following script to start a backend server to connect to. You will need to have [Docker Compose](https://docs.docker.com/install/) installed.
+Chances are you'll need to run the backend as well. You can use the fairly terse script below for this, and read more about [developing on the backend](#backend). You will need to have [Docker Compose](https://docs.docker.com/install/) installed.
 
 ```sh
-sh scripts/run-backend.sh
+# Initialise and start the backend Django/Postgres servers
+docker-compose run dev pipenv sync
+docker-compose run dev pipenv run migrate
+docker-compose up -d
+
+# Run the frontend development server
+yarn start
+
+# We "stop" the backend containers/network, since "down" would clean them up
+docker-compose stop
 ```
 
 Below are some common commands you might run. Remember you will need to be in the frontend root (`/mellophone/frontend`). You might wish to consult the [yarn docs](https://yarnpkg.com/lang/en/docs/cli/) or the [package.json itself](/mellophone/frontend/package.json)
@@ -58,7 +67,7 @@ docker-compose run dev pipenv sync --dev
 docker-compose run dev pipenv run migrate
 ```
 
-You can install the latest build of the frontend with `scripts/get-frontend-build.sh` if you don't want to build it yourself.
+You can install the latest build of the frontend with `scripts/get-frontend-build.sh` instead of building it yourself.
 
 ```sh
 docker-compose run dev sh scripts/get-frontend-build.sh
@@ -72,14 +81,14 @@ docker-compose up
 
 Below are some common commands you might run. You might also wish to consult the [pipenv docs](https://pipenv.readthedocs.io/en/latest#pipenv-usage) and the [Pipfile itself](/Pipfile).
 
-| Command              | Action                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------- |
-| pipenv sync          | Install dependencies (and ensure all dependencies are up to date with `Pipfile.lock`) |
-| pipenv sync --dev    | As above, but also include dev dependencies, such as linting/testing libraries        |
-| pipenv run migrate   | Apply new migrations to the database (must be running at this time)                   |
-| pipenv run server    | Run the backend (a Django server)                                                     |
-| pipenv run lint      | Lint using pylint (just defaults for now)                                             |
-| pipenv run test-unit | Run tests against the backend (the database must be running)                          |
-| pipenv run test-e2e  | Run an end-to-end test (requires that you've [built the frontend](#frontend)) \*      |
+| Command              | Action                                                                                 |
+| -------------------- | -------------------------------------------------------------------------------------- |
+| pipenv sync          | Install runtime dependencies (and ensure they are up to date with `Pipfile.lock`)      |
+| pipenv sync --dev    | As above, but also include development dependencies, such as linting/testing libraries |
+| pipenv run migrate   | Apply new migrations to the database (must be running at this time)                    |
+| pipenv run server    | Run the Django development server                                                      |
+| pipenv run lint      | Lint using pylint                                                                      |
+| pipenv run test-unit | Run tests against the backend                                                          |
+| pipenv run test-e2e  | Run an end-to-end test \*                                                              |
 
 \* _Currently still under development - You'll need Geckodriver and Firefox installed, you can try adapting this from an [older version of this project's Dockerfile](https://github.com/nchlswhttkr/mellophone/blob/55f9d5eb4cb1514ebf6b9a6193e687959b3dcfa7/Dockerfile#L23) if you are unsure about what to do._

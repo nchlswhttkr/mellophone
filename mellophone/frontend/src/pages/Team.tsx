@@ -8,7 +8,7 @@ import MeetingList from "../components/MeetingList";
 import { IMeeting } from "../types";
 import Button from "../components/Button";
 import Route from "../utils/Route";
-import { NetworkContext } from "../network";
+import { useNetwork } from "../network";
 import requireAuthentication from "../utils/requireAuthentication";
 import ErrorMessage from "../components/ErrorMessage";
 import { ITeam } from "../types";
@@ -23,7 +23,7 @@ function Team(props: Props) {
   const [team, setTeam] = React.useState<ITeam>();
   const [error, setError] = React.useState<Error>();
   const [meetings, setMeetings] = React.useState<IMeeting[]>();
-  const { getTeamById, getMeetingsOfTeam } = React.useContext(NetworkContext);
+  const { getTeamById, getMeetingsOfTeam } = useNetwork();
   const { userTeams, teamsLoaded } = props;
 
   const teamId = Number(props.teamId);
@@ -70,6 +70,4 @@ const mapStateToProps = (state: AppState) => ({
   userTeams: state.teams.teams,
 });
 
-export default requireAuthentication<{ teamId: string }>(
-  connect(mapStateToProps)(Team)
-);
+export default connect(mapStateToProps)(requireAuthentication<Props>(Team));

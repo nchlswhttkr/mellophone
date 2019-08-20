@@ -1,6 +1,5 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { RouteComponentProps } from "@reach/router";
 
 import Route from "./Route";
 import { AppState } from "../ducks";
@@ -15,13 +14,13 @@ import { AppState } from "../ducks";
  * If a user is authenticated, the <Child/> will be rendered.
  *
  * If you need to provide path parameters (eg "/teams/:teamId"), you can pass
- * an object into the RouteProps generic.
+ * an object into the WrappedComponentProps generic.
  */
-function requireAuthentication<RouteProps = {}>(
-  Child: React.ComponentType<RouteComponentProps<RouteProps>>,
-  Fallback?: React.ComponentType<RouteComponentProps<RouteProps>>
+function requireAuthentication<WrappedComponentProps = {}>(
+  Child: React.ComponentType<WrappedComponentProps>,
+  Fallback?: React.ComponentType<WrappedComponentProps>
 ) {
-  return (props: RouteComponentProps<RouteProps>) => {
+  return (props: WrappedComponentProps) => {
     const user = useSelector((state: AppState) => state.session.user);
 
     React.useEffect(() => {

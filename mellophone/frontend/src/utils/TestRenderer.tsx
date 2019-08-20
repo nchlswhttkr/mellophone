@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { render } from "@testing-library/react";
 import thunk from "redux-thunk";
 
-import { INetworkLayer, NetworkLayer, NetworkContext } from "../network";
+import { NetworkLayer, NetworkContext } from "../network";
 import { IUser } from "../types";
 import mock from "./mock";
 import rootReducer, { AppState } from "../ducks";
@@ -19,7 +19,7 @@ import { setSessionUser } from "../ducks/session";
  */
 export default class TestRenderer {
   stores: Partial<AppState>;
-  network: INetworkLayer;
+  network: typeof NetworkLayer;
   user?: IUser;
 
   constructor() {
@@ -32,7 +32,7 @@ export default class TestRenderer {
     return this;
   }
 
-  withNetwork(network: Partial<INetworkLayer>): TestRenderer {
+  withNetwork(network: Partial<typeof NetworkLayer>): TestRenderer {
     Object.assign(this.network, network);
     return this;
   }

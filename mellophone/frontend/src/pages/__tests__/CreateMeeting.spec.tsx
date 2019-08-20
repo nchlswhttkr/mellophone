@@ -14,9 +14,9 @@ it("Does not render when a user is not authenticated", () => {
 it("Allows teams to create a meeting", async () => {
   const meeting = mock.meeting();
   const teamId = 20;
-  const createMeeting = jest.fn(async () => meeting);
+  const postMeeting = jest.fn(async () => meeting);
   const { getByLabelText, getByText } = new TestRenderer()
-    .withNetwork({ createMeeting })
+    .withNetwork({ postMeeting })
     .asAuthenticatedUser()
     .render(<CreateMeeting teamId={teamId.toString()} />);
 
@@ -31,16 +31,16 @@ it("Allows teams to create a meeting", async () => {
   await wait(() =>
     expect(window.location.pathname).toMatch(meeting.id.toString())
   );
-  expect(createMeeting).toBeCalledTimes(1);
-  expect(createMeeting).toBeCalledWith(teamId, meeting.name, meeting.venue);
+  expect(postMeeting).toBeCalledTimes(1);
+  expect(postMeeting).toBeCalledWith(teamId, meeting.name, meeting.venue);
 });
 
 it("Allows teams to create a meeting without specifying a venue", async () => {
   const meeting = mock.meeting();
   const teamId = 21;
-  const createMeeting = jest.fn(async () => meeting);
+  const postMeeting = jest.fn(async () => meeting);
   const { getByLabelText, getByText } = new TestRenderer()
-    .withNetwork({ createMeeting })
+    .withNetwork({ postMeeting })
     .asAuthenticatedUser()
     .render(<CreateMeeting teamId={teamId.toString()} />);
 
@@ -52,17 +52,17 @@ it("Allows teams to create a meeting without specifying a venue", async () => {
   await wait(() =>
     expect(window.location.pathname).toMatch(meeting.id.toString())
   );
-  expect(createMeeting).toBeCalledTimes(1);
-  expect(createMeeting).toBeCalledWith(teamId, meeting.name, "");
+  expect(postMeeting).toBeCalledTimes(1);
+  expect(postMeeting).toBeCalledWith(teamId, meeting.name, "");
 });
 
 it("Shows a error message when creating a team fails", async () => {
-  const createMeeting = jest.fn(async () => {
+  const postMeeting = jest.fn(async () => {
     throw new Error("This is an error message");
   });
   const { getByText, queryByText } = new TestRenderer()
     .asAuthenticatedUser()
-    .withNetwork({ createMeeting })
+    .withNetwork({ postMeeting })
     .render(<CreateMeeting teamId="1" />);
 
   fireEvent.click(getByText("Create meeting"));
@@ -70,5 +70,5 @@ it("Shows a error message when creating a team fails", async () => {
   await wait(() =>
     expect(queryByText("This is an error message")).not.toBe(null)
   );
-  expect(createMeeting).toBeCalledTimes(1);
+  expect(postMeeting).toBeCalledTimes(1);
 });

@@ -5,17 +5,17 @@ import Main from "../components/Main";
 import Route from "../utils/Route";
 import CreateMeetingForm from "../components/CreateMeetingForm";
 import requireAuthentication from "../utils/requireAuthentication";
-import { NetworkContext } from "../network";
+import { useNetwork } from "../network";
 
-type Props = RouteComponentProps<{ teamId: string }>;
+interface Props extends RouteComponentProps<{ teamId: string }> {}
 
 function CreateMeeting(props: Props) {
-  const { createMeeting } = React.useContext(NetworkContext);
+  const { postMeeting } = useNetwork();
   const teamId = Number(props.teamId);
 
   const onCreateMeeting = async (name: string, venue?: string) => {
-    const meetingId = (await createMeeting(teamId, name, venue)).id;
-    new Route(Route.MEETINGS, meetingId).navigate();
+    const meeting = await postMeeting(teamId, name, venue);
+    new Route(Route.MEETINGS, meeting.id).navigate();
   };
 
   return (
@@ -26,4 +26,4 @@ function CreateMeeting(props: Props) {
   );
 }
 
-export default requireAuthentication<{ teamId: string }>(CreateMeeting);
+export default requireAuthentication<Props>(CreateMeeting);

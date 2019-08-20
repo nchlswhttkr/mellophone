@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Main from "../components/Main";
 import TeamList from "../components/TeamList";
 import requireAuthentication from "../utils/requireAuthentication";
-import { NetworkContext } from "../network";
+import { useNetwork } from "../network";
 import Route from "../utils/Route";
 import classes from "./Home.module.css";
 import "../animate.css";
@@ -21,7 +21,7 @@ interface Props extends RouteComponentProps {
 
 function Home(props: Props) {
   const { loadTeamsThunk, teamsLoaded, teams } = props;
-  const { getTeamsOfSessionUser } = React.useContext(NetworkContext);
+  const { getTeamsOfSessionUser } = useNetwork();
 
   React.useEffect(() => {
     if (!teamsLoaded) {
@@ -86,10 +86,7 @@ const mapDispatchToProps = {
   loadTeamsThunk,
 };
 
-export default requireAuthentication(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Home),
-  SplashPage
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(requireAuthentication<Props>(Home, SplashPage));

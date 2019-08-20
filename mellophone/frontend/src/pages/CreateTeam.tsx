@@ -6,7 +6,7 @@ import Main from "../components/Main";
 import CreateTeamForm from "../components/CreateTeamForm";
 import Route from "../utils/Route";
 import requireAuthentication from "../utils/requireAuthentication";
-import { NetworkContext } from "../network";
+import { useNetwork } from "../network";
 import { AppState } from "../ducks";
 import { appendTeam } from "../ducks/teams";
 import { ITeam } from "../types";
@@ -17,7 +17,7 @@ interface Props extends RouteComponentProps {
 }
 
 function CreateTeam(props: Props) {
-  const { postTeam } = React.useContext(NetworkContext);
+  const { postTeam } = useNetwork();
 
   const createTeam = async (name: string, website: string) => {
     const team = await postTeam(name, website);
@@ -41,9 +41,7 @@ const mapDispatchToProps = {
   appendTeam,
 };
 
-export default requireAuthentication(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(CreateTeam)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(requireAuthentication<Props>(CreateTeam));

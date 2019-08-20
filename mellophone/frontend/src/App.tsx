@@ -2,7 +2,7 @@ import React from "react";
 import { Router } from "@reach/router";
 import { connect } from "react-redux";
 
-import { NetworkContext } from "./network";
+import { useNetwork } from "./network";
 import Route from "./utils/Route";
 import Header from "./components/Header";
 import Main from "./components/Main";
@@ -27,7 +27,7 @@ interface Props {
 
 function App(props: Props) {
   const [userPending, setUserPending] = React.useState(true);
-  const { getSessionUser } = React.useContext(NetworkContext);
+  const { getSessionUser } = useNetwork();
 
   React.useEffect(() => {
     getSessionUser()
