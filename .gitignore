@@ -10,3 +10,4 @@
 /docker
 .venv
 .cache
+/e2e

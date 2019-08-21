@@ -2,6 +2,8 @@ import re
 import json
 import base64
 from django.http.response import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.utils.decorators import method_decorator
 from backend.views import GenericViews
 from backend.serializers import serialize_user
 from backend.services.identity import IdentityService
@@ -56,6 +58,7 @@ class IdentityController:
         IdentityService.sign_out(request)
         return JsonResponse({}, status=200)
 
+    @method_decorator(ensure_csrf_cookie)
     def whoami(self, request):
         """
         Return information about the session user, or an empty object if there

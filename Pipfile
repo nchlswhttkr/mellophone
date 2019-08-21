@@ -8,6 +8,7 @@ autopep8 = "~=1.0"
 pylint = "~=2.0"
 pylint-django = "~=2.0"
 selenium = "~=3.0"
+lxml = "~=4.4"
 
 [packages]
 django = "~=2.2"

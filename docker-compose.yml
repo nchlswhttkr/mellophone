@@ -5,7 +5,7 @@ services:
     image: "nchlswhttkr/mellophone"
     working_dir: "/home/conductor/dev"
     environment:
-      - "PIPENV_VENV_IN_PROJECT=true"
+      - "WORKON_HOME=/home/conductor/dev/docker/dev/.venv"
     volumes:
       - ".:/home/conductor/dev"
     ports:
