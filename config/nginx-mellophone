@@ -12,6 +12,14 @@ server {
     gzip_types text/css text/javascript application/javascript application/json
     gzip_min_length 1k;
 
+    location /index\.html {
+        root /home/conductor/production/mellophone/static;
+    }
+
+    location /favicon\.png {
+        root /home/conductor/production/mellophone/static;
+    }
+
     location /static/ {
         root /home/conductor/production/mellophone;
     }

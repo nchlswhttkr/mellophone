@@ -19,18 +19,18 @@ from django.conf import settings
 
 urlpatterns = [
     path('api/', include('backend.urls')),
-
-    # Serving the favicon like this is unecessary, but prevents a warning when
-    # loading an HTTP route like /api/
-    path('favicon.png', serve, kwargs={
-        'document_root': settings.STATIC_ROOT,
-        'path': 'favicon.png'
-    }),
-
-    # Simple method to serve the default frontend from anywhere if no previous
-    # route matches
-    re_path(r"", serve, kwargs={
-        'document_root': settings.STATIC_ROOT,
-        'path': 'index.html'
-    }),
 ]
+
+# In production, nginx serves static content (see config/nginx-mellophone), but
+# in development we need Django to serve it.
+if settings.DEBUG:
+    urlpatterns += [
+        path('favicon.png', serve, kwargs={
+            'document_root': settings.STATIC_ROOT,
+            'path': 'favicon.png'
+        }),
+        re_path(r"", serve, kwargs={
+            'document_root': settings.STATIC_ROOT,
+            'path': 'index.html'
+        }),
+    ]
