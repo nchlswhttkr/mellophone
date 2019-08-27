@@ -9,6 +9,7 @@ interface Props {
   onInput?: (event: React.FormEvent<HTMLInputElement>) => void;
   value?: string;
   className?: string;
+  "aria-label"?: string;
 }
 
 function Input(props: Props, ref?: React.Ref<HTMLInputElement>) {
@@ -21,6 +22,7 @@ function Input(props: Props, ref?: React.Ref<HTMLInputElement>) {
         ref={ref}
         onInput={props.onInput}
         value={props.value}
+        aria-label={props["aria-label"]}
       />
     </label>
   );

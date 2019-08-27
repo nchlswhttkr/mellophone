@@ -8,6 +8,7 @@ interface Props {
   children: React.ReactNode;
   type?: "button" | "submit";
   className?: string;
+  "aria-label"?: string;
 }
 
 function Button(props: Props) {
@@ -16,7 +17,7 @@ function Button(props: Props) {
       onClick={props.onClick}
       className={classnames(classes.button, props.className)}
       type={props.type || "button"} // explicit type avoids issues with <form>
-    >
+      aria-label={props["aria-label"]}>
       {props.children}
     </button>
   );

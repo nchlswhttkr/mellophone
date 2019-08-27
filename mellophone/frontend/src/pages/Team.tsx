@@ -3,7 +3,6 @@ import { RouteComponentProps } from "@reach/router";
 import { connect } from "react-redux";
 
 import Main from "../components/Main";
-import TeamProfile from "../components/TeamProfile";
 import MeetingList from "../components/MeetingList";
 import { IMeeting } from "../types";
 import Button from "../components/Button";
@@ -52,7 +51,12 @@ function Team(props: Props) {
   return (
     <Main>
       <ErrorMessage error={error} />
-      {team && <TeamProfile team={team} />}
+      {team && (
+        <>
+          <h2>{team.name}</h2>
+          <p>{team.website}</p>
+        </>
+      )}
       <Button
         onClick={() =>
           new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()

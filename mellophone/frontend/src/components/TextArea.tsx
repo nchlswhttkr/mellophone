@@ -9,6 +9,7 @@ interface Props {
   onInput?: (event: React.FormEvent<HTMLTextAreaElement>) => void;
   value?: string;
   className?: string;
+  "aria-label"?: string;
 }
 
 /**
@@ -24,6 +25,7 @@ function TextArea(props: Props, ref?: React.Ref<HTMLTextAreaElement>) {
         ref={ref}
         onInput={props.onInput}
         value={props.value}
+        aria-label={props["aria-label"]}
       />
     </label>
   );

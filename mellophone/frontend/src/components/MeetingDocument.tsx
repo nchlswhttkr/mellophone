@@ -14,7 +14,7 @@ interface Props {
   createItemForMeeting(meetingId: number, item: Partial<IItem>): Promise<void>;
 }
 
-function MeetingDocument(props: Props) {
+export default function MeetingDocument(props: Props) {
   const [error, setError] = useState<Error>();
   const { meeting, items, createItemForMeeting } = props;
 
@@ -43,28 +43,40 @@ function MeetingDocument(props: Props) {
         </Link>
       </h2>
       <hr></hr>
-      {items.map(item => (
-        <div key={item.id}>
-          <h3>{item.name}</h3>
-          <p>
-            {item.description.split("\n").map((line, i) => (
-              // Avoids React warning about keys for reconciliation
-              <React.Fragment key={i}>
-                {i > 0 && <br />}
-                {line}
-              </React.Fragment>
-            ))}
-          </p>
-        </div>
-      ))}
+      {items.map(transformItemIntoElement)}
       <form>
-        <Input ref={itemNameRef} label="Item name" />
-        <TextArea ref={itemDescriptionRef} label="Item description" rows={5} />
-        <Button onClick={onCreateMeetingItem}>Create item</Button>
+        <Input
+          ref={itemNameRef}
+          label="Item name"
+          aria-label="New meeting item name"
+        />
+        <TextArea
+          ref={itemDescriptionRef}
+          label="Item description"
+          aria-label="New meeting item description"
+          rows={5}
+        />
+        <Button onClick={onCreateMeetingItem}>Create new item</Button>
         <ErrorMessage error={error} />
       </form>
     </div>
   );
 }
 
-export default MeetingDocument;
+// Easier to test this transformation if it is isolation from the component
+export const transformItemIntoElement = (item: IItem) => {
+  return (
+    <div key={item.id}>
+      <h3>{item.name}</h3>
+      <p>
+        {item.description.split("\n").map((line, i) => (
+          // Avoids React warning about keys for reconciliation
+          <React.Fragment key={i}>
+            {i > 0 && <br />}
+            {line}
+          </React.Fragment>
+        ))}
+      </p>
+    </div>
+  );
+};

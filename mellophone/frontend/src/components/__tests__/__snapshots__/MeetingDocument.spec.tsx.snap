@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Matches a snapshot from converting an item into an element 1`] = `
+<div>
+  <h3>
+    Item MQ==
+  </h3>
+  <p>
+    <React.Fragment>
+      Line 1
+    </React.Fragment>
+    <React.Fragment>
+      <br />
+      Line 2
+    </React.Fragment>
+    <React.Fragment>
+      <br />
+      Line 3
+    </React.Fragment>
+  </p>
+</div>
+`;

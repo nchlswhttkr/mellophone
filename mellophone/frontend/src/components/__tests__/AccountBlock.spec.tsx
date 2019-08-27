@@ -11,21 +11,16 @@ it("Renders nothing when no user exists", () => {
   expect(container.childElementCount).toBe(0);
 });
 
-it("Shows a user's profile if they are authenticated", () => {
+it("Shows a user's profile if they are authenticated and allows them sign out", () => {
   const user = mock.user();
-  const { queryByText } = render(
-    <AccountBlock user={user} signOut={Promise.resolve} />
+  const signOut = jest.fn(async () => undefined);
+  const { queryByText, getByText } = render(
+    <AccountBlock user={user} signOut={signOut} />
   );
 
   expect(queryByText(`${user.firstName} ${user.lastName}`)).not.toBe(null);
   expect(queryByText(user.email)).not.toBe(null);
   expect(queryByText(`User #${user.id} of Mellophone!`)).not.toBe(null);
-});
-
-it("Triggers signOut when a user clicks to sign out", () => {
-  const user = mock.user();
-  const signOut = jest.fn(async () => undefined);
-  const { getByText } = render(<AccountBlock user={user} signOut={signOut} />);
 
   fireEvent.click(getByText("Sign out"));
 

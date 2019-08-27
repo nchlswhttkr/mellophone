@@ -3,11 +3,15 @@ import { render, fireEvent } from "@testing-library/react";
 
 import Button from "../Button";
 
-it("Triggers onClick once when clicked", () => {
+it("Triggers onClick() when clicked", () => {
   const onClick = jest.fn();
-  const { getByText } = render(<Button onClick={onClick}>Click me!</Button>);
+  const { getByLabelText } = render(
+    <Button onClick={onClick} aria-label="Can be found by aria-label">
+      Click me!
+    </Button>
+  );
 
-  const target = getByText("Click me!");
+  const target = getByLabelText("Can be found by aria-label");
   fireEvent.click(target);
 
   expect(onClick).toHaveBeenCalledTimes(1);
