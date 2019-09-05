@@ -4,7 +4,7 @@ import BaseRequest from "../utils/BaseRequest";
 export async function postMeeting(
   teamId: number,
   name: string,
-  venue?: string
+  venue: string
 ): Promise<IMeeting> {
   if (!name) {
     throw new Error("Meetings must have a name");

@@ -14,7 +14,7 @@ export interface ITeam {
 export interface IMeeting {
   id: number;
   name: string;
-  venue?: string;
+  venue: string; // may be an empty string
   dateHeld: Date;
   team: ITeam;
 }

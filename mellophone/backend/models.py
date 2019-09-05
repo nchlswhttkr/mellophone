@@ -40,7 +40,7 @@ class Meeting(models.Model):
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     date_held = models.DateField(auto_now_add=True)
-    venue = models.CharField(max_length=100, null=True)
+    venue = models.CharField(max_length=100)
 
 
 class Item(models.Model):
