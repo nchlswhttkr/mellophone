@@ -6,7 +6,7 @@ import Main from "../components/Main";
 import MeetingList from "../components/MeetingList";
 import { IMeeting } from "../types";
 import Button from "../components/Button";
-import Route from "../utils/Route";
+import { navigate } from "../utils/routing";
 import { useNetwork } from "../network";
 import requireAuthentication from "../utils/requireAuthentication";
 import ErrorMessage from "../components/ErrorMessage";
@@ -57,10 +57,7 @@ function Team(props: Props) {
           <p>{team.website}</p>
         </>
       )}
-      <Button
-        onClick={() =>
-          new Route(Route.TEAMS, teamId, Route.MEETINGS, Route.NEW).navigate()
-        }>
+      <Button onClick={() => navigate(`teams/${teamId}/meetings/new`)}>
         Create meeting
       </Button>
       <hr style={{ margin: "1rem 0" }} />

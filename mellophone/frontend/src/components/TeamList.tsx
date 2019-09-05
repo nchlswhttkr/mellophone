@@ -3,7 +3,7 @@ import { Link } from "@reach/router";
 
 import { ITeam } from "../types";
 import classes from "./TeamList.module.css";
-import Route from "../utils/Route";
+import { route, navigate } from "../utils/routing";
 import Button from "./Button";
 
 interface Props {
@@ -18,20 +18,11 @@ function TeamList({ teams }: Props) {
       {teams.map(team => (
         <div key={team.id} className={classes.team}>
           <h3 className={classes.title}>
-            <Link to={new Route(Route.TEAMS, team.id).build()}>
-              {team.name}
-            </Link>
+            <Link to={route(`/teams/${team.id}`)}>{team.name}</Link>
           </h3>
           <Button
             className={classes.button}
-            onClick={() =>
-              new Route(
-                Route.TEAMS,
-                team.id,
-                Route.MEETINGS,
-                Route.NEW
-              ).navigate()
-            }>
+            onClick={() => navigate(`/teams/${team.id}/meetings/new`)}>
             Create meeting
           </Button>
         </div>
@@ -40,9 +31,7 @@ function TeamList({ teams }: Props) {
       {teams.length === 0 && (
         <p>
           You are not a member of any teams, would you like to{" "}
-          <Link
-            to={new Route(Route.TEAMS, Route.NEW).build()}
-            className={classes.link}>
+          <Link to={route("/teams/new")} className={classes.link}>
             create a new team
           </Link>
           ?

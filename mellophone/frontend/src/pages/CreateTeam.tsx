@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import Main from "../components/Main";
 import CreateTeamForm from "../components/CreateTeamForm";
-import Route from "../utils/Route";
+import { navigate } from "../utils/routing";
 import requireAuthentication from "../utils/requireAuthentication";
 import { useNetwork } from "../network";
 import { AppState } from "../ducks";
@@ -22,7 +22,7 @@ function CreateTeam(props: Props) {
   const createTeam = async (name: string, website: string) => {
     const team = await postTeam(name, website);
     props.appendTeam(team);
-    new Route(Route.TEAMS, team.id).navigate();
+    navigate(`/teams/${team.id}`);
   };
 
   return (

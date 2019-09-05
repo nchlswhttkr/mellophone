@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "@reach/router";
 
 import { IMeeting } from "../types";
-import Route from "../utils/Route";
+import { route } from "../utils/routing";
 
 interface Props {
   meetings: IMeeting[];
@@ -15,9 +15,7 @@ function MeetingList(props: Props) {
       {props.meetings.map(meeting => (
         <div key={meeting.id}>
           <p>
-            <Link to={new Route(Route.MEETINGS, meeting.id).build()}>
-              {meeting.name}
-            </Link>
+            <Link to={route(`/meetings/${meeting.id}`)}>{meeting.name}</Link>
           </p>
           <p>{meeting.dateHeld.toString()}</p>
         </div>

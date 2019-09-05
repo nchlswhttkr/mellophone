@@ -3,7 +3,7 @@ import { Router } from "@reach/router";
 import { connect } from "react-redux";
 
 import { useNetwork } from "./network";
-import Route from "./utils/Route";
+import { route } from "./utils/routing";
 import Header from "./components/Header";
 import Main from "./components/Main";
 import Footer from "./components/Footer";
@@ -43,20 +43,13 @@ function App(props: Props) {
         <Main />
       ) : (
         <Router>
-          <Home path={new Route().build()} />
-          <SignIn path={new Route(Route.SIGN_IN).build()} />
-          <Account path={new Route(Route.ACCOUNT).build()} />
-          <CreateTeam path={new Route(Route.TEAMS, Route.NEW).build()} />
-          <Team path={new Route(Route.TEAMS, ":teamId").build()} />
-          <CreateMeeting
-            path={new Route(
-              Route.TEAMS,
-              ":teamId",
-              Route.MEETINGS,
-              Route.NEW
-            ).build()}
-          />
-          <Meeting path={new Route(Route.MEETINGS, ":meetingId").build()} />
+          <Home path={route("/")} />
+          <SignIn path={route("/sign-in")} />
+          <Account path={route("/account")} />
+          <CreateTeam path={route("/teams/new")} />
+          <Team path={route("/teams/:teamId")} />
+          <CreateMeeting path={route("/teams/:teamId/meetings/new")} />
+          <Meeting path={route("/meetings/:meetingId")} />
           <PageNotFound default />
         </Router>
       )}
