@@ -13,7 +13,7 @@ function CreateMeeting(props: Props) {
   const { postMeeting } = useNetwork();
   const teamId = Number(props.teamId);
 
-  const onCreateMeeting = async (name: string, venue?: string) => {
+  const onCreateMeeting = async (name: string, venue: string) => {
     const meeting = await postMeeting(teamId, name, venue);
     new Route(Route.MEETINGS, meeting.id).navigate();
   };
