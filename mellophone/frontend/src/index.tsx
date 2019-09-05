@@ -8,6 +8,10 @@ import App from "./App";
 import "./index.css";
 import rootReducer from "./ducks";
 
+if (process.env.NODE_ENV === "production") {
+  console.log("Built from commit " + process.env.REACT_APP_COMMIT_SHA || "-");
+}
+
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 ReactDOM.render(
