@@ -3,7 +3,7 @@ import { ITeam } from "../types";
 
 export async function postTeam(name: string, website: string) {
   if (!name || !website) {
-    throw new Error("Teams must have a name and website.");
+    throw new Error("Teams must have a name and website");
   }
   const response = await BaseRequest.post<{ team: ITeam }>("/teams", {
     name,

@@ -41,6 +41,12 @@ export async function postItemInMeeting(
   meetingId: number,
   item: Partial<IItem>
 ) {
+  if (!item.name) {
+    throw new Error("Meeting items must have a name");
+  }
+  if (!item.description) {
+    throw new Error("Meeting items must have a description");
+  }
   const response = await BaseRequest.post<{ item: IItem }>(
     `/meetings/${meetingId}/items`,
     item
