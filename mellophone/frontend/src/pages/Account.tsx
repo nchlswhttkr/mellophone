@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Main from "../components/Main";
 import AccountBlock from "../components/AccountBlock";
 import requireAuthentication from "../utils/requireAuthentication";
-import Route from "../utils/Route";
+import { navigate } from "../utils/routing";
 import { clearSession } from "../ducks/session";
 import { IUser } from "../types";
 import { AppState } from "../ducks";
@@ -22,7 +22,7 @@ function Account(props: Props) {
   const onSignOut = () =>
     signOut().then(() => {
       props.clearSession();
-      new Route().navigate();
+      navigate("/");
     });
 
   return (

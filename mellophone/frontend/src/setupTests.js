@@ -1,5 +1,5 @@
 import { cleanup } from "@testing-library/react";
-import { navigate } from "@reach/router";
+import { navigate } from "./utils/routing";
 
 // Throw if network calls are made during tests
 const realFetch = fetch;

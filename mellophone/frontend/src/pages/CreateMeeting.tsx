@@ -2,7 +2,7 @@ import React from "react";
 import { RouteComponentProps } from "@reach/router";
 
 import Main from "../components/Main";
-import Route from "../utils/Route";
+import { navigate } from "../utils/routing";
 import CreateMeetingForm from "../components/CreateMeetingForm";
 import requireAuthentication from "../utils/requireAuthentication";
 import { useNetwork } from "../network";
@@ -15,7 +15,7 @@ function CreateMeeting(props: Props) {
 
   const onCreateMeeting = async (name: string, venue: string) => {
     const meeting = await postMeeting(teamId, name, venue);
-    new Route(Route.MEETINGS, meeting.id).navigate();
+    navigate(`/meetings/${meeting.id}`);
   };
 
   return (

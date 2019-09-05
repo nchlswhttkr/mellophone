@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-import Route from "./Route";
+import { navigate } from "./routing";
 import { AppState } from "../ducks";
 
 /**
@@ -25,7 +25,7 @@ function requireAuthentication<WrappedComponentProps = {}>(
 
     React.useEffect(() => {
       if (!user && !Fallback) {
-        new Route(Route.SIGN_IN).navigate();
+        navigate("/sign-in");
       }
     }, [user]);
 

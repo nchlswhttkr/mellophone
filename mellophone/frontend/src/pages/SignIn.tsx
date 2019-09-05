@@ -7,7 +7,7 @@ import SignInForm from "../components/SignInForm";
 import SignUpForm from "../components/SignUpForm";
 import classes from "./SignIn.module.css";
 import Button from "../components/Button";
-import Route from "../utils/Route";
+import { navigate } from "../utils/routing";
 import { useNetwork } from "../network";
 import ErrorMessage from "../components/ErrorMessage";
 import { AppState } from "../ducks";
@@ -28,7 +28,9 @@ function SignIn(props: Props) {
 
   // Skip signing in a user is already authenticated
   React.useEffect(() => {
-    if (props.isAuthenticated) new Route().navigate();
+    if (props.isAuthenticated) {
+      navigate("/");
+    }
   }, [props.isAuthenticated]);
 
   const onSignUp = (
@@ -41,7 +43,7 @@ function SignIn(props: Props) {
       .then(user => {
         props.setSessionUser(user);
         localStorage.setItem("hasAccount", "yes");
-        new Route().navigate();
+        navigate("/");
       })
       .catch(setError);
   };
@@ -51,7 +53,7 @@ function SignIn(props: Props) {
       .then(user => {
         props.setSessionUser(user);
         localStorage.setItem("hasAccount", "yes");
-        new Route().navigate();
+        navigate("/");
       })
       .catch(setError);
   };

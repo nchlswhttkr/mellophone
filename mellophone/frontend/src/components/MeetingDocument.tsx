@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 
 import { IMeeting, IItem } from "../types";
 import { Link } from "@reach/router";
-import Route from "../utils/Route";
+import { route } from "../utils/routing";
 import Button from "./Button";
 import Input from "./Input";
 import ErrorMessage from "./ErrorMessage";
@@ -38,9 +38,7 @@ export default function MeetingDocument(props: Props) {
       <h1>{meeting.name}</h1>
       <h2>
         Meeting held {meeting.dateHeld.toString()} by{" "}
-        <Link to={new Route(Route.TEAMS, meeting.team.id).build()}>
-          {meeting.team.name}
-        </Link>
+        <Link to={route(`/teams/${meeting.team.id}`)}>{meeting.team.name}</Link>
       </h2>
       <hr></hr>
       {items.map(transformItemIntoElement)}

@@ -6,7 +6,7 @@ import Main from "../components/Main";
 import TeamList from "../components/TeamList";
 import requireAuthentication from "../utils/requireAuthentication";
 import { useNetwork } from "../network";
-import Route from "../utils/Route";
+import { route } from "../utils/routing";
 import classes from "./Home.module.css";
 import "../animate.css";
 import { loadTeamsThunk } from "../ducks/teams";
@@ -70,7 +70,7 @@ function SplashPage() {
         <h1>Mellophone is an app for teams</h1>
         <h2>Take meeting minutes and coordinate with your members today!</h2>
         <h2 style={{ color: "#cd2d79" }}>
-          <Link to={new Route(Route.SIGN_IN).build()}>Sign up!</Link>
+          <Link to={route("/sign-in")}>Sign up!</Link>
         </h2>
       </div>
     </Main>
