@@ -76,7 +76,7 @@ class MeetingController:
 
         body = json.loads(request.body.decode("utf-8"))
         name = body["name"]
-        venue = body["venue"] if "venue" in body else None
+        venue = body["venue"] if "venue" in body else ""
 
         meeting = MeetingService.create_meeting_for_team_with_id(
             team_id, name, venue)

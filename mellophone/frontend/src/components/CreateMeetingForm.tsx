@@ -6,7 +6,7 @@ import Button from "./Button";
 import ErrorMessage from "./ErrorMessage";
 
 interface Props {
-  createMeeting: (name: string, venue?: string) => Promise<void>;
+  createMeeting: (name: string, venue: string) => Promise<void>;
 }
 
 function CreateMeetingForm(props: Props) {

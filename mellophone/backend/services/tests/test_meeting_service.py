@@ -25,7 +25,8 @@ class ItemServiceTestCase(TestCase):
 
     def test_create_meeting_without_venue(self):
         """
-        A meeting can be created without a venue being provided
+        A meeting can be created without a venue being provided, defaulting to
+        an empty string
         """
         user = UserService.create_user(
             "john@email.com", "hunter2", "John", "Doe")
@@ -37,7 +38,7 @@ class ItemServiceTestCase(TestCase):
             team.id, meeting_name)
 
         self.assertEqual(meeting.name, meeting_name)
-        self.assertEqual(meeting.venue, None)
+        self.assertEqual(meeting.venue, "")
 
     def test_retrieve_meeting(self):
         """
