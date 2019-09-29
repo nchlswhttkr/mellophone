@@ -95,6 +95,7 @@ cache:
     - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/latest-deployment
 
 "BE Image Build":
+  image: docker
   stage: setup
   only:
     changes:
