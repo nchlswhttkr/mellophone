@@ -18,6 +18,11 @@ variables:
   DJANGO_SECRET_KEY: "DJANGO_SECRET_KEY"
   DJANGO_SETTINGS_MODULE: "mellophone.settings_local"
 
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#container-registry-examples
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_REGISTRY: registry.hub.docker.io
+
 cache:
   paths:
     - .cache
@@ -95,7 +100,9 @@ cache:
     - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/latest-deployment
 
 "BE Image Build":
-  image: docker
+  image: docker:stable
+  services:
+    - docker:dind
   stage: setup
   only:
     changes:
