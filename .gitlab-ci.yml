@@ -104,9 +104,9 @@ cache:
   services:
     - docker:dind
   stage: setup
-  only:
-    changes:
-      - Dockerfile
+  # only:
+  #   changes:
+  #     - Dockerfile
   script:
     - docker info
     - docker pull nchlswhttkr/mellophone
