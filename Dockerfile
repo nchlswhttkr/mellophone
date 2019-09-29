@@ -19,4 +19,5 @@ USER conductor
 WORKDIR /home/conductor
 
 ENV PATH="/home/conductor/.local/bin:${PATH}" LANG="C.UTF-8"
+RUN echo "extended"
 RUN pip3 install --user pipenv

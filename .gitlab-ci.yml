@@ -1,7 +1,9 @@
 stages:
+  - setup
   - build
   - test
   - deploy
+  - teardown
 
 variables:
   PIPENV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pipenv"
@@ -91,3 +93,13 @@ cache:
     - pipenv sync --keep-outdated
     - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
     - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/latest-deployment
+
+"BE Image Build":
+  image: docker
+  stage: setup
+  only:
+    changes:
+      - Dockerfile
+  script:
+    - docker pull nchlswhttkr/mellophone
+    - docker build - < Dockerfile
