@@ -33,12 +33,15 @@ class GenericViews:
         return JsonResponse({}, status=404)
 
     @staticmethod
-    def forbidden_response(request):
+    def forbidden_response(request, error=None):
         """
         If a request is valid but the user is not authorised to view the
         response, this view can be used.
         """
-        return JsonResponse({}, status=403)
+        response = {}
+        if error is not None:
+            response["error"] = str(error)
+        return JsonResponse(response, status=403)
 
     @staticmethod
     def invalid_request_response(request, error=None):

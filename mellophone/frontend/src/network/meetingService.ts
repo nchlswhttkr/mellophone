@@ -1,5 +1,5 @@
 import { IMeeting, IItem } from "../types";
-import BaseRequest from "../utils/BaseRequest";
+import request from "./request";
 
 export async function postMeeting(
   teamId: number,
@@ -9,32 +9,30 @@ export async function postMeeting(
   if (!name) {
     throw new Error("Meetings must have a name");
   }
-  const response = await BaseRequest.post<{ meeting: IMeeting }>(
-    `/teams/${teamId}/meetings`,
-    { name, venue }
-  );
-  return response.meeting;
+  const response = await request.post(`/teams/${teamId}/meetings`, {
+    name,
+    venue,
+  });
+  const body = (await response.json()) as { meeting: IMeeting };
+  return body.meeting;
 }
 
 export async function getMeetingById(meetingId: number): Promise<IMeeting> {
-  const response = await BaseRequest.get<{ meeting: IMeeting }>(
-    `/meetings/${meetingId}`
-  );
-  return response.meeting;
+  const response = await request.get(`/meetings/${meetingId}`);
+  const body = (await response.json()) as { meeting: IMeeting };
+  return body.meeting;
 }
 
 export async function getMeetingsOfTeam(teamId: number): Promise<IMeeting[]> {
-  const response = await BaseRequest.get<{ meetings: IMeeting[] }>(
-    `/teams/${teamId}/meetings`
-  );
-  return response.meetings;
+  const response = await request.get(`/teams/${teamId}/meetings`);
+  const body = (await response.json()) as { meetings: IMeeting[] };
+  return body.meetings;
 }
 
 export async function getItemsOfMeeting(meetingId: number) {
-  const response = await BaseRequest.get<{ items: IItem[] }>(
-    `/meetings/${meetingId}/items`
-  );
-  return response.items;
+  const response = await request.get(`/meetings/${meetingId}/items`);
+  const body = (await response.json()) as { items: IItem[] };
+  return body.items;
 }
 
 export async function postItemInMeeting(
@@ -47,9 +45,8 @@ export async function postItemInMeeting(
   if (!item.description) {
     throw new Error("Meeting items must have a description");
   }
-  const response = await BaseRequest.post<{ item: IItem }>(
-    `/meetings/${meetingId}/items`,
-    item
-  );
-  return response.item;
+
+  const response = await request.post(`/meetings/${meetingId}/items`, item);
+  const body = (await response.json()) as { item: IItem };
+  return body.item;
 }

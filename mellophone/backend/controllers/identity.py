@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from backend.views import GenericViews
 from backend.serializers import serialize_user
 from backend.services.identity import IdentityService
-from backend.services.user import UserService
+from backend.services.user import UserService, EmailAlreadyInUseException, InvalidUserDetailsException
 
 
 class IdentityController:
@@ -43,10 +43,16 @@ class IdentityController:
         email, password = base64.b64decode(
             credentials.encode()).decode().split(':')
         body = json.loads(request.body.decode("utf-8"))
-        first_name = body["firstName"]
-        last_name = body["lastName"]
+        first_name = body["firstName"] if "firstName" in body else ""
+        last_name = body["lastName"] if "lastName" in body else ""
 
-        UserService.create_user(email, password, first_name, last_name)
+        try:
+            UserService.create_user(email, password, first_name, last_name)
+        except InvalidUserDetailsException as error:
+            return GenericViews.invalid_request_response(request, error)
+        except EmailAlreadyInUseException as error:
+            return GenericViews.forbidden_response(request, error)
+
         IdentityService.sign_in(request, email, password)
         user = IdentityService.get_session_user(request)
         return JsonResponse({"user": serialize_user(user)}, status=201)
