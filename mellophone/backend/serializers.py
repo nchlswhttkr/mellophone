@@ -15,16 +15,12 @@ def serialize_user(user):
         "id": user.id,
         "firstName": user.first_name,
         "lastName": user.last_name,
-        "email": user.email
+        "email": user.email,
     }
 
 
 def serialize_team(team):
-    return {
-        "id": team.id,
-        "name": team.name,
-        "website": team.website
-    }
+    return {"id": team.id, "name": team.name, "website": team.website}
 
 
 def serialize_meeting(meeting):
@@ -40,10 +36,6 @@ def serialize_meeting(meeting):
 
 
 def serialize_item(item):
-    return {
-        "id": item.id,
-        "name": item.name,
-        "description": item.description
-    }
+    return {"id": item.id, "name": item.name, "description": item.description}
     # dateCreated
     # dateUpdated

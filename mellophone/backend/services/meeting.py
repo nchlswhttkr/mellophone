@@ -5,6 +5,7 @@ class MeetingService:
     """
     Handles logic around the creation, retrieval and updating of meetings.
     """
+
     @staticmethod
     def create_meeting_for_team_with_id(team_id, name, venue=""):
         """

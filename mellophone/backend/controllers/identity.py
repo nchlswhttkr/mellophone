@@ -7,7 +7,11 @@ from django.utils.decorators import method_decorator
 from backend.views import GenericViews
 from backend.serializers import serialize_user
 from backend.services.identity import IdentityService
-from backend.services.user import UserService, EmailAlreadyInUseException, InvalidUserDetailsException
+from backend.services.user import (
+    UserService,
+    EmailAlreadyInUseException,
+    InvalidUserDetailsException,
+)
 
 
 class IdentityController:
@@ -20,10 +24,8 @@ class IdentityController:
         """
         Attempt to initiate an authenticated session
         """
-        credentials = re.fullmatch(
-            r"Basic (.*)", request.META['HTTP_AUTHORIZATION'])[1]
-        email, password = base64.b64decode(
-            credentials.encode()).decode().split(':')
+        credentials = re.fullmatch(r"Basic (.*)", request.META["HTTP_AUTHORIZATION"])[1]
+        email, password = base64.b64decode(credentials.encode()).decode().split(":")
 
         IdentityService.sign_in(request, email=email, password=password)
 
@@ -38,10 +40,8 @@ class IdentityController:
         """
         Create a new user and start an authenticated session with them
         """
-        credentials = re.fullmatch(
-            r"Basic (.*)", request.META['HTTP_AUTHORIZATION'])[1]
-        email, password = base64.b64decode(
-            credentials.encode()).decode().split(':')
+        credentials = re.fullmatch(r"Basic (.*)", request.META["HTTP_AUTHORIZATION"])[1]
+        email, password = base64.b64decode(credentials.encode()).decode().split(":")
         body = json.loads(request.body.decode("utf-8"))
         first_name = body["firstName"] if "firstName" in body else ""
         last_name = body["lastName"] if "lastName" in body else ""

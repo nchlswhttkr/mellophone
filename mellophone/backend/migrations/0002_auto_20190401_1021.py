@@ -9,46 +9,61 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('backend', '0001_initial'),
+        ("backend", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Item',
+            name="Item",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('topic', models.CharField(max_length=100)),
-                ('description', models.TextField()),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("topic", models.CharField(max_length=100)),
+                ("description", models.TextField()),
             ],
         ),
         migrations.CreateModel(
-            name='MeetingAttendee',
+            name="MeetingAttendee",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                )
             ],
         ),
         migrations.RenameField(
-            model_name='meeting',
-            old_name='date_opened',
-            new_name='date_held',
+            model_name="meeting", old_name="date_opened", new_name="date_held"
         ),
-        migrations.RemoveField(
-            model_name='meeting',
-            name='date_closed',
-        ),
+        migrations.RemoveField(model_name="meeting", name="date_closed"),
         migrations.AddField(
-            model_name='meeting',
-            name='venue',
+            model_name="meeting",
+            name="venue",
             field=models.CharField(max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='meetingattendee',
-            name='meeting',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backend.Meeting'),
+            model_name="meetingattendee",
+            name="meeting",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="backend.Meeting"
+            ),
         ),
         migrations.AddField(
-            model_name='meetingattendee',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="meetingattendee",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

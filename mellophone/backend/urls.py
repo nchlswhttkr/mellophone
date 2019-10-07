@@ -27,15 +27,16 @@ def route(path, get=None, post=None, put=None, delete=None):
     To get around, we pass our own handler that check the method. This means
     we can keep controllers tied to the objects they handle.
     """
+
     def handler(request):
         method = request.method
-        if method == 'GET' and get is not None:
+        if method == "GET" and get is not None:
             return get(request)
-        if method == 'POST' and post is not None:
+        if method == "POST" and post is not None:
             return post(request)
-        if method == 'PUT' and put is not None:
+        if method == "PUT" and put is not None:
             return put(request)
-        if method == 'DELETE' and delete is not None:
+        if method == "DELETE" and delete is not None:
             return delete(request)
         return GenericViews.not_found_response(request)
 
@@ -49,29 +50,26 @@ urlpatterns = [
     route(r"^identity/sign-up$", post=identity_controller.sign_up),
     route(r"^identity/sign-out$", post=identity_controller.sign_out),
     route(r"^identity/whoami$", get=identity_controller.whoami),
-
     # TEAMS
     route(
         r"^teams$",
         get=team_controller.get_teams_of_user,
-        post=team_controller.create_team
+        post=team_controller.create_team,
     ),
     route(r"^teams/[0-9]*$", get=team_controller.get_team_by_id),
-
     # MEETINGS
     route(
         r"^teams/[0-9]*/meetings$",
         get=meeting_controller.get_meetings_of_team,
-        post=meeting_controller.create_meeting_for_team
+        post=meeting_controller.create_meeting_for_team,
     ),
     route(r"^meetings/[0-9]*$", get=meeting_controller.get_meeting_by_id),
     route(
         r"^meetings/[0-9]*/items$",
         get=meeting_controller.get_items_of_meeting,
-        post=meeting_controller.post_item_to_meeting
+        post=meeting_controller.post_item_to_meeting,
     ),
-
     # MISC
     route(r"^$", get=index_controller.hello_world),
-    re_path(r".*", GenericViews.not_found_response)
+    re_path(r".*", GenericViews.not_found_response),
 ]

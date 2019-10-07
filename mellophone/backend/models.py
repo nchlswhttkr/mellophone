@@ -18,6 +18,7 @@ class Team(models.Model):
     because no team should be dependent on single members, lest they be hit by
     a bus...
     """
+
     name = models.CharField(max_length=100)
     website = models.CharField(max_length=100)
 
@@ -27,6 +28,7 @@ class Membership(models.Model):
     Individual users have membership with a team through these instances. Roles
     are not yet handled, but they will likely also sit within this model.
     """
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
 
@@ -37,6 +39,7 @@ class Meeting(models.Model):
     decisions for the group. The model itself is bare for now while it is not
     used within the application.
     """
+
     name = models.CharField(max_length=100)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     date_held = models.DateField(auto_now_add=True)
@@ -48,6 +51,7 @@ class Item(models.Model):
     Items are individual points of discussion on a meeting. They can include
     motions/votes and outcomes/actions.
     """
+
     name = models.CharField(max_length=100)
     description = models.TextField()
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)

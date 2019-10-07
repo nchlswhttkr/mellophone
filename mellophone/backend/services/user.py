@@ -25,7 +25,7 @@ class UserService:
             raise InvalidUserDetailsException("A last name must be supplied.")
 
         if User.objects.filter(email=email).exists():
-            message = "The email \"{}\" is not available.".format(email)
+            message = 'The email "{}" is not available.'.format(email)
             raise EmailAlreadyInUseException(message)
 
         return User.objects.create_user(
@@ -33,7 +33,7 @@ class UserService:
             email,  # email
             password,
             first_name=first_name,
-            last_name=last_name
+            last_name=last_name,
         )
 
 

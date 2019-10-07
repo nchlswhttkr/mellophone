@@ -22,8 +22,7 @@ class TeamController:
 
         teams = TeamService.get_teams_of_user(user)
         return JsonResponse(
-            {"teams": [serialize_team(team) for team in teams]},
-            status=200
+            {"teams": [serialize_team(team) for team in teams]}, status=200
         )
 
     def create_team(self, request):
@@ -41,8 +40,7 @@ class TeamController:
         name = body["name"]
         website = body["website"]
 
-        team = TeamService.create_team_with_user_as_owner(
-            owner, name, website)
+        team = TeamService.create_team_with_user_as_owner(owner, name, website)
         return JsonResponse({"team": serialize_team(team)}, status=201)
 
     def get_team_by_id(self, request):

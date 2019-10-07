@@ -5,15 +5,9 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('backend', '0002_auto_20190401_1021'),
-    ]
+    dependencies = [("backend", "0002_auto_20190401_1021")]
 
     operations = [
-        migrations.DeleteModel(
-            name='Item',
-        ),
-        migrations.DeleteModel(
-            name='MeetingAttendee',
-        ),
+        migrations.DeleteModel(name="Item"),
+        migrations.DeleteModel(name="MeetingAttendee"),
     ]

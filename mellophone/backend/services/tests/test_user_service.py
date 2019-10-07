@@ -1,6 +1,10 @@
 from django.test import TestCase
 from backend.models import User
-from backend.services.user import UserService, EmailAlreadyInUseException, InvalidUserDetailsException
+from backend.services.user import (
+    UserService,
+    EmailAlreadyInUseException,
+    InvalidUserDetailsException,
+)
 
 
 class UserServiceTestCase(TestCase):
@@ -17,22 +21,26 @@ class UserServiceTestCase(TestCase):
 
         self.assertFalse(
             User.objects.filter(email=email).exists(),
-            "The new user should not already exist"
+            "The new user should not already exist",
         )
 
-        user = self.user_service.create_user(
-            email, password, first_name, last_name)
+        user = self.user_service.create_user(email, password, first_name, last_name)
 
-        self.assertEqual(User.objects.filter(email=email).count(), 1,
-                         "A single user should have been created")
+        self.assertEqual(
+            User.objects.filter(email=email).count(),
+            1,
+            "A single user should have been created",
+        )
         self.assertNotEqual(
-            user, None, "UserService.create_user() must return a user instance")
-        self.assertEqual(user.email, email,
-                         "The user must have a matching email")
-        self.assertEqual(user.first_name, first_name,
-                         "The user must have a matching first name")
-        self.assertEqual(user.last_name, last_name,
-                         "The user must have a matching last name")
+            user, None, "UserService.create_user() must return a user instance"
+        )
+        self.assertEqual(user.email, email, "The user must have a matching email")
+        self.assertEqual(
+            user.first_name, first_name, "The user must have a matching first name"
+        )
+        self.assertEqual(
+            user.last_name, last_name, "The user must have a matching last name"
+        )
 
     def test_cannot_create_user_with_taken_email(self):
         """
@@ -46,8 +54,7 @@ class UserServiceTestCase(TestCase):
         def create_user_when_already_exists():
             UserService.create_user(email, "-", "-", "-")
 
-        self.assertRaises(EmailAlreadyInUseException,
-                          create_user_when_already_exists)
+        self.assertRaises(EmailAlreadyInUseException, create_user_when_already_exists)
 
     def test_cannot_create_user_with_empty_fields(self):
         """
@@ -59,11 +66,19 @@ class UserServiceTestCase(TestCase):
         first_name = "John"
         last_name = "Doe"
 
-        with self.assertRaises(InvalidUserDetailsException, msg="An email must be supplied"):
+        with self.assertRaises(
+            InvalidUserDetailsException, msg="An email must be supplied"
+        ):
             UserService.create_user("", password, first_name, last_name)
-        with self.assertRaises(InvalidUserDetailsException, msg="A password must be supplied"):
+        with self.assertRaises(
+            InvalidUserDetailsException, msg="A password must be supplied"
+        ):
             UserService.create_user(email, "", first_name, last_name)
-        with self.assertRaises(InvalidUserDetailsException, msg="A first name must be supplied"):
+        with self.assertRaises(
+            InvalidUserDetailsException, msg="A first name must be supplied"
+        ):
             UserService.create_user(email, password, "", last_name)
-        with self.assertRaises(InvalidUserDetailsException, msg="A last name must be supplied"):
+        with self.assertRaises(
+            InvalidUserDetailsException, msg="A last name must be supplied"
+        ):
             UserService.create_user(email, password, first_name, "")

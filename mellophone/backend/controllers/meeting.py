@@ -33,10 +33,7 @@ class MeetingController:
         if not TeamService.is_user_in_team_with_id(user, meeting.team.id):
             return GenericViews.forbidden_response(request)
 
-        return JsonResponse(
-            {"meeting": serialize_meeting(meeting)},
-            status=200
-        )
+        return JsonResponse({"meeting": serialize_meeting(meeting)}, status=200)
 
     def get_meetings_of_team(self, request):
         """
@@ -53,12 +50,8 @@ class MeetingController:
 
         meetings = MeetingService.get_meetings_of_team_with_id(team_id)
         return JsonResponse(
-            {
-                "meetings": [
-                    serialize_meeting(meeting) for meeting in meetings
-                ]
-            },
-            status=200
+            {"meetings": [serialize_meeting(meeting) for meeting in meetings]},
+            status=200,
         )
 
     def create_meeting_for_team(self, request):
@@ -78,8 +71,7 @@ class MeetingController:
         name = body["name"]
         venue = body["venue"] if "venue" in body else ""
 
-        meeting = MeetingService.create_meeting_for_team_with_id(
-            team_id, name, venue)
+        meeting = MeetingService.create_meeting_for_team_with_id(team_id, name, venue)
 
         return JsonResponse({"meeting": serialize_meeting(meeting)}, status=201)
 
@@ -91,8 +83,7 @@ class MeetingController:
         if user is None:
             return GenericViews.authentication_required_response(request)
 
-        meeting_id = int(
-            re.match(r"/api/meetings/([0-9]*)/items", request.path)[1])
+        meeting_id = int(re.match(r"/api/meetings/([0-9]*)/items", request.path)[1])
         meeting = MeetingService.get_meeting_with_id(meeting_id)
 
         if not TeamService.is_user_in_team_with_id(user, meeting.team.id):
@@ -100,8 +91,9 @@ class MeetingController:
 
         items = ItemService.get_items_of_meeting_with_id(meeting_id)
 
-        return JsonResponse({
-            "items": [serialize_item(item) for item in items]}, status=200)
+        return JsonResponse(
+            {"items": [serialize_item(item) for item in items]}, status=200
+        )
 
     def post_item_to_meeting(self, request):
         """
@@ -111,8 +103,7 @@ class MeetingController:
         if user is None:
             return GenericViews.authentication_required_response(request)
 
-        meeting_id = int(
-            re.match(r"/api/meetings/([0-9]*)/items", request.path)[1])
+        meeting_id = int(re.match(r"/api/meetings/([0-9]*)/items", request.path)[1])
         meeting = MeetingService.get_meeting_with_id(meeting_id)
 
         if not TeamService.is_user_in_team_with_id(user, meeting.team.id):
@@ -123,8 +114,7 @@ class MeetingController:
         description = body["description"]
 
         try:
-            item = ItemService.create_item_for_meeting(
-                meeting, name, description)
+            item = ItemService.create_item_for_meeting(meeting, name, description)
         except InvalidItemException as error:
             return GenericViews.invalid_request_response(request, error)
 

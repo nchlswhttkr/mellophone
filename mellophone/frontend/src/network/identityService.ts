@@ -1,4 +1,4 @@
-import request  from "./request";
+import request from "./request";
 import { IUser } from "../types";
 
 export async function signIn(email: string, password: string): Promise<IUser> {
