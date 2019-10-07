@@ -111,4 +111,4 @@ cache:
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
     - docker build -t $DOCKER_IMAGE_TAG - < Dockerfile
-    - docker push DOCKER_IMAGE_TAG
+    - docker push $DOCKER_IMAGE_TAG
