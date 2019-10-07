@@ -22,6 +22,7 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_REGISTRY: registry.gitlab.com
+  DOCKER_IMAGE_TAG: $DOCKER_REGISTRY/nchlswhttkr/mellophone:$CI_COMMIT_REF_NAME
 
 cache:
   paths:
@@ -109,4 +110,5 @@ cache:
   #     - Dockerfile
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
-    - docker build - < Dockerfile
+    - docker build -t $DOCKER_IMAGE_TAG - < Dockerfile
+    - docker push DOCKER_IMAGE_TAG
