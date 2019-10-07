@@ -4,11 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-autopep8 = "~=1.0"
-pylint = "~=2.0"
-pylint-django = "~=2.0"
 selenium = "~=3.0"
 lxml = "~=4.4"
+black = "==19.3b0"
 
 [packages]
 django = "~=2.2"
@@ -21,6 +19,6 @@ python_version = "3.6"
 [scripts]
 migrate     = "python mellophone/manage.py migrate"
 server      = "python mellophone/manage.py runserver 0.0.0.0:8000"
-lint        = "pylint mellophone/backend"
+lint        = "black mellophone/backend"
 test-unit   = "python mellophone/manage.py test backend"
 test-e2e    = "python mellophone/e2e.py"

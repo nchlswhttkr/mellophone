@@ -81,14 +81,15 @@ docker-compose up
 
 Below are some common commands you might run. You might also wish to consult the [pipenv docs](https://pipenv.readthedocs.io/en/latest#pipenv-usage) and the [Pipfile itself](/Pipfile).
 
-| Command              | Action                                                                                 |
-| -------------------- | -------------------------------------------------------------------------------------- |
-| pipenv sync          | Install runtime dependencies (and ensure they are up to date with `Pipfile.lock`)      |
-| pipenv sync --dev    | As above, but also include development dependencies, such as linting/testing libraries |
-| pipenv run migrate   | Apply new migrations to the database (must be running at this time)                    |
-| pipenv run server    | Run the Django development server                                                      |
-| pipenv run lint      | Lint using pylint                                                                      |
-| pipenv run test-unit | Run tests against the backend                                                          |
-| pipenv run test-e2e  | Run an end-to-end test \*                                                              |
+| Command                 | Action                                                                                 |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| pipenv sync             | Install runtime dependencies (and ensure they are up to date with `Pipfile.lock`)      |
+| pipenv sync --dev       | As above, but also include development dependencies, such as linting/testing libraries |
+| pipenv run migrate      | Apply new migrations to the database (must be running at this time)                    |
+| pipenv run server       | Run the Django development server                                                      |
+| pipenv run lint         | Format backend code                                                                    |
+| pipenv run lint --check | Check backend code formatting                                                          |
+| pipenv run test-unit    | Run tests against the backend                                                          |
+| pipenv run test-e2e     | Run an end-to-end test \*                                                              |
 
 \* _Currently still under development - You'll need Geckodriver and Firefox installed, you can try adapting this from an [older version of this project's Dockerfile](https://github.com/nchlswhttkr/mellophone/blob/55f9d5eb4cb1514ebf6b9a6193e687959b3dcfa7/Dockerfile#L23) if you are unsure about what to do._

@@ -63,7 +63,7 @@ cache:
   allow_failure: true
   script:
     - pipenv sync --dev --keep-outdated
-    - pipenv run lint
+    - pipenv run lint --check
 
 "BE Testing":
   image: nchlswhttkr/mellophone
