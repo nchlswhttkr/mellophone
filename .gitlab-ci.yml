@@ -1,9 +1,7 @@
 stages:
-  - setup
   - build
   - test
   - deploy
-  - teardown
 
 variables:
   PIPENV_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pipenv"
@@ -31,85 +29,78 @@ cache:
     - mellophone/frontend/node_modules
     - mellophone/frontend/build
 
-# "FE Linting":
-#   image: node:10-alpine
-#   stage: test
-#   allow_failure: true
-#   script:
-#     - cd mellophone/frontend
-#     - yarn
-#     - yarn lint
+"FE Linting":
+  image: node:10-alpine
+  stage: test
+  allow_failure: true
+  script:
+    - cd mellophone/frontend
+    - yarn
+    - yarn lint
 
-# "FE Testing":
-#   image: node:10-alpine
-#   stage: test
-#   script:
-#     - cd mellophone/frontend
-#     - yarn
-#     - yarn test --verbose
+"FE Testing":
+  image: node:10-alpine
+  stage: test
+  script:
+    - cd mellophone/frontend
+    - yarn
+    - yarn test --verbose
 
-# "FE Install/Build":
-#   image: node:10-alpine
-#   stage: build
-#   artifacts:
-#     paths:
-#       - mellophone/frontend/build
-#   script:
-#     - cd mellophone/frontend
-#     - yarn
-#     - REACT_APP_COMMIT_SHA=$CI_COMMIT_SHORT_SHA yarn build
+"FE Install/Build":
+  image: node:10-alpine
+  stage: build
+  artifacts:
+    paths:
+      - mellophone/frontend/build
+  script:
+    - cd mellophone/frontend
+    - yarn
+    - REACT_APP_COMMIT_SHA=$CI_COMMIT_SHORT_SHA yarn build
 
-# "BE Install":
-#   image: nchlswhttkr/mellophone
-#   stage: build
-#   script:
-#     - pipenv sync --dev --keep-outdated
+"BE Linting":
+  image: nchlswhttkr/mellophone
+  stage: test
+  allow_failure: true
+  script:
+    - pipenv sync --dev --keep-outdated
+    - pipenv run lint
 
-# "BE Linting":
-#   image: nchlswhttkr/mellophone
-#   stage: test
-#   allow_failure: true
-#   script:
-#     - pipenv sync --dev --keep-outdated
-#     - pipenv run lint
+"BE Testing":
+  image: nchlswhttkr/mellophone
+  stage: test
+  services:
+    - postgres:10
+  script:
+    - pipenv sync --keep-outdated
+    - pipenv run test-unit
 
-# "BE Testing":
-#   image: nchlswhttkr/mellophone
-#   stage: test
-#   services:
-#     - postgres:10
-#   script:
-#     - pipenv sync --keep-outdated
-#     - pipenv run test-unit
-
-# "Deploy":
-#   image: nchlswhttkr/mellophone
-#   stage: deploy
-#   environment:
-#     name: production
-#     url: https://mellophone.pink
-#   only:
-#     - master
-#   script:
-#     - eval $(ssh-agent -s)
-#     - mkdir -p ~/.ssh
-#     - chmod 700 ~/.ssh
-#     - ssh-keyscan 157.230.241.239 > ~/.ssh/known_hosts
-#     - echo "$PRODUCTION_PRIVATE_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
-#     - pipenv sync --keep-outdated
-#     - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
-#     - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/latest-deployment
+"Deploy":
+  image: nchlswhttkr/mellophone
+  stage: deploy
+  environment:
+    name: production
+    url: https://mellophone.pink
+  only:
+    - master
+  script:
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan 157.230.241.239 > ~/.ssh/known_hosts
+    - echo "$PRODUCTION_PRIVATE_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - pipenv sync --keep-outdated
+    - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
+    - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/latest-deployment
 
 "BE Image Build":
   image: docker:stable
   services:
     - docker:dind
-  stage: setup
-  # only:
-  #   changes:
-  #     - Dockerfile
+  stage: build
+  only:
+    changes:
+      - Dockerfile
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
-    - docker pull $DOCKER_IMAGE_TAG
     - docker build -t $DOCKER_IMAGE_TAG - < Dockerfile
     - docker push $DOCKER_IMAGE_TAG

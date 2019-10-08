@@ -1,4 +1,4 @@
-FROM ubuntu:bionic-20181204
+FROM ubuntu:18.04
 
 RUN apt update -qqy && DEBIAN_FRONTEND=noninteractive apt install -qqy \
     curl \
@@ -19,5 +19,4 @@ USER conductor
 WORKDIR /home/conductor
 
 ENV PATH="/home/conductor/.local/bin:${PATH}" LANG="C.UTF-8"
-RUN echo "extended"
 RUN pip3 install --user pipenv
