@@ -1,4 +1,4 @@
-FROM ubuntu:bionic-20181204
+FROM ubuntu:18.04
 
 RUN apt update -qqy && DEBIAN_FRONTEND=noninteractive apt install -qqy \
     curl \

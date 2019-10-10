@@ -16,6 +16,12 @@ variables:
   DJANGO_SECRET_KEY: "DJANGO_SECRET_KEY"
   DJANGO_SETTINGS_MODULE: "mellophone.settings_local"
 
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#container-registry-examples
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_REGISTRY: registry.gitlab.com
+  DOCKER_IMAGE_TAG: $DOCKER_REGISTRY/nchlswhttkr/mellophone:$CI_COMMIT_REF_NAME
+
 cache:
   paths:
     - .cache
@@ -51,12 +57,6 @@ cache:
     - yarn
     - REACT_APP_COMMIT_SHA=$CI_COMMIT_SHORT_SHA yarn build
 
-"BE Install":
-  image: nchlswhttkr/mellophone
-  stage: build
-  script:
-    - pipenv sync --dev --keep-outdated
-
 "BE Linting":
   image: nchlswhttkr/mellophone
   stage: test
@@ -91,3 +91,16 @@ cache:
     - pipenv sync --keep-outdated
     - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
     - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/latest-deployment
+
+"BE Image Build":
+  image: docker:stable
+  services:
+    - docker:dind
+  stage: build
+  only:
+    changes:
+      - Dockerfile
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $DOCKER_REGISTRY
+    - docker build -t $DOCKER_IMAGE_TAG - < Dockerfile
+    - docker push $DOCKER_IMAGE_TAG
