@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   dev:
-    image: "nchlswhttkr/mellophone"
+    image: "registry.gitlab.com/nchlswhttkr/mellophone:master"
     working_dir: "/home/conductor/dev"
     environment:
       - "WORKON_HOME=/home/conductor/dev/docker/dev/.venv"

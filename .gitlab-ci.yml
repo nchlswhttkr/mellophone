@@ -58,7 +58,7 @@ cache:
     - REACT_APP_COMMIT_SHA=$CI_COMMIT_SHORT_SHA yarn build
 
 "BE Linting":
-  image: nchlswhttkr/mellophone
+  image: $DOCKER_IMAGE_TAG
   stage: test
   allow_failure: true
   script:
@@ -66,7 +66,7 @@ cache:
     - pipenv run lint --check
 
 "BE Testing":
-  image: nchlswhttkr/mellophone
+  image: $DOCKER_IMAGE_TAG
   stage: test
   services:
     - postgres:10
@@ -75,7 +75,7 @@ cache:
     - pipenv run test-unit
 
 "Deploy":
-  image: nchlswhttkr/mellophone
+  image: $DOCKER_IMAGE_TAG
   stage: deploy
   environment:
     name: production
