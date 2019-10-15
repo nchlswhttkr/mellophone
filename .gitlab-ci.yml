@@ -81,6 +81,7 @@ cache:
   services:
     - postgres:10
   artifacts:
+    when: always
     paths:
       - e2e
   script:
