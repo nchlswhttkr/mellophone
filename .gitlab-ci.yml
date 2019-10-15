@@ -74,6 +74,15 @@ cache:
     - pipenv sync --keep-outdated
     - pipenv run test-unit
 
+"E2E Testing":
+  image: $DOCKER_IMAGE_TAG
+  stage: test
+  services:
+    - postgres:10
+  script:
+    - pipenv sync --keep-outdated
+    - sh scripts/test-e2e.sh
+
 "Deploy":
   image: $DOCKER_IMAGE_TAG
   stage: deploy
