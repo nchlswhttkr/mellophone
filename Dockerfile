@@ -4,7 +4,6 @@ RUN apt-get -qqy update && DEBIAN_FRONTEND=noninteractive apt-get -qqy --no-inst
     curl \
     firefox \
     libpq-dev \
-    nginx \
     openssh-client \
     python3-pip \
     rsync \

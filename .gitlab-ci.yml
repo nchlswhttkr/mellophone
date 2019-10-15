@@ -27,8 +27,6 @@ cache:
     - .cache
     - .venv
     - mellophone/frontend/node_modules
-    - mellophone/frontend/build
-    - e2e
 
 "FE Linting":
   image: node:10-alpine
@@ -81,7 +79,7 @@ cache:
   services:
     - postgres:10
   artifacts:
-    when: always
+    when: on_failure
     paths:
       - e2e
   script:
@@ -108,7 +106,7 @@ cache:
     - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
     - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/latest-deployment
 
-"BE Image Build":
+"Dev Image Build":
   image: docker:stable
   services:
     - docker:dind
