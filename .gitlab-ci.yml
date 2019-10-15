@@ -28,6 +28,7 @@ cache:
     - .venv
     - mellophone/frontend/node_modules
     - mellophone/frontend/build
+    - e2e
 
 "FE Linting":
   image: node:10-alpine
@@ -79,7 +80,11 @@ cache:
   stage: test
   services:
     - postgres:10
+  artifacts:
+    paths:
+      - e2e
   script:
+    - sh scripts/get-frontend-build.sh
     - pipenv sync --keep-outdated
     - sh scripts/test-e2e.sh
 

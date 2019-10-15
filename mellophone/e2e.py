@@ -7,6 +7,7 @@ from lxml import html, etree
 def main():
     options = FirefoxOptions()
     options.add_argument("-headless")
+    os.makedirs("e2e", exist_ok=True)
     browser = Firefox(options=options, service_log_path="e2e/geckodriver.log")
     browser.implicitly_wait(5)  # give pages time to render after loading
 
