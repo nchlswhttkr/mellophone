@@ -90,6 +90,6 @@ Below are some common commands you might run. You might also wish to consult the
 | pipenv run lint         | Format backend code                                                                    |
 | pipenv run lint --check | Check backend code formatting                                                          |
 | pipenv run test-unit    | Run tests against the backend                                                          |
-| pipenv run test-e2e     | Run an end-to-end test \*                                                              |
+| pipenv run test-e2e     | Run an end-to-end test, assumes the site is up and running on `localhost:8000` \*      |
 
-\* _Currently still under development - You'll need Geckodriver and Firefox installed, you can try adapting this from an [older version of this project's Dockerfile](https://github.com/nchlswhttkr/mellophone/blob/55f9d5eb4cb1514ebf6b9a6193e687959b3dcfa7/Dockerfile#L23) if you are unsure about what to do._
+\* You'll like want to run the backend and test within the same container. You can accomplish this with `docker-compose run dev sh scripts/test-e2e.sh` to run a prewritten script that will accomplish this.
