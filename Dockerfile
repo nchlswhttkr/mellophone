@@ -5,6 +5,7 @@ RUN apt-get -qqy update && DEBIAN_FRONTEND=noninteractive apt-get -qqy --no-inst
     firefox \
     libpq5 \
     openssh-client \
+    postgresql \
     python3-pip \
     rsync \
     unzip
