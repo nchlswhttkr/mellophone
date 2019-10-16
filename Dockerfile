@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 RUN apt-get -qqy update && DEBIAN_FRONTEND=noninteractive apt-get -qqy --no-install-recommends install \
     curl \
     firefox \
-    libpq5 \
+    libpq-dev \
     openssh-client \
     postgresql \
     python3-pip \
