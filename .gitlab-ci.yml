@@ -86,7 +86,7 @@ cache:
       - e2e
   script:
     - pipenv clean
-    - pipenv sync --keep-outdated
+    - pipenv sync --dev --keep-outdated
     - pipenv run migrate
     - sh scripts/get-frontend-build.sh
     - sh scripts/test-e2e.sh
