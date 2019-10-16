@@ -1,11 +1,14 @@
 FROM ubuntu:18.04
 
-RUN apt-get -qqy update && DEBIAN_FRONTEND=noninteractive apt-get -qqy --no-install-recommends install \
+RUN apt-get -qqy update && DEBIAN_FRONTEND=noninteractive apt-get -qqy install \
     curl \
     firefox \
     libpq-dev \
+    nginx \
     openssh-client \
     postgresql \
+    postgresql-contrib \
+    python3-dev \
     python3-pip \
     rsync \
     unzip
