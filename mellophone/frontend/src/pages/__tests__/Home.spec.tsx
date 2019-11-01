@@ -27,8 +27,10 @@ it("Renders a feed when a user is logged in", async () => {
 
 it("Shows the feed immediately if some/all teams are loaded", () => {
   const teams = [mock.team(), mock.team()];
+  const getTeamsOfSessionUser = jest.fn(async () => []);
   const { queryByText } = new TestRenderer()
-    .withStores({ teams: { teams, status: "fulfilled", error: undefined } })
+    .withStores({ teams: { teams } })
+    .withNetwork({ getTeamsOfSessionUser })
     .asAuthenticatedUser()
     .render(<Home />);
 
@@ -36,11 +38,25 @@ it("Shows the feed immediately if some/all teams are loaded", () => {
   expect(queryByText(teams[1].name)).not.toBe(null);
 });
 
+it("Shows an error if loading a user's teams fails", async () => {
+  const message = "Your teams could not be loaded at this time";
+  const getTeamsOfSessionUser = jest.fn(async () => {
+    throw new Error(message);
+  });
+  const { queryByText } = new TestRenderer()
+    .asAuthenticatedUser()
+    .withNetwork({ getTeamsOfSessionUser })
+    .render(<Home />);
+
+  await wait(() => expect(queryByText(message)).not.toBe(null));
+  expect(getTeamsOfSessionUser).toBeCalledTimes(1);
+});
+
 it("Prompts a user to create a team if they are not a member of any teams", () => {
   const getTeamsOfSessionUser = jest.fn(async () => []);
   const { queryByText } = new TestRenderer()
     .asAuthenticatedUser()
-    .withStores({ teams: { teams: [], status: "fulfilled", error: undefined } })
+    .withStores({ teams: { teams: [] } })
     .withNetwork({ getTeamsOfSessionUser })
     .render(<Home />);
 

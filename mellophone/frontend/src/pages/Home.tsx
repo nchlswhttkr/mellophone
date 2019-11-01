@@ -8,27 +8,33 @@ import requireAuthentication from "../utils/requireAuthentication";
 import { useNetwork } from "../network";
 import { route } from "../utils/routing";
 import classes from "./Home.module.css";
-import { loadTeamsThunk } from "../ducks/teams";
+import { appendTeams } from "../ducks/teams";
 import { ITeam } from "../types";
 import { AppState } from "../ducks";
+import ErrorMessage from "../components/ErrorMessage";
 
 interface Props extends RouteComponentProps {
-  loadTeamsThunk(promise: Promise<ITeam[]>): void;
+  appendTeams(teams: ITeam[]): void;
   teams: ITeam[];
-  teamsLoaded: boolean;
 }
 
 function Home(props: Props) {
-  const { loadTeamsThunk, teamsLoaded, teams } = props;
+  const { appendTeams, teams } = props;
   const { getTeamsOfSessionUser } = useNetwork();
+  const [teamsLoadingError, setTeamsLoadingError] = React.useState<Error>();
 
   React.useEffect(() => {
-    if (!teamsLoaded) {
-      loadTeamsThunk(getTeamsOfSessionUser());
-    }
-  }, [loadTeamsThunk, getTeamsOfSessionUser, teamsLoaded]);
+    getTeamsOfSessionUser()
+      .then(appendTeams)
+      .catch(setTeamsLoadingError);
+  }, [appendTeams, getTeamsOfSessionUser]);
 
-  return <Main>{teamsLoaded && <TeamList teams={teams} />}</Main>;
+  return (
+    <Main>
+      <ErrorMessage error={teamsLoadingError} />
+      <TeamList teams={teams} />
+    </Main>
+  );
 }
 
 function SplashPage() {
@@ -51,12 +57,11 @@ function SplashPage() {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  teamsLoaded: state.teams.status === "fulfilled",
   teams: state.teams.teams,
 });
 
 const mapDispatchToProps = {
-  loadTeamsThunk,
+  appendTeams,
 };
 
 export default connect(

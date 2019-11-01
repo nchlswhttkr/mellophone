@@ -7,13 +7,11 @@ import CreateTeamForm from "../components/CreateTeamForm";
 import { navigate } from "../utils/routing";
 import requireAuthentication from "../utils/requireAuthentication";
 import { useNetwork } from "../network";
-import { AppState } from "../ducks";
-import { appendTeam } from "../ducks/teams";
+import { appendTeams } from "../ducks/teams";
 import { ITeam } from "../types";
 
 interface Props extends RouteComponentProps {
-  teamsLoaded: boolean;
-  appendTeam(team: ITeam): void;
+  appendTeams(teams: ITeam[]): void;
 }
 
 function CreateTeam(props: Props) {
@@ -21,27 +19,23 @@ function CreateTeam(props: Props) {
 
   const createTeam = async (name: string, website: string) => {
     const team = await postTeam(name, website);
-    props.appendTeam(team);
+    props.appendTeams([team]);
     navigate(`/teams/${team.id}`);
   };
 
   return (
     <Main>
       <h1>Create a new team</h1>
-      {props.teamsLoaded && <CreateTeamForm createTeam={createTeam} />}
+      <CreateTeamForm createTeam={createTeam} />
     </Main>
   );
 }
 
-const mapStateToProps = (state: AppState) => ({
-  teamsLoaded: state.teams.status === "fulfilled",
-});
-
 const mapDispatchToProps = {
-  appendTeam,
+  appendTeams,
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(requireAuthentication<Props>(CreateTeam));

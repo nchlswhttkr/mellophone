@@ -1,83 +1,25 @@
-import { Dispatch } from "redux";
-
 import { ITeam } from "../types";
 import { CLEAR_SESSION, ClearSessionAction } from "./session";
 
-export const SET_TEAMS_PENDING = "mellophone/teams/SET_TEAMS_PENDING";
-export const SET_TEAMS_FULFILLED = "mellophone/teams/SET_TEAMS_FULFILLED";
-export const SET_TEAMS_REJECTED = "mellophone/teams/SET_TEAMS_REJECTED";
-export const APPEND_TEAM = "mellophone/teams/APPEND_TEAM";
+export const APPEND_TEAMS = "mellophone/teams/APPEND_TEAMS";
 
-interface SetTeamsPendingAction {
-  type: typeof SET_TEAMS_PENDING;
-}
-
-export function setTeamsPending(): SetTeamsPendingAction {
-  return {
-    type: SET_TEAMS_PENDING,
-  };
-}
-
-interface SetTeamsFulfilledAction {
-  type: typeof SET_TEAMS_FULFILLED;
+interface AppendTeamsAction {
+  type: typeof APPEND_TEAMS;
   teams: ITeam[];
 }
 
-export function setTeamsFulfilled(teams: ITeam[]): SetTeamsFulfilledAction {
-  return {
-    type: SET_TEAMS_FULFILLED,
-    teams,
-  };
+export function appendTeams(teams: ITeam[]): AppendTeamsAction {
+  return { type: APPEND_TEAMS, teams };
 }
 
-interface SetTeamsRejectedAction {
-  type: typeof SET_TEAMS_REJECTED;
-  error: Error;
-}
-
-export function setTeamsRejected(error: Error): SetTeamsRejectedAction {
-  return {
-    type: SET_TEAMS_REJECTED,
-    error,
-  };
-}
-
-/** Expects a promise that resolves to a set of teams, likely an API call */
-export function loadTeamsThunk(teamsPromise: Promise<ITeam[]>) {
-  return (dispatch: Dispatch) => {
-    dispatch(setTeamsPending());
-    return teamsPromise
-      .then(teams => dispatch(setTeamsFulfilled(teams)))
-      .catch(error => dispatch(setTeamsRejected(error)));
-  };
-}
-
-interface AppendTeamAction {
-  type: typeof APPEND_TEAM;
-  team: ITeam;
-}
-
-export function appendTeam(team: ITeam): AppendTeamAction {
-  return { type: APPEND_TEAM, team };
-}
-
-type TeamsAction =
-  | SetTeamsPendingAction
-  | SetTeamsFulfilledAction
-  | SetTeamsRejectedAction
-  | AppendTeamAction
-  | ClearSessionAction;
+type TeamsAction = AppendTeamsAction | ClearSessionAction;
 
 export interface TeamsState {
   teams: ITeam[];
-  status: "pending" | "fulfilled" | "rejected";
-  error: Error | undefined;
 }
 
 const DEFAULT_STATE: TeamsState = {
   teams: [],
-  status: "pending",
-  error: undefined,
 };
 
 export default function reducer(
@@ -85,16 +27,20 @@ export default function reducer(
   action: TeamsAction
 ): TeamsState {
   switch (action.type) {
-    case SET_TEAMS_PENDING:
-      return { ...state, status: "pending", error: undefined, teams: [] };
-    case SET_TEAMS_FULFILLED:
-      return { ...state, status: "fulfilled", teams: action.teams };
-    case SET_TEAMS_REJECTED:
-      return { ...state, status: "rejected", error: action.error };
-    case APPEND_TEAM:
-      return { ...state, teams: state.teams.concat([action.team]) };
+    case APPEND_TEAMS:
+      // Avoid appending duplicate teams by checking IDs, and uses some less
+      // pretty logic to avoid mutating the current team array
+      let nextTeams = Array.from(state.teams);
+      for (const team of action.teams) {
+        if (!nextTeams.find(nextTeam => nextTeam.id === team.id)) {
+          nextTeams.push(team);
+        }
+      }
+      return { ...state, teams: nextTeams };
+
     case CLEAR_SESSION:
       return DEFAULT_STATE;
+
     default:
       return state;
   }
