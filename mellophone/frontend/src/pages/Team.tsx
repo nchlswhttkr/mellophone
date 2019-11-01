@@ -57,7 +57,7 @@ function Team(props: Props) {
           <p>{team.website}</p>
         </>
       )}
-      <Button onClick={() => navigate(`teams/${teamId}/meetings/new`)}>
+      <Button onClick={() => navigate(`/teams/${teamId}/meetings/new`)}>
         Create meeting
       </Button>
       <hr style={{ margin: "1rem 0" }} />
