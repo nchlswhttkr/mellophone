@@ -88,7 +88,7 @@ cache:
     - pipenv clean
     - pipenv sync --dev --keep-outdated
     - pipenv run migrate
-    - sh scripts/get-frontend-build.sh
+    - sh scripts/get-frontend-build.sh $CI_COMMIT_REF_NAME
     - sh scripts/test-e2e.sh
 
 "Deploy":
