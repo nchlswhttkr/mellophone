@@ -20,7 +20,7 @@ variables:
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_REGISTRY: registry.gitlab.com
-  DOCKER_IMAGE_TAG: $DOCKER_REGISTRY/nchlswhttkr/mellophone:$CI_COMMIT_REF_NAME
+  DOCKER_IMAGE_TAG: $DOCKER_REGISTRY/nchlswhttkr/mellophone:$CI_COMMIT_REF_SLUG
 
 cache:
   paths:
@@ -88,7 +88,7 @@ cache:
     - pipenv clean
     - pipenv sync --dev --keep-outdated
     - pipenv run migrate
-    - sh scripts/get-frontend-build.sh $CI_COMMIT_REF_NAME
+    - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
     - sh scripts/test-e2e.sh
 
 "Deploy":
