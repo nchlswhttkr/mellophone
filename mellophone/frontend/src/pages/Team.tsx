@@ -14,43 +14,45 @@ import { ITeam } from "../types";
 import { AppState } from "../ducks";
 
 interface Props extends RouteComponentProps<{ teamId: string }> {
-  teamsLoaded: boolean;
-  userTeams: ITeam[];
+  loadedTeams: ITeam[];
 }
 
 function Team(props: Props) {
   const [team, setTeam] = React.useState<ITeam>();
-  const [error, setError] = React.useState<Error>();
   const [meetings, setMeetings] = React.useState<IMeeting[]>();
+  const [loadDataError, setLoadDataError] = React.useState<Error>();
   const { getTeamById, getMeetingsOfTeam } = useNetwork();
-  const { userTeams, teamsLoaded } = props;
+  const { loadedTeams } = props;
 
   const teamId = Number(props.teamId);
 
+  // Set the team for the page, only fetch if not available locally
   React.useEffect(() => {
-    if (!Number.isNaN(teamId) && !teamsLoaded) {
-      const foundTeam = userTeams.find(team => team.id === teamId);
-      if (!foundTeam) {
-        getTeamById(teamId)
-          .then(setTeam)
-          .catch(setError);
-      } else {
-        setTeam(foundTeam);
-      }
-    }
-  }, [teamId, getTeamById, userTeams, teamsLoaded]);
+    if (team !== undefined) return;
+    if (Number.isNaN(teamId)) return;
 
+    const foundTeam = loadedTeams.find(team => team.id === teamId);
+    if (foundTeam !== undefined) {
+      setTeam(foundTeam);
+    } else {
+      getTeamById(teamId)
+        .then(setTeam)
+        .catch(setLoadDataError);
+    }
+  }, [teamId, getTeamById, loadedTeams, team]);
+
+  // Load the meetings of this team
   React.useEffect(() => {
     if (!Number.isNaN(teamId)) {
       getMeetingsOfTeam(teamId)
         .then(setMeetings)
-        .catch(setError);
+        .catch(setLoadDataError);
     }
   }, [teamId, getMeetingsOfTeam]);
 
   return (
     <Main>
-      <ErrorMessage error={error} />
+      <ErrorMessage error={loadDataError} />
       {team && (
         <>
           <h2>{team.name}</h2>
@@ -67,8 +69,7 @@ function Team(props: Props) {
 }
 
 const mapStateToProps = (state: AppState) => ({
-  teamsLoaded: state.teams.status === "fulfilled",
-  userTeams: state.teams.teams,
+  loadedTeams: state.teams.teams,
 });
 
 export default connect(mapStateToProps)(requireAuthentication<Props>(Team));
