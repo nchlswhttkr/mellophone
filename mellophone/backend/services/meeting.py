@@ -1,20 +1,19 @@
 from backend.models import Meeting
+from backend.exceptions import BadRequestException
 
 
 class MeetingService:
-    """
-    Handles logic around the creation, retrieval and updating of meetings.
-    """
-
     @staticmethod
-    def create_meeting_for_team_with_id(team_id, name, venue=""):
+    def create(team_id, name, venue=""):
         """
         Creates a meeting for the given team.
         """
+        if name == "":
+            raise BadRequestException("Meetings must have a name")
         return Meeting.objects.create(team_id=team_id, name=name, venue=venue)
 
     @staticmethod
-    def get_meeting_with_id(meeting_id):
+    def get(meeting_id):
         """
         Retrieves a meeting by its ID.
         """

@@ -1,18 +1,25 @@
 from django.db import transaction
-from backend.models import Team, Membership
+from backend.models import Team
+from backend.services.membership import MembershipService
+from backend.exceptions import BadRequestException
 
 
 class TeamService:
-    """
-    Handle logic around creating and retrieving a team or set of teams.
-    """
+    @staticmethod
+    def create_team(name, website):
+        if name == "":
+            raise BadRequestException("Teams must have a name")
+        return Team.objects.create(name=name, website=website)
 
     @staticmethod
-    def get_teams_of_user(user):
-        """
-        Lists all teams of which the given user is a member.
-        """
-        return Team.objects.filter(membership__user=user)
+    def get(id):
+        return Team.objects.get(pk=id)
+
+    @staticmethod
+    def get_teams_of_user_with_id(user_id):
+        # Django allows reverse lookups on relationships
+        # https://docs.djangoproject.com/en/dev/topics/db/queries/#lookups-that-span-relationships
+        return Team.objects.filter(membership__user__id=user_id)
 
     @staticmethod
     @transaction.atomic
@@ -22,22 +29,6 @@ class TeamService:
         they will be owner when roles are added in future).
         """
         with transaction.atomic():
-            team = Team(name=name, website=website)
-            team.save()
-            membership = Membership(team=team, user=user)
-            membership.save()
+            team = TeamService.create_team(name=name, website=website)
+            MembershipService.create(user.id, team.id)
         return team
-
-    @staticmethod
-    def get_team_with_id(team_id):
-        """
-        Retrieve information about a given team.
-        """
-        return Team.objects.get(pk=team_id)
-
-    @staticmethod
-    def is_user_in_team_with_id(user, team_id):
-        """
-        Confirm that the a user is a member of a team.
-        """
-        return Membership.objects.filter(user=user, team__id=team_id).exists()

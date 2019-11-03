@@ -5,6 +5,7 @@ services:
     image: "registry.gitlab.com/nchlswhttkr/mellophone:master"
     working_dir: "/home/conductor/dev"
     environment:
+      # Ensures all 'dev' containers use the same dependencies
       - "WORKON_HOME=/home/conductor/dev/docker/dev/.venv"
     volumes:
       - ".:/home/conductor/dev"

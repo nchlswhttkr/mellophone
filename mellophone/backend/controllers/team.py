@@ -16,11 +16,9 @@ class TeamController:
         """
         Get the teams of which the session user is a member.
         """
-        user = IdentityService.get_session_user(request)
-        if user is None:
-            return GenericViews.authentication_required_response(request)
+        user = IdentityService.get_required_session_user(request)
 
-        teams = TeamService.get_teams_of_user(user)
+        teams = TeamService.get_teams_of_user_with_id(user.id)
         return JsonResponse(
             {"teams": [serialize_team(team) for team in teams]}, status=200
         )
@@ -32,25 +30,20 @@ class TeamController:
         If roles are implemented, this may also include asssigning them as an
         'owner'-like role.
         """
-        owner = IdentityService.get_session_user(request)
-        if owner is None:
-            return GenericViews.authentication_required_response(request)
-
+        user = IdentityService.get_required_session_user(request)
         body = json.loads(request.body.decode("utf-8"))
         name = body["name"]
         website = body["website"]
 
-        team = TeamService.create_team_with_user_as_owner(owner, name, website)
+        team = TeamService.create_team_with_user_as_owner(user, name, website)
         return JsonResponse({"team": serialize_team(team)}, status=201)
 
     def get_team_by_id(self, request):
         """
         Get a team by their ID.
         """
-        user = IdentityService.get_session_user(request)
-        if user is None:
-            return GenericViews.authentication_required_response(request)
-
+        user = IdentityService.get_required_session_user(request)
         team_id = re.match(r"/api/teams/([0-9]*)", request.path)[1]
-        team = TeamService.get_team_with_id(team_id)
+
+        team = TeamService.get(team_id)
         return JsonResponse({"team": serialize_team(team)}, status=200)

@@ -52,3 +52,10 @@ class GenericViews:
         if error is None:
             error = "Invalid request"
         return JsonResponse({"error": str(error)}, status=400)
+
+    @staticmethod
+    def internal_error_response(request):
+        """
+        Used if an unforeseen error is encountered while processing a request.
+        """
+        return JsonResponse({"error": "An internal error occured"}, status=500)

@@ -25,8 +25,7 @@ class Team(models.Model):
 
 class Membership(models.Model):
     """
-    Individual users have membership with a team through these instances. Roles
-    are not yet handled, but they will likely also sit within this model.
+    Individual users have membership with a team through these instances.
     """
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)

@@ -12,6 +12,7 @@ from backend.controllers.identity import IdentityController
 from backend.controllers.team import TeamController
 from backend.controllers.meeting import MeetingController
 from backend.views import GenericViews
+from backend.exceptions import BadRequestException, ForbiddenException,AuthenticationRequiredException
 
 index_controller = IndexController()
 identity_controller = IdentityController()
@@ -29,15 +30,22 @@ def route(path, get=None, post=None, put=None, delete=None):
     """
 
     def handler(request):
-        method = request.method
-        if method == "GET" and get is not None:
-            return get(request)
-        if method == "POST" and post is not None:
-            return post(request)
-        if method == "PUT" and put is not None:
-            return put(request)
-        if method == "DELETE" and delete is not None:
-            return delete(request)
+        try:
+            if request.method == "GET" and get is not None:
+                return get(request)
+            if request.method == "POST" and post is not None:
+                return post(request)
+            if request.method == "PUT" and put is not None:
+                return put(request)
+            if request.method == "DELETE" and delete is not None:
+                return delete(request)
+        except BadRequestException as error:
+            return GenericViews.invalid_request_response(request, error)
+        except ForbiddenException as error:
+            return GenericViews.forbidden_response(request, error)
+        except AuthenticationRequiredException as error:
+            return GenericViews.authentication_required_response(request, error)
+
         return GenericViews.not_found_response(request)
 
     return re_path(path, handler)

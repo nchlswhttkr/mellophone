@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from backend.exceptions import BadRequestException
 
 
 class UserService:
@@ -11,35 +12,25 @@ class UserService:
     """
 
     @staticmethod
-    def create_user(email, password, first_name, last_name):
-        """
-        Creates a new user, with a username matching their email.
-        """
+    def create(email, password, first_name, last_name):
         if email == "":
-            raise InvalidUserDetailsException("An email must be supplied.")
+            raise BadRequestException("An email must be supplied")
         if password == "":
-            raise InvalidUserDetailsException("A password must be supplied.")
+            raise BadRequestException("A password must be supplied")
         if first_name == "":
-            raise InvalidUserDetailsException("A first name must be supplied.")
+            raise BadRequestException("A first name must be supplied")
         if last_name == "":
-            raise InvalidUserDetailsException("A last name must be supplied.")
+            raise BadRequestException("A last name must be supplied")
 
         if User.objects.filter(email=email).exists():
             message = 'The email "{}" is not available.'.format(email)
-            raise EmailAlreadyInUseException(message)
+            raise BadRequestException(message)
 
         return User.objects.create_user(
-            email,  # username is same as email
-            email,  # email
-            password,
+            username=email,  # username is same as email
+            email=email,  # email
+            password=password,
             first_name=first_name,
             last_name=last_name,
         )
 
-
-class InvalidUserDetailsException(Exception):
-    pass
-
-
-class EmailAlreadyInUseException(Exception):
-    pass

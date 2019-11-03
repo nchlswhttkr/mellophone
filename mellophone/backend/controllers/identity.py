@@ -7,11 +7,7 @@ from django.utils.decorators import method_decorator
 from backend.views import GenericViews
 from backend.serializers import serialize_user
 from backend.services.identity import IdentityService
-from backend.services.user import (
-    UserService,
-    EmailAlreadyInUseException,
-    InvalidUserDetailsException,
-)
+from backend.services.user import UserService
 
 
 class IdentityController:
@@ -27,13 +23,7 @@ class IdentityController:
         credentials = re.fullmatch(r"Basic (.*)", request.META["HTTP_AUTHORIZATION"])[1]
         email, password = base64.b64decode(credentials.encode()).decode().split(":")
 
-        IdentityService.sign_in(request, email=email, password=password)
-
-        # It is not certain that authenticating will succeed
-        user = IdentityService.get_session_user(request)
-        if user is None:
-            return GenericViews.authentication_required_response(request)
-
+        user = IdentityService.sign_in(request, email=email, password=password)
         return JsonResponse({"user": serialize_user(user)}, status=200)
 
     def sign_up(self, request):
@@ -46,15 +36,7 @@ class IdentityController:
         first_name = body["firstName"] if "firstName" in body else ""
         last_name = body["lastName"] if "lastName" in body else ""
 
-        try:
-            UserService.create_user(email, password, first_name, last_name)
-        except InvalidUserDetailsException as error:
-            return GenericViews.invalid_request_response(request, error)
-        except EmailAlreadyInUseException as error:
-            return GenericViews.forbidden_response(request, error)
-
-        IdentityService.sign_in(request, email, password)
-        user = IdentityService.get_session_user(request)
+        user = IdentityService.sign_up(request, email, password, first_name, last_name)
         return JsonResponse({"user": serialize_user(user)}, status=201)
 
     def sign_out(self, request):
@@ -73,5 +55,4 @@ class IdentityController:
         user = IdentityService.get_session_user(request)
         if user is None:
             return JsonResponse({}, status=200)
-
         return JsonResponse({"user": serialize_user(user)}, status=201)
