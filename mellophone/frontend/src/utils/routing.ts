@@ -7,11 +7,12 @@ const MEETINGS = "meetings";
 const NEW = "new";
 
 /**
- * Useful to check whether a given path is known, warning in development.
+ * Useful to check whether a given path is known, showing a warning when not in
+ * production.
  *
- * Its use is optional, but suggested since it can give warnings about routing
- * at minimal cost (it minifies to an empty function in production, so it only
- * adds a few bytes).
+ * Using it is optional, but recommended since it can warn about bad/incorrect
+ * routes at minimal cost (it minifies to an empty function in production, so
+ * it only adds a few bytes).
  */
 export function route(path: string): string {
   if (process.env.NODE_ENV !== "production") {

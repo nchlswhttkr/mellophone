@@ -15,7 +15,6 @@ it("Creates a team, stores it and redirects to their profile", async () => {
   const postTeam = jest.fn(async () => team);
   const { getByLabelText, getByText, store } = new TestRenderer()
     .withNetwork({ postTeam })
-    .withStores({ teams: { teams: [], status: "fulfilled", error: undefined } })
     .asAuthenticatedUser()
     .render(<CreateTeam />);
 
