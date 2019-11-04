@@ -12,7 +12,11 @@ from backend.controllers.identity import IdentityController
 from backend.controllers.team import TeamController
 from backend.controllers.meeting import MeetingController
 from backend.views import GenericViews
-from backend.exceptions import BadRequestException, ForbiddenException,AuthenticationRequiredException
+from backend.exceptions import (
+    BadRequestException,
+    ForbiddenException,
+    AuthenticationRequiredException,
+)
 
 index_controller = IndexController()
 identity_controller = IdentityController()

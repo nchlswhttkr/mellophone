@@ -105,18 +105,18 @@ docker-compose run dev
 
 Below are some common commands you might run. You might also wish to consult the [pipenv docs](https://pipenv.readthedocs.io/en/latest#pipenv-usage) and the [Pipfile itself](/Pipfile) for further information.
 
+Make sure you're running your commands inside the development container (`docker-compose run dev ${YOUR COMMAND}`).
+
 | Command                 | Action                                                                                 |
 | ----------------------- | -------------------------------------------------------------------------------------- |
 | pipenv sync             | Install runtime dependencies (and ensure they are up to date with `Pipfile.lock`)      |
 | pipenv sync --dev       | As above, but also include development dependencies, such as linting/testing libraries |
 | pipenv run migrate      | Apply new migrations to the database (must be running at this time)                    |
-| pipenv run server       | Run the Django development server (located at http://local)                            |
+| pipenv run server       | Run the Django development server (located at http://localhost:8000)                   |
 | pipenv run lint         | Format backend code                                                                    |
 | pipenv run lint --check | Check backend code formatting                                                          |
 | pipenv run test-unit    | Run tests against the backend                                                          |
-| pipenv run test-e2e     | Run an end-to-end test using Selenium \*                                               |
-
-\* You'll likely want to run the backend and test within the same container. You can accomplish this with `docker-compose run dev sh scripts/test-e2e.sh` to run a prewritten script that will accomplish this.
+| pipenv run test-e2e     | Run an end-to-end test using Selenium                                                  |
 
 #### The backend codebase
 

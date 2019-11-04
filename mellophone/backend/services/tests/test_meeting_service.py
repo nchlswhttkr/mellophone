@@ -8,7 +8,9 @@ from backend.exceptions import BadRequestException
 class ItemServiceTestCase(TestCase):
     def setUp(self):
         self.user = UserService.create("john@email.com", "hunter2", "John", "Doe")
-        self.team = TeamService.create_team_with_user_as_owner(self.user, "John's Team", "")
+        self.team = TeamService.create_team_with_user_as_owner(
+            self.user, "John's Team", ""
+        )
 
     def test_create(self):
         """
@@ -17,9 +19,7 @@ class ItemServiceTestCase(TestCase):
 
         meeting_name = "A meeting"
         meeting_venue = "A meeting venue"
-        meeting = MeetingService.create(
-            self.team.id, meeting_name, meeting_venue
-        )
+        meeting = MeetingService.create(self.team.id, meeting_name, meeting_venue)
 
         self.assertEqual(meeting.name, meeting_name)
         self.assertEqual(meeting.venue, meeting_venue)

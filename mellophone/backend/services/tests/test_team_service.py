@@ -36,7 +36,6 @@ class TeamServiceTestCase(TestCase):
         with self.assertRaises(BadRequestException, msg="Teams must have a name"):
             TeamService.create_team(name="", website="-")
 
-
     def test_get_team(self):
         """
         Create and retrieve a team.

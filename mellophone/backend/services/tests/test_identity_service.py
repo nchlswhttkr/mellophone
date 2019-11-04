@@ -45,4 +45,3 @@ class IdentityServiceTestCase(TestCase):
 
         with self.assertRaises(AuthenticationRequiredException):
             IdentityService.get_required_session_user(request)
-
