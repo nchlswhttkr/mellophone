@@ -11,7 +11,7 @@ while [ $? -eq 7 ]; do
     curl -s localhost:8000 > /dev/null
 done
 
-python mellophone/e2e.py
+pipenv run python mellophone/e2e.py
 export TEST_EXIT_STATUS=$?
 
 kill $BACKEND_SERVER_PID
