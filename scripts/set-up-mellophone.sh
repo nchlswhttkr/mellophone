@@ -46,6 +46,6 @@ sudo vi /root/digitalocean.ini # declare API key per certbot-dns-digitalocean
 sudo chmod 600 /root/ssl/digitalocean.ini
 sudo certbot certonly \
   -i nginx \
-  --dns-digitalocean --dns-digitalocean-credentials=/root/ssl/digitalocean.ini
+  --dns-digitalocean --dns-digitalocean-credentials=/root/ssl/digitalocean.ini \
   -d "*.mellophone.pink" -d "mellophone.pink" \
   --server https://acme-v02.api.letsencrypt.org/directory
