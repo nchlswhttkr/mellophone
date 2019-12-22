@@ -51,8 +51,8 @@ Below are some common commands you might run. Remember you will need to be in th
 | yarn start        | Run a development server (located at http://localhost:300)                         |
 | yarn build        | Create a production build (if you want to run the backend with a static frontend)  |
 | yarn test         | Run tests against the frontend code                                                |
-| yarn lint         | Run code style and type checks                                                     |
-| yarn lint --write | Run code style and type checks, fixing where possible                              |
+| yarn lint         | Run code style checks                                                              |
+| yarn lint --write | Run code style checks, fixing where possible                                       |
 
 #### The frontend codebase
 

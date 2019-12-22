@@ -87,7 +87,4 @@ const mapStateToProps = (state: AppState) => ({
 
 const mapDispatchToProps = { setSessionUser };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
