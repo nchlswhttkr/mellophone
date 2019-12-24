@@ -22,9 +22,9 @@ RUN curl -L https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIV
     && rm /tmp/geckodriver.tar.gz \
     && chmod +x /usr/local/bin/geckodriver /opt/geckodriver
 
-RUN useradd -m conductor
-USER conductor
-WORKDIR /home/conductor
+RUN useradd -m mellophone
+USER mellophone
+WORKDIR /home/mellophone
 
-ENV PATH="/home/conductor/.local/bin:${PATH}" LANG="C.UTF-8"
+ENV PATH="/home/mellophone/.local/bin:${PATH}" LANG="C.UTF-8"
 RUN pip3 install --user pipenv

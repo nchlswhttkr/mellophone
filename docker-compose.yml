@@ -3,12 +3,12 @@ version: "3.7"
 services:
   dev:
     image: "registry.gitlab.com/nchlswhttkr/mellophone:master"
-    working_dir: "/home/conductor/dev"
+    working_dir: "/home/mellophone/dev"
     environment:
       # Ensures all 'dev' containers use the same dependencies
-      - "WORKON_HOME=/home/conductor/dev/docker/dev/.venv"
+      - "WORKON_HOME=/home/mellophone/dev/docker/dev/.venv"
     volumes:
-      - ".:/home/conductor/dev"
+      - ".:/home/mellophone/dev"
     ports:
       - "8000:8000"
     depends_on:

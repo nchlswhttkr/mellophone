@@ -1,6 +1,6 @@
 # Mellophone
 
-[![](https://gitlab.com/nchlswhttkr/mellophone/badges/master/build.svg?style=flat-square)](https://gitlab.com/nchlswhttkr/mellophone/pipelines)
+[![](https://gitlab.com/nchlswhttkr/mellophone/badges/master/pipeline.svg?style=flat-square)](https://gitlab.com/nchlswhttkr/mellophone/pipelines)
 
 :trumpet: :trumpet: :trumpet:
 

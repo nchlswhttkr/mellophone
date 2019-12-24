@@ -103,11 +103,11 @@ cache:
     - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan 157.230.241.239 > ~/.ssh/known_hosts
+    - ssh-keyscan $PRODUCTION_IP > ~/.ssh/known_hosts
     - echo "$PRODUCTION_PRIVATE_SSH_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - pipenv sync --keep-outdated
     - pipenv run python mellophone/manage.py collectstatic --clear --no-input --no-post-process
-    - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock conductor@157.230.241.239:~/latest-deployment
+    - rsync -a -e ssh --delete-excluded --exclude-from=.rsyncignore config mellophone Pipfile Pipfile.lock mellophone@$PRODUCTION_IP:~/latest-deployment
 
 "Dev Image Build":
   image: docker:stable

@@ -4,10 +4,10 @@ Requires=gunicorn.socket
 After=network.target
 
 [Service]
-User=conductor
+User=mellophone
 Group=www-data
-WorkingDirectory=/home/conductor/production/mellophone
-ExecStart=/home/conductor/.local/bin/pipenv run gunicorn \
+WorkingDirectory=/home/mellophone/production/mellophone
+ExecStart=/home/mellophone/.local/bin/pipenv run gunicorn \
     --access-logfile - \
     --workers 3 \
     --bind unix:/run/gunicorn.sock \
