@@ -94,9 +94,9 @@ cache:
 "Deploy":
   image: $DOCKER_IMAGE_TAG
   stage: deploy
-  environment:
-    name: production
-    url: https://mellophone.pink
+  # environment:
+  #   name: production
+  #   url: https://mellophone.pink
   only:
     - master
   script:

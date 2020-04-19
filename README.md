@@ -2,13 +2,15 @@
 
 [![](https://gitlab.com/nchlswhttkr/mellophone/badges/master/pipeline.svg?style=flat-square)](https://gitlab.com/nchlswhttkr/mellophone/pipelines)
 
+! :warning: While I haven't had time to work on Mellophone lately, there's still plenty of cool things to dig into!
+
 :trumpet: :trumpet: :trumpet:
 
 An app for teams, allowing them to write and share meeting minutes.
 
 I started this project to implement what I've learned over the past few years, and to explore new technologies and libraries that interest me.
 
-https://mellophone.pink
+---
 
 ## Contributing
 
@@ -18,15 +20,27 @@ Contributions are welcome! You can make a contribution by forking this repositor
 
 Alternatively, you can [open an issue](https://github.com/nchlswhttkr/mellophone/issues/new) if you find a problem that needs to be fixed.
 
-### Frontend
+## Setup
 
-The frontend is a [React](https://reactjs.org) application.
+The frontend is a [React](https://reactjs.org/) application. You will need to [Yarn](https://yarnpkg.org/) installed (as well as [Node](https://nodejs.org/)).
 
-#### Setting up the frontend
+The backend is a [Django](https://www.djangoproject.com/) application, you'll need [Docker Compose](https://docs.docker.com/install/) installed.
 
-To develop on the frontend you will need [Yarn](https://yarnpkg.org/) (as well as [Node](https://nodejs.org/)).
+The backend runs inside a container, you'll need to install dependencies and run database migrations before you start it.
 
-To set up the frontend, install its dependencies and start the development server.
+```sh
+docker-compose run dev pipenv sync --dev
+docker-compose run dev pipenv run migrate
+docker-compose run dev sh scripts/get-frontend-build.sh
+docker-compose up --detach dev
+
+# stop the various running containers (backend, database)
+docker-compose stop
+```
+
+You can access the app at `http://localhost:8000`.
+
+If you would like to work on the frontend, you can start the React development server.
 
 ```sh
 cd mellophone/frontend
@@ -34,14 +48,9 @@ yarn
 yarn start
 ```
 
-You'll probably want to have the backend running at the same time as well. You can run this is in a new terminal window. You will need to have [Docker Compose](https://docs.docker.com/install/) installed. If you'd like you can read more about the [how the backend is set up](#backend).
+You can access this server at `http://localhost:3000`. It proxies requests to the backend, so make sure the backend container is still running!
 
-```sh
-# Initialise and start the backend Django/Postgres servers
-docker-compose run dev pipenv sync
-docker-compose run dev pipenv run migrate
-docker-compose up dev
-```
+### Frontend Development
 
 Below are some common commands you might run. Remember you will need to be in the frontend root (`/mellophone/frontend`). You might wish to consult the [yarn docs](https://yarnpkg.com/lang/en/docs/cli/) or the [package.json itself](/mellophone/frontend/package.json)
 
@@ -53,8 +62,6 @@ Below are some common commands you might run. Remember you will need to be in th
 | yarn test         | Run tests against the frontend code                                                |
 | yarn lint         | Run code style checks                                                              |
 | yarn lint --write | Run code style checks, fixing where possible                                       |
-
-#### The frontend codebase
 
 The frontend is bootstrapped using [Create React App](https://create-react-app.dev/) and is located in the `mellophone/frontend` directory.
 
@@ -80,28 +87,7 @@ Most components are written using [TypeScript](https://www.typescriptlang.org/) 
 Tests are run using [Jest](https://jestjs.io/) with [React Testing Library](https://testing-library.com/docs/react-testing-library/intro), and are colocated with their applicable file in a `__tests__` subdirectory. \
 If you're testing components from the `pages/` directory, you can use `src/utils/TestRenderer.tsx` to replace `network` functions or to set the Redux store to a particular state.
 
-### Backend
-
-The backend is a [Django](https://www.djangoproject.com/) application.
-
-#### Setting up the backend
-
-To set up the backend you will need [Docker Compose](https://docs.docker.com/install/) installed.
-
-Before starting the development server, you will need to install dependencies and run database migrations. \
-To save the hassle of running/compiling the frontend, you can run the `scripts/get-frontend-build.sh` script to have it installed for you.
-
-```sh
-docker-compose run dev pipenv sync --dev
-docker-compose run dev pipenv run migrate
-docker-compose run dev sh scripts/get-frontend-build.sh
-```
-
-You can now start up the development server.
-
-```sh
-docker-compose run dev
-```
+### Backend Development
 
 Below are some common commands you might run. You might also wish to consult the [pipenv docs](https://pipenv.readthedocs.io/en/latest#pipenv-usage) and the [Pipfile itself](/Pipfile) for further information.
 
@@ -117,8 +103,6 @@ Make sure you're running your commands inside the development container (`docker
 | pipenv run lint --check | Check backend code formatting                                                          |
 | pipenv run test-unit    | Run tests against the backend                                                          |
 | pipenv run test-e2e     | Run an end-to-end test using Selenium                                                  |
-
-#### The backend codebase
 
 This repository is set up as a Django project, with the backend API as the `mellophone/backend` application.
 
