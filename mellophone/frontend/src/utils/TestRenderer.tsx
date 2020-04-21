@@ -15,7 +15,12 @@ import { setSessionUser } from "../ducks/session";
  * network requests and data stores is usually necessary to assert behaviour in
  * a given scenario.
  *
- * TestRenderer provides this with builder syntax.
+ * TestRenderer allows portions of these dependencies to be overridden. Instead
+ * of declaring an entire state tree or a full set of data-fetching functions,
+ * only what's passed in is overwritten.
+ *
+ * Otherwise, data-fetching functions will attempt to fetch and the data store
+ * will be in its default state.
  */
 export default class TestRenderer {
   stores: Partial<AppState>;

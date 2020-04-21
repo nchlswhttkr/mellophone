@@ -1,8 +1,12 @@
+I'm putting Mellophone on the shelf for now, but you're still welcome to take a look!
+
+https://nicholas.cloud/blog/poco-a-poco-diminuendo-mellophone/
+
+---
+
 # Mellophone
 
 [![](https://gitlab.com/nchlswhttkr/mellophone/badges/master/pipeline.svg?style=flat-square)](https://gitlab.com/nchlswhttkr/mellophone/pipelines)
-
-> :warning: While I haven't had time to work on Mellophone lately, there's still plenty of cool things to dig into!
 
 :trumpet: :trumpet: :trumpet:
 
